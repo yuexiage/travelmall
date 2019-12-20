@@ -1,0 +1,22 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
+<header id="header" class="mui-bar mall_header">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">游记</h1>
+</header>
+<div class="visa" style="margin-top: 50px;">
+    {loop $travels $visa}
+    <div class="mui-card" style="width: 320px;margin: 15px auto;">
+        <a href="{php echo $this->createMobileUrl('travels',array('id'=>$visa['id'],'op'=>'travels_item'));}">
+            <div class="mui-card-header mui-card-media">
+            {$visa['name']}
+            </div>
+            <div class="mui-card-content">
+                <img src="{php echo tomedia($visa['thumbs']);}" alt="" width="100%">
+            </div>
+        </a>
+    </div>
+    {/loop}
+</div>
+
+{template 'common/footer'}

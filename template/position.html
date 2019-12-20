@@ -1,0 +1,11 @@
+<select name="pid" class="form-control">
+	<option value="-1" >--选择位置--</option>
+	<option value="1" {php if(1==$module_post['pid']) echo "selected='selected' ;"}> 首页 
+	</option>
+	<option value="2" {php if(2==$module_post['pid']) echo "selected='selected' ;"}> 类别页 
+	</option>
+	<option value="3" {php if(3==$module_post['pid']) echo "selected='selected' ;"}> 主题页 
+	</option>
+	<option value="4" {php if(4==$module_post['pid']) echo "selected='selected' ;"}> 标签页 
+	</option>
+</select>

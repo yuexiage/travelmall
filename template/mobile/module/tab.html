@@ -1,0 +1,113 @@
+<div class="tab_mod">
+    {if $tab['show_title'] =='1'}
+    <div class="floor-header fh-center">  
+    <h5>{$tab['name']}</h5>
+    </div>
+    {/if}
+    <div class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted" style="overflow: hidden;">
+        <div class="mui-scroll">
+            {php $tab['img'] = iunserializer($tab['img']);}
+            {php $imgs = array_keys($tab['img']);}
+            {loop $imgs $key $tab}
+            {if $key=='0'}
+            <input type="hidden" class="tabId" value="{$tabs[$tab]['id']}">
+            {/if}
+            <a class="mui-control-item {php if($key=='0') echo 'mui-active'}" id="{$tabs[$tab]['id']}">
+                {$tabs[$tab]['name']}
+            </a>
+            {/loop}
+        </div>
+    </div>
+    <ul class="mui-table-view tabItem"></ul>
+    <input type="hidden" class="page" value="1">
+    <input type="hidden" class="checkout" value="0">
+</div>
+<script>
+    function getTab(){
+        var tabId = $(".tabId").val();
+        var page  = $(".page").val();
+        mui.ajax("{php echo $this->createMobileUrl('GetTabGoods');}",{
+            data:{
+                tabId:tabId,
+                page:page
+            },
+            dataType:'html',//服务器返回json格式数据
+            type:'get',//HTTP请求类型
+            timeout:10000,//超时时间设置为10秒；
+            headers:{'Content-Type':'application/json'},                  
+            success:function(data){
+                $(".tab_mod .tabItem").append(data);
+                $(".page").val(parseInt(page)+1);
+            },
+            error:function(xhr,type,errorThrown){
+                //异常处理；
+                console.log(type);
+            }
+        });
+    }
+    $(function(){
+        getTab();
+        //点击标签标题，获取商品
+        $(document).on("touchstart",".tab_mod .mui-scroll a",function(){
+            var tabId = $(this).attr('id');
+            $(".tabId").val(tabId);
+            mui.ajax("{php echo $this->createMobileUrl('GetTabGoods');}",{
+                data:{
+                    tabId:tabId,
+                    page:1
+                },
+                dataType:'html',//服务器返回json格式数据
+                type:'get',//HTTP请求类型
+                timeout:10000,//超时时间设置为10秒；
+                headers:{'Content-Type':'application/json'},                  
+                success:function(data){
+                    $(".tab_mod .tabItem").html('');
+                    $(".tab_mod .tabItem").html(data);
+                    $(".page").val(2);
+                },
+                error:function(xhr,type,errorThrown){
+                    //异常处理；
+                    console.log(type);
+                }
+            });
+        });
+
+        $(".tab_mod .tabItem").scroll(function(){
+            if( $(".tab_mod .tabItem")[0].scrollHeight - ($(".tab_mod .tabItem").height()+$(".tab_mod .tabItem").scrollTop()+10)<50 ){
+                var checkout  =   $(".checkout").val();  
+                var page      = $(".page").val();
+                var tabId     =   $(".tabId").val();
+                if(checkout == '0'){
+                    $.ajax({
+                        type: "get",
+                        data: "page="+page+"&tabId="+tabId,
+                        contentType: "application/json",
+                        url: "{php echo $this->createMobileUrl('GetTabGoods');}",
+                        beforeSend: function () {
+                           //$("html").css({overflow:"hidden"});    //禁用滚动条
+                           $("#checkout").val('1');
+                           $(".loading2").text('加载中……').show();
+                        },
+                        success: function (data) {
+                            if(data!=''){
+                                $(".tab_mod .tabItem").append(data);
+                                $(".page").val(++page);
+                                mui.toast('加载中……!',{ duration:'short', type:'div' })
+                            }else{
+                                mui.toast('就这么多了!',{ duration:'short', type:'div' }) 
+                            }
+                            $("#checkout").val('0');
+                        },
+                        error: function (data) {
+                            console.info("error: " + data.responseText);
+                        }
+                    });
+                } 
+            }
+        });
+    });
+
+    
+
+
+</script>

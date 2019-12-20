@@ -1,0 +1,355 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
+<script type="text/javascript" src="../addons/yuexiage_travelmall/images/js/wScratchPad.js?{TIMESTAMP}"></script>
+<script type="text/javascript">
+
+$(function(){
+    var useragent = window.navigator.userAgent.toLowerCase();
+    var num = 0;
+    {if $start}
+        $("#scratchpad").addClass("no");
+        $("#scratchpad").mousedown(function() {
+            mui.alert('无效活动时间!','提示框');  
+        });
+    {else}
+    $("#scratchpad").wScratchPad({
+        width : 150,
+        height : 40,
+        color : "#a9a9a7",
+        scratchMove : function(){
+            num++;
+            if(num == 2){
+            var _this = $(this);
+            $.ajax({
+                url: "{php echo $this->createMobileUrl('Checklottery', array('t'=>'2'))}",
+                dataType: "json",
+                data: {
+                    award_times: {$award_times},
+                    number_times: {$number_times},
+                    most_num_times: {$most_num_times}
+                },
+                success: function (data) {
+                    switch(data){
+                        case 0:
+                        $.ajax({
+                            url: "{php echo $this->createMobileUrl('getAward', array('t'=>'2'))}",
+                            dataType: "json",
+                            success: function (data) {
+                                switch(data.rid){
+                                    case 0:
+                                        mui.alert(data.description,'提示框');
+                                        $("#prize").text('谢谢参与');
+                                        $('#more').show();
+                                    break;
+                                    case 1:
+                                    $("#prize").text('一等奖');
+                        mui.alert(data.description,'提示框','OK',function(){
+                            $("input[name='wid']").val(data.wid);
+                            $("#mcover2").fadeIn();
+                        },'div');
+                                    break;
+                                    case 2:
+                                    $("#prize").text('二等奖');
+                                mui.alert(data.description,'提示框','OK',function(){
+                                    $("input[name='wid']").val(data.wid);
+                                    $("#mcover2").fadeIn();
+                                },'div');
+                                    break;
+                                    case 3:
+                                    $("#prize").text('三等奖');
+                                mui.alert(data.description,'提示框','OK',function(){
+                                    $("input[name='wid']").val(data.wid);
+                                    $("#mcover2").fadeIn();
+                                },'div');
+                                    break;
+                                    case 4:
+                                    $("#prize").text('四等奖');
+                                mui.alert(data.description,'提示框','OK',function(){
+                                    $("input[name='wid']").val(data.wid);
+                                    $("#mcover2").fadeIn();
+                                },'div');
+                                    break;
+                                    case 5:
+                                    $("#prize").text('五等奖');
+                                mui.alert(data.description,'提示框','OK',function(){
+                                    $("input[name='wid']").val(data.wid);
+                                    $("#mcover2").fadeIn();
+                                },'div');
+                                    break;
+                                    case 6:
+                                    $("#prize").text('六等奖');
+                                mui.alert(data.description,'提示框','OK',function(){
+                                    $("input[name='wid']").val(data.wid);
+                                    $("#mcover2").fadeIn();
+                                },'div');
+                                    break;
+                                }
+                            }
+                        })
+                        break;
+                        case 1:
+                        mui.alert('超过可参加次数!','提示框');
+                        break;
+                        case 2:
+                        mui.alert('获奖次数已用完!','提示框');
+                        break;
+                        case 3:
+                        mui.alert('今日抽奖次数已用完!','提示框');
+                        break;
+                        case 4:
+                        mui.alert('活动未开始!','提示框');
+                        break;
+                        case 5:
+                        mui.alert('活动已结束!','提示框');
+                        break;
+
+                        default:
+             
+                    }
+                    
+                }
+            })    
+
+            if (useragent.indexOf("android 4") > 0) {
+                if ($("#scratchpad").css("color").indexOf("51") > 0) {
+                    $("#scratchpad").css("color", "rgb(50,50,50)");
+                } else if($("#scratchpad").css("color").indexOf("50") > 0) {
+                    $("#scratchpad").css("color", "rgb(51,51,51)");
+                }
+            }
+
+            }
+        }
+    });
+{/if}
+});
+</script>
+<style>
+    .cover{
+    width: 320px;
+    max-width: 480px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.cover img{
+    width: 320px;
+}
+
+#scratchpad,#prize{
+    position: absolute;
+    width: 150px;
+    height: 40px;
+    top: 140px;
+    left: 105px;
+    text-align: center;
+    font-size: 20px;
+    line-height: 40px;
+    color:#333;
+}
+#more{
+    display: block;
+    color: #FFF;
+    font-size: 16px;
+    text-align: center;
+    width: 200px;
+    height: 40px;
+    margin: auto;
+    line-height: 40px;
+    text-decoration: none;
+    text-shadow: 0 -1px 1px rgba(0, 0, 0, .5);
+    border-radius: 5px;
+    background-color: #25b025;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#39d139), to(#25b025));
+    background-image: -webkit-linear-gradient(top, #39d139, #25b025);
+    background-image: linear-gradient(to bottom, #39d139, #25b025);
+}
+</style>
+<div class="header">
+    <div class="cover" id="cover">
+        <img src="../addons/yuexiage_travelmall/images/images/activity-scratch-card-bannerbg.png">
+        <div id="prize">looading……</div>
+        <div id="scratchpad"></div>
+        <a href="{php echo $this->createMobileUrl('scratchcard', array())}" id="more"  target="_self" style="display: none">再来一次 </a>
+    </div>
+</div>
+{if $bigwheel['show_num']=='1'}
+<!-- 显示 -->
+    <div class="show_num">
+        <div class="mui-card">
+            <div class="mui-card-header">奖品列表</div>
+            <div class="mui-card-content">
+                <ul style="padding:10px;">
+                    <li>
+                        一等奖:
+                        {if $bigwheel['c_type_one'] == '1'}
+                            积分{$bigwheel['c_name_one']}x{$bigwheel['c_num_one']}
+                        {elseif  $bigwheel['c_type_one'] == '2'}
+                            {$bigwheel['c_coupon_one']['amount']}元优惠券x{$bigwheel['c_num_one']}
+                        {elseif  $bigwheel['c_type_one'] == '3'}
+                            {$bigwheel['c_name_one']}x{$bigwheel['c_num_one']}
+                        {elseif  $bigwheel['c_type_one'] == '4'}
+                            {$bigwheel['c_coupon_one']['amount']}元代金券x{$bigwheel['c_num_one']}
+                        {/if}
+                    </li>
+                    <li>
+                        二等奖:
+                        {if $bigwheel['c_type_two'] == '1'}
+                            积分{$bigwheel['c_name_two']}x{$bigwheel['c_num_two']}
+                        {elseif  $bigwheel['c_type_two'] == '2'}
+                            {$bigwheel['c_coupon_two']['amount']}元优惠券x{$bigwheel['c_num_two']}
+                        {elseif  $bigwheel['c_type_two'] == '3'}
+                            {$bigwheel['c_name_two']}x{$bigwheel['c_num_two']}
+                        {elseif  $bigwheel['c_type_two'] == '4'}
+                            {$bigwheel['c_coupon_two']['amount']}元代金券x{$bigwheel['c_num_two']}
+                        {/if}
+                    </li>
+                    <li>
+                        三等奖:
+                        {if $bigwheel['c_type_three'] == '1'}
+                            积分{$bigwheel['c_name_three']}x{$bigwheel['c_num_three']}
+                        {elseif  $bigwheel['c_type_three'] == '2'}
+                            {$bigwheel['c_coupon_three']['amount']}元优惠券x{$bigwheel['c_num_three']}
+                        {elseif  $bigwheel['c_type_three'] == '3'}
+                            {$bigwheel['c_name_three']}x{$bigwheel['c_num_three']}
+                        {elseif  $bigwheel['c_type_three'] == '4'}
+                            {$bigwheel['c_coupon_three']['amount']}元代金券x{$bigwheel['c_num_three']}
+                        {/if}
+                    </li>
+                    <li>
+                        四等奖:
+                        {if $bigwheel['c_type_four'] == '1'}
+                            积分{$bigwheel['c_name_four']}x{$bigwheel['c_num_four']}
+                        {elseif  $bigwheel['c_type_four'] == '2'}
+                            {$bigwheel['c_coupon_four']['amount']}元优惠券x{$bigwheel['c_num_four']}
+                        {elseif  $bigwheel['c_type_four'] == '3'}
+                            {$bigwheel['c_name_four']}x{$bigwheel['c_num_four']}
+                        {elseif  $bigwheel['c_type_four'] == '4'}
+                            {$bigwheel['c_coupon_four']['amount']}元代金券x{$bigwheel['c_num_four']}
+                        {/if}
+                    </li>
+                    <li>
+                        五等奖:
+                        {if $bigwheel['c_type_five'] == '1'}
+                            积分{$bigwheel['c_name_five']}x{$bigwheel['c_num_five']}
+                        {elseif  $bigwheel['c_type_five'] == '2'}
+                            {$bigwheel['c_coupon_five']['amount']}元优惠券x{$bigwheel['c_num_five']}
+                        {elseif  $bigwheel['c_type_five'] == '3'}
+                            {$bigwheel['c_name_five']}x{$bigwheel['c_num_five']}
+                        {elseif  $bigwheel['c_type_five'] == '4'}
+                            {$bigwheel['c_coupon_five']['amount']}元代金券x{$bigwheel['c_num_five']}
+                        {/if}
+                    </li>
+                    <li>
+                        六等奖:
+                        {if $bigwheel['c_type_six'] == '1'}
+                            积分{$bigwheel['c_name_six']}x{$bigwheel['c_num_six']}
+                        {elseif  $bigwheel['c_type_six'] == '2'}
+                            {$bigwheel['c_coupon_six']['amount']}元优惠券x{$bigwheel['c_num_six']}
+                        {elseif  $bigwheel['c_type_six'] == '3'}
+                            {$bigwheel['c_name_six']}x{$bigwheel['c_num_six']}
+                        {elseif  $bigwheel['c_type_six'] == '4'}
+                            {$bigwheel['c_coupon_six']['amount']}元代金券x{$bigwheel['c_num_six']}
+                        {/if}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{/if}
+<div class="show_num">
+    <div class="mui-card">
+        <div class="mui-card-header">活动介绍</div>
+        <div class="mui-card-content">
+             {$bigwheel['description']}
+             <br>
+             活动时间{php echo date("Y-m-d H:i",strtotime($bigwheel['datelimit_start']));}-{php echo date("Y-m-d H:i",strtotime($bigwheel['datelimit_end']));}
+        </div>
+    </div>
+</div>
+<div class="show_num">
+    <div class="mui-card">
+        <div class="mui-card-header">{if $_W['member']['realname']} {$_W['member']['realname']}的&nbsp;&nbsp;&nbsp;{/if}中奖信息</div>
+        <div class="mui-card-content">
+             当前获奖次数: <strong style="color:red" class="win_num">{php echo $award_times_uid?$award_times_uid:'0';}</strong>次，还有<strong style="color:red" class="win_num2">{php echo $bigwheel['award_times']-$award_times_uid}</strong>次中奖机会
+             <ul class="win_list">
+                 {loop $winners $win}
+                 {if $win}
+                 <li>{$win['rid']}等奖：
+                    {if $win['tab_id'] == '1'}
+                            {$win['award']}积分
+                        {elseif  $win['tab_id'] == '2'}
+                            {$win['award']}元优惠券
+                        {elseif  $win['tab_id'] == '3'}
+                            {$win['award']}
+                        {elseif  $win['tab_id'] == '4'}
+                            {$win['award']}元代金券
+                        {/if}
+                {/loop}
+                </li>
+                {/if}
+             </ul>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+{template 'common/footer'}
+<style>
+    #mcover,#mcover2{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+    }
+    #mcover2{
+        display: none;
+    }
+</style>
+{if $start}
+<div id="mcover" >
+    <script>
+        if({$start}==1){
+            mui.alert('活动未开始!','提示框');
+        }else if({$start}==2){
+            mui.alert('活动已结束!','提示框');
+        }
+    </script>
+</div>
+{/if}
+<div id="mcover2" >
+    <form class="mui-input-group" method="post" style="margin: 50px 20px 0 20px;" action="{php echo $this->createMobileUrl('scratchcard',array());}">
+        <div class="mui-input-row">
+            <label>姓名</label>
+        <input type="text" class="mui-input-clear" name="realname" placeholder="请输入姓名">
+        </div>
+        <div class="mui-input-row">
+            <label>电话</label>
+            <input type="tel" class="mui-input-clear" name="tel" placeholder="请输入电话">
+        </div>
+        <input type="hidden" name="wid" value="0">
+        <div class="mui-button-row">
+            <button type="button" class="mui-btn mui-btn-primary" >确认</button>
+        </div>
+    </form>
+</div>
+<script>
+    $(function(){
+        $(".mui-btn-primary").click(function(){
+            var realname = $("input[name='realname']").val();
+            var tel = $("input[name='tel']").val();
+            if(tel=='' || realname==''){
+                mui.alert('请输入完整信息!','提示框');  
+                return false;  
+            }
+            $("form").submit();
+        });
+    });
+</script>

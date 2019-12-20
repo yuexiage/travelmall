@@ -1,0 +1,115 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
+<header id="header" class="mui-bar mui-bar-transparent">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title"></h1>
+</header>
+<div class="mui-content">
+    <div class="mui-slider">
+        {php $imgs = iunserializer($visa['thumbs']);}
+        <div class="mui-slider-group">
+            {loop $imgs $row}
+            <div class="mui-slider-item">
+              <img src="{php echo tomedia($row);}" width="100%">
+            </div>
+            {/loop}
+        </div>
+    </div>
+    <div class="visa_content">
+        {$visa['description']}
+    </div>
+    <ul class="mui-table-view">
+        <li class="mui-table-view-cell">
+            <strong style="color:red">￥{$visa['price']}</strong>
+        </li>
+    </ul>
+
+    {if $visa_order}
+    <ul class="mui-table-view">
+        <li class="mui-table-view-cell">
+            {if $visa_order['status']=='0'}
+            <strong style="color: #007aff">已提交,请等待工作人员联系!</strong>
+            {else}
+            <strong style="color: #f0ad4e">处理中……</strong>
+            {/if}
+        </li>
+    </ul>
+    {else}
+    <div class="submit_info">
+        <form action="" method="post">
+            <ul class="mui-table-view">
+                <li class="mui-table-view-cell">
+                    联系人
+                </li>
+                <li class="mui-table-view-cell">
+                    <div class="mui-input-row">
+                        <label>姓名:</label>
+                        <input name='contact_name' type="text" class="mui-input-clear mui-input" placeholder="请输入姓名">
+                    </div>
+                    <div class="mui-input-row">
+                        <label>电话</label>
+                        <input name='contact_tel' maxlength="11" type="text" class="mui-input-clear mui-input" placeholder="请输入电话">
+                    </div>
+                    <div class="mui-input-row">
+                        <label>身份证</label>
+                        <input name='contact_id' maxlength="18" type="text" class="mui-input-clear mui-input" placeholder="请输入身份证">
+                    </div>
+                    <div class="mui-input-row">
+                        <label>邮箱</label>
+                        <input name='contact_email' type="text" class="mui-input-clear mui-input" placeholder="请输入邮箱">
+                    </div>
+                </li>
+            </ul>
+            <input type="hidden" name="submit1" value="1">
+            <button type="button" id="orderButton" class="mui-btn mui-btn-success mui-btn-block">提交</button>
+        </form>
+    </div>
+    {/if}
+    <ul class="mui-table-view">
+        <li class="mui-table-view-cell">
+            <label>联系我们:</label> <a href="tel:{$visa['contact']}">{$visa['contact']}</a>  
+        </li>
+    </ul>
+</div>
+<script type="text/javascript">
+    mui.plusReady(function() {
+    });
+    document.getElementById('orderButton').addEventListener('tap', function() {
+        var id = {$_GPC['id']};
+        mui.ajax("{php echo $this->createMobileUrl('Checkuser',array('t'=>'visa'));}",{
+            data:{
+                id:id,
+            },
+            dataType:'html',//服务器返回json格式数据
+            type:'get',//HTTP请求类型
+            timeout:10000,//超时时间设置为10秒；
+            headers:{'Content-Type':'application/json'},                  
+            success:function(data){
+                console.log(data);
+                var dataset = $.parseJSON(data);
+                if(dataset.error ==0){
+                    if(dataset.msg.visa=='0' || dataset.msg==false){
+                        var contact_name    = $("input[name='contact_name']").val();
+                        var contact_tel     = $("input[name='contact_tel']").val();
+                        var contact_id      = $("input[name='contact_id']").val();
+                        var contact_email   = $("input[name='contact_email']").val();
+                        if(contact_name=='' || contact_tel=='' || contact_id=='' || contact_email=='' ){
+                            mui.toast('请填写完整信息!');
+                            return false;
+                        }
+                        $("form").submit();
+                    }else{
+                        mui.toast('没有权限!!');
+                    }
+                }else{
+                    mui.toast('没有权限!');
+                }
+            },
+            error:function(xhr,type,errorThrown){
+                //异常处理；
+                console.log(type);
+            }
+        });
+    });
+</script>
+{template 'common/footer'}

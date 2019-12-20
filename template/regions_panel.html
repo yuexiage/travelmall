@@ -1,0 +1,17 @@
+{template 'common/header'}
+<div class="clearfix welcome-container">
+	<div class="page-header">
+		<h4><i class="fa fa-plane"></i>地域功能菜单</h4>
+	</div>
+	<div class="shortcut clearfix">
+		<a href="{php echo $this->createWebUrl('regions', array('action' => 'country'))}" title="国家管理">
+			<i class="fa fa-folder"></i>
+			<span>国家管理</span>
+		</a>
+		<a href="{php echo $this->createWebUrl('regions', array('action' => 'city'))}" title="城市管理">
+			<i class="fa fa-folder"></i>
+			<span>城市管理</span>
+		</a>
+	</div>
+</div>
+{template 'common/footer'}

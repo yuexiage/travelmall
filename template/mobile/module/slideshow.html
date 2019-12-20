@@ -1,0 +1,28 @@
+<div class="mod_panel mod_slideshow mui-col-sm-12 mui-col-xs-12">
+    <div class="mui-slider">
+        <div class="mui-slider-group mui-slider-loop">
+            <div class="mui-slider-item mui-slider-item-duplicate">
+                <a href="{php echo $slideshow['lnk'][($count-1)]?$slideshow['lnk'][($count-1)]:'javascript:;';}">
+                    <img src="{php echo tomedia($slideshow['img'][($count-1)]);}">
+                </a>
+            </div>
+            {loop $slideshow['img'] $key $img}
+            <div class="mui-slider-item">
+                <a href="{php echo $slideshow['lnk'][$key]?$slideshow['lnk'][$key]:'javascript:;';}">
+                    <img src="{php echo tomedia($img);}" />
+                </a>
+            </div>
+            {/loop}
+            <div class="mui-slider-item mui-slider-item-duplicate">
+                <a href="{php echo $slideshow['lnk'][0]?$slideshow['lnk'][($count-1)]:'javascript:;';}">
+                    <img src="{php echo tomedia($slideshow['img'][0]);}">
+                </a>
+            </div>
+        </div>
+        <div class="mui-slider-indicator">
+            {loop $slideshow['img'] $key $img}
+            <div class="mui-indicator {php if($key=='0') echo 'mui-active';}"></div>
+            {/loop}
+        </div>
+    </div>
+</div>

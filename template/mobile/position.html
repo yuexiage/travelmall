@@ -1,0 +1,43 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=9112f5fe8e098f1488ccaf92b619f974"></script>
+
+<script>
+    wx.ready(function(){
+        wx.getLocation({
+        type: 'wgs84', 
+        success: function (res) {
+            var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+            var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+            var speed = res.speed; // 速度，以米/每秒计
+            var accuracy = res.accuracy; // 位置精度
+            $.ajax({
+                url:"{php echo $this->createMobileUrl('Conversion');}",
+                data:{
+                    latitude:latitude,
+                    longitude:longitude
+                    },
+                dataType:'json',
+                type:'post',
+                success:function(data){
+                    //当前坐标x,y
+                    var x = data.x;
+                    var y = data.y;
+                    //目标坐标
+                    var nx = '{php echo $coordinate["0"]}';
+                    var ny = '{php echo $coordinate["1"]}';
+
+                    var map = new BMap.Map("allmap");
+                    var myP1 = new BMap.Point(x,y);    //起点
+                    var myP2 = new BMap.Point(nx,ny);    //终点
+                   alert((map.getDistance(myP1,myP2)).toFixed(2)+'米'); 
+                }
+            });
+        },  
+        cancel: function (res) {  
+            alert('用户拒绝授权获取地理位置');  
+        } 
+        });
+    });
+</script>
+{template 'common/footer'}

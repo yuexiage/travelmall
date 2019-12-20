@@ -1,0 +1,29 @@
+<div class="filter_mod" style="    overflow-x: hidden;min-height: 133px;">
+    {if $style['show_title'] =='1'}
+    <div class="floor-header fh-center">  
+    <h5>{$filter['name']}</h5>
+    </div>
+    {/if}
+
+    <div id="sliderSegmentedControl" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+        <div class="mui-scroll">
+            {loop $filter['img'] $key $img}
+            {if !empty($img)}
+            <a class="mui-control-item" href="{php echo $this->createMobileUrl('filter',array('type'=>$filter['condition']['type'][$key],'val'=>$filter['condition']['val'][$key]));}" data-wid="tab-top-subpage-1.html">
+                <img src="{php echo tomedia($img);}" />
+            </a>
+            {/if}
+            {/loop}
+        </div>
+    </div>
+</div>
+<script>
+    mui("#sliderSegmentedControl").on('tap','.mui-control-item',function(){
+        //获取id
+        var url = this.getAttribute("href");
+        mui.openWindow({
+            id:'detail',
+            url:url
+        });
+    })
+</script>

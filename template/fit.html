@@ -1,0 +1,703 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/fullcalendar.css?{TIMESTAMP}">
+<ul class="nav nav-tabs">
+	<li {if $do == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('fit', array('op' => 'display'));}">管理自由行</a></li>					
+	<li {if $do == 'post' && empty($id)}class="active"{/if}><a href="{php echo $this->createWebUrl('fit', array('op' => 'post'));}">添加自由行</a></li>
+	{if $do == 'post' && $id}
+	<li {if $do == 'post' && !empty($id)}class="active"{/if}><a href="{php echo $this->createWebUrl('fit', array('op' => 'post','id'=>$id));}">编辑</a></li>
+	{/if}
+</ul>
+<style>
+	.select{
+		padding:10px;
+		border-radius: 5px;
+		border:1px solid #ddd;
+		width: 80px;
+		text-align: center;
+		cursor:pointer;
+	}
+	.select:hover{
+		border:1px solid #bbb;
+		background-color: #ddd;
+	}
+	input[type='radio']{
+		width: 20px;
+		height:20px;
+	}
+</style>
+{if $do == 'post'}
+<script>
+$(document).ready(function() {  
+    //Default Action  
+    $(".tab_content").hide(); //Hide all content  
+    $("ul.tabs li:first").attr("id","active").show(); //Activate first tab  
+    $(".tab_content:first").show(); //Show first tab content  
+      
+    //On Click Event  
+    $("ul.tabs li").click(function() {  
+        $("#active").attr("id",""); //Remove any "active" class  
+        $(this).attr("id","active"); //Add "active" class to selected tab  
+        $(".tab_content").hide(); //Hide all tab content  
+        var activeTab = $(this).find("a").attr("href"); //Find the rel attribute value to identify the active tab + content  
+        $(activeTab).fadeIn(); //Fade in the active content  
+        return false;  
+    });  
+
+    $(document).on('click','.glyphicon-remove',function(){
+    	var li = $(this).parent();
+    	$(li).remove();
+    });
+});
+</script>  
+{if isset($_GET['stroke_id']) && $_GET['stroke_id']>0 }
+<h3>
+<a href="{php echo $this->createWebUrl('fit', array('op' => 'post','id'=>$id))}">
+<span class="label label-warning"><<返回</span>
+</a>
+</h3>
+{/if}
+<ul class="tabs">
+    <li class="active">
+    	<a href="#tab1">基础信息
+    	</a>
+    </li>											
+	<li>
+    	<a href="#tab2">行程
+    	</a>
+    </li>
+    <li>
+    	<a href="#tab3">日期
+    	</a>
+    </li>
+</ul>
+<div class="tab_container"> 
+	<div id="tab1" class="tab_content main" style="display: block; ">
+	<form action="" method="post" class="form-horizontal form" id="form1">
+		<div class="panel panel-default">
+			<div class="panel-heading">自由行详细设置</div>
+			<div class="panel-body">
+			{if isset($_GET['stroke_id']) && $_GET['stroke_id']>0 }
+			<div class="alert alert-danger" role="alert">
+			当前只可进行修改行程操作;
+			</div>
+			{else}
+				{if !empty($fit['name'])}
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">访问地址</label>
+					<div class="col-sm-8 col-xs-12">
+						<div class="form-control-static">
+						<a href="{$_W['siteroot']}app/index.php?c=entry&m=yuexiage_travelmall&do=fit_spike_item&id={$fit['id']}&i={$_W['uniacid']}" target="_blank">
+							{$_W['siteroot']}app/index.php?c=entry&m=yuexiage_travelmall&do=fit_spike_item&id={$fit['id']}&i={$_W['uniacid']}
+						</a>
+						</div>
+						<span class="help-block">您可以根据此地址，添加回复规则，设置访问。</span>
+					</div>
+				</div>
+				{/if}
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">排序</label>
+					<div class="col-sm-8 col-xs-12">
+						<input type="text" name="displayorder" class="form-control" value="{$fit['displayorder']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">发布</label>
+					<div class="col-sm-8 col-xs-12">
+						<label>
+							<input type="radio" value="1" name="enabled" {php if ($fit['enabled']=='1') echo "checked='checked' ";}>是
+						</label>
+						<label>
+							<input type="radio" value="0" name="enabled" {php if ($fit['enabled']=='0') echo "checked='checked' ";}>否
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">自由行名称</label>
+					<div class="col-sm-8 col-xs-12">
+						<input type="text" name="name" class="form-control" value="{$fit['name']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">天数</label>
+					<div class="col-sm-8 col-xs-12">
+						<input type="text" name="day_night" class="form-control" value="{$fit['day_night']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">成人价</label>
+					<div class="col-sm-8 col-xs-12">
+						<input type="text" name="adult_price" class="form-control" value="{$fit['adult_price']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">儿童</label>
+					<div class="col-sm-8 col-xs-12">
+						<input type="text" name="child_price" class="form-control" value="{$fit['child_price']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">出发地</label>
+					<div class="col-sm-8 col-xs-12">
+					{php echo tpl_form_field_category_2level('fit1', $countrys, $_citys,$fit['cid1'], $fit['yid1']);}
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">目的地</label>
+					<div class="col-sm-8 col-xs-12">
+					{php echo tpl_form_field_category_2level('fit', $countrys, $_citys,$fit['country_id'], $fit['city_id']);}
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">标签</label>
+					<div class="col-sm-8 col-xs-12">
+					<select name="tab_id" class="form-control">
+						<option value="-1" >--选择标签--</option>
+						{loop $tabs $row}
+						<option value="{$row['id']}" {php if($row['id']==$fit['tab_id']) echo "selected='selected' ;"}> {$row['name']} </option>
+						{/loop}
+					</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">主题</label>
+					<div class="col-sm-8 col-xs-12">
+					<select name="theme_id" class="form-control">
+						<option value="-1" >--选择主题--</option>
+						{loop $theme $row}
+						<option value="{$row['id']}" {php if($row['id']==$fit['theme_id']) echo "selected='selected' ;"}> {$row['name']} </option>
+						{/loop}
+					</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">分类</label>
+					<div class="col-sm-8 col-xs-12">
+					<select name="category_id" class="form-control">
+						<option value="-1" >--选择分类--</option>
+						{loop $categorys $row}
+						<option value="{$row['id']}" {php if($row['id']==$fit['category_id']) echo "selected='selected' ;"}> {$row['name']} </option>
+						{/loop}
+					</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">去程机票</label>
+					<div class="col-sm-8 col-xs-12">
+					<select name="trip" class="form-control">
+						<option value="-1" >--选择航班--</option>
+						{loop $flights $flight}
+						<option value="{$flight['id']}" {php if($flight['id']==$fit['trip']) echo "selected='selected' ;"}> {$flight['airline']}({$flight['air_num']}) </option>
+						{/loop}
+					</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">返程机票</label>
+					<div class="col-sm-8 col-xs-12">
+					<select name="return_trip" class="form-control">
+						<option value="-1" >--选择航班--</option>
+						{loop $flights $flight}
+						<option value="{$flight['id']}" {php if($flight['id']==$fit['return_trip']) echo "selected='selected' ;"}> {$flight['airline']}({$flight['air_num']}) </option>
+						{/loop}
+					</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">启用下架时间</label>
+					<div class="col-sm-8 col-xs-12">
+						<label>
+							<input type="radio" name="upper_shelf" value="1" {php if ($fit['upper_shelf']=='1') echo "checked='checked' ";}>启用
+						</label>
+						<label>
+							<input type="radio" name="upper_shelf" value="0" {php if ($fit['upper_shelf']=='0') echo "checked='checked' ";}>不启用
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">下架时间</label>
+					<div class="col-sm-8 col-xs-12">
+					{php echo tpl_form_field_date('lower_shelf',$fit['lower_shelf'],true);}
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">自由行图片</label>
+					<div class="col-sm-8 col-xs-12">
+					{php echo tpl_form_field_multi_image('thumbs', $fit['thumbs'])}
+					</div><br>
+					<em>推荐尺寸900*500</em>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">特别说明</label>
+					<div class="col-sm-8 col-xs-12">
+						<textarea name="description" class="form-control" cols="70">{$fit['description']}</textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">费用包含</label>
+					<div class="col-sm-8 col-xs-12">
+						{php echo tpl_ueditor('contain', $fit['contain']);}
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">费用不含</label>
+					<div class="col-sm-8 col-xs-12">
+						{php echo tpl_ueditor('not_included', $fit['not_included']);}
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">签证说明</label>
+					<div class="col-sm-8 col-xs-12">
+						{php echo tpl_ueditor('visa', $fit['visa']);}
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">预订须知</label>
+					<div class="col-sm-8 col-xs-12">
+						{php echo tpl_ueditor('booked', $fit['booked']);}
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">客服电话</label>
+					<div class="col-sm-8 col-xs-12">
+						<input type="text" name="customer" class="form-control" value="{$fit['customer']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">库存</label>
+					<div class="col-sm-2 col-xs-12">
+						<input type="text" name="stock" class="form-control" value="{$fit['stock']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">返利积分</label>
+					<div class="col-sm-2 col-xs-12">
+						<input type="text" name="credit" class="form-control" value="{$fit['credit']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">积分最高可抵扣金额</label>
+					<div class="col-sm-2 col-xs-12">
+						<div class="input-group">
+					    	<input type="text" class="form-control" name="credit_value"  placeholder="可抵扣" value="{$fit['credit_value']}">
+					    	<div class="input-group-addon">￥</div>
+					    </div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">选择优惠券</label>
+					<div class="col-sm-2 col-xs-12">
+						<select name="coupon_id" class="form-control">
+							<option value="-1" >--选择优惠券--</option>
+							{loop $coupons $coupon}
+							<option value="{$coupon['id']}" {if $coupon['id']==$fit['coupon_id']} selected='selected'{/if}>{$coupon['name']}</option>
+							{/loop}
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">选择现金券</label>
+					<div class="col-sm-2 col-xs-12">
+						<select name="cash_id" class="form-control">
+							<option value="-1" >--选择现金券--</option>
+							{loop $cashs $cash}
+							<option value="{$cash['id']}" {if $cash['id']==$fit['cash_id']} selected='selected'{/if}>{$cash['name']}</option>
+							{/loop}
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">评论</label>
+					<div class="col-sm-8 col-xs-12">
+						<label>
+							<input type="radio" value="1" name="comment" {php if ($fit['comment']=='1') echo "checked='checked' ";}>允许
+						</label>
+						<label>
+							<input type="radio" value="0" name="comment" {php if ($fit['comment']=='0') echo "checked='checked' ";}>不允许
+						</label>
+					</div>
+				</div>
+			{/if}
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-12">
+				<input name="submit" type="submit" value="提交" class="btn btn-primary col-lg-1">
+				<input type="hidden" name="token" value="{$_W['token']}" />
+			</div>
+		</div>
+	</form>
+	</div>
+	<script type="text/javascript">
+		$("#form1").submit(function(){
+			if($("input[name='name']").val() == '') {
+				util.message('请输入自由行名称', '', 'error');
+				return false;
+			}
+		});
+	</script>
+	<div id="tab2" class="tab_content" style="display: none; ">  
+		{if isset($_GET['id']) && $_GET['id']>0 }
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-7 col-md-7 col-lg-7 col-xs-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">添加行程</div>
+						<div class="panel-body">
+						<form action="" method="post" class="form-horizontal form" id="form2">
+							<div class="form-group">
+						    	<label for="inputEmail3" class="col-sm-2 control-label">天</label>
+							    <div class="col-sm-10">
+							    	<select name="displayorder" class="form-control">
+										<option value="-1" >--第几天--</option>
+										{php for($i=1;$i<20;$i++):}
+										<option value="{$i}" {php if($i==$stroke['displayorder']) echo "selected='selected' ;"}>第{$i}天</option>
+										{php endfor;}
+									</select>
+							    </div>
+						  	</div>
+							<div class="form-group">
+						    	<label for="inputEmail3" class="col-sm-2 control-label">行程</label>
+							    <div class="col-sm-10">
+							      <input type="text" class="form-control" name="stroke" value="{$stroke['stroke']}">
+							    </div>
+						  	</div>
+						  	<div class="form-group">
+						    	<label for="inputPassword3" class="col-sm-2 control-label">餐饮</label>
+							    <div class="col-sm-10">
+							    	<label>早餐
+							    		<input type="text" name="breakfast" class="form-control" value="{$stroke['breakfast']}">
+							    	</label>
+							    	<label>中餐
+							    		<input type="text" name="lunch" class="form-control" value="{$stroke['lunch']}">
+							    	</label>
+							      	<label>晚餐
+							    		<input type="text" name="dinner" class="form-control" value="{$stroke['dinner']}">
+							    	</label>
+							    </div>
+						  	</div>
+						  	<div class="form-group">
+						    	<label for="inputPassword3" class="col-sm-2 control-label">住宿</label>
+							    <div class="col-sm-10">
+							    	<div class="select" data-toggle="modal" data-target="#myModal">选择</div>
+							    </div>
+						  	</div>
+						  	<div class="form-group">
+						  		<label for="inputPassword3" class="col-sm-2 control-label">酒店列表</label>
+						  		<div class="col-sm-10 hotel_list">
+							  		<ul style="padding: 0;">
+							  			{loop $stroke['stay'] $index $stay}
+				        	 			<li>
+				        	 				<i class='glyphicon glyphicon-remove'></i>{$stay}<input type='hidden' name='hotellist[{$index}]' value='{$stay}' >
+				        	 			</li>
+				        	 			{/loop}
+							  		</ul>
+						  		</div>
+						  	</div>
+						  	<div class="form-group">
+						    	<label for="inputPassword3" class="col-sm-2 control-label">景点</label>
+							    <div class="col-sm-10">
+							    	<div class="select" data-toggle="modal" data-target="#myModal1">选择</div>
+							    </div>
+						  	</div>
+						  	<div class="form-group">
+						  		<label class="col-sm-2 control-label">景点列表</label>
+						  		<div class="col-sm-10 viewpoint_list">
+							  		<ul style="padding: 0;">
+							  			{loop $stroke['viewpoint'] $index $viewpoint}
+				        	 			<li>
+				        	 				<i class='glyphicon glyphicon-remove'></i>{$viewpoint}<input type='hidden' name='viewpoint[{$index}]' value='{$viewpoint}' >
+				        	 			</li>
+				        	 			{/loop}
+							  		</ul>
+						  		</div>
+						  	</div>
+						  	<div class="form-group">
+						  		<label class="col-sm-2 control-label">说明</label>
+						  		<div class="col-sm-10 viewpoint_list">
+							  		<textarea name="desc" id="" class="form-control">{$stroke['desc']}</textarea>
+						  		</div>
+						  	</div>
+				  	<!-- Modal -->
+							<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+								<div class="modal-dialog" role="document" style="width: 80%;height: 500px;">
+								    <div class="modal-content">
+								    	<div class="modal-header">
+								        	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								        		<span aria-hidden="true">&times;</span>
+								        	</button>
+								        	<h4 class="modal-title" id="myModalLabel">选择景点</h4>
+								      	</div>
+									    <div class="modal-body">
+									        <div class="select_hotel" >
+									        	<iframe src="{$_W['script_name']}?c=site&a=entry&m=yuexiage_travelmall&do=viewpointlist" width="100%" height="400px;"></iframe>
+									        </div>
+									    </div>
+								      	<div class="modal-footer">
+								        	<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+								      	</div>
+								    </div>
+							  	</div>
+							</div>
+						  	<!-- Modal -->
+							<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+								<div class="modal-dialog" role="document" style="width: 80%;height: 500px;">
+								    <div class="modal-content">
+								    	<div class="modal-header">
+								        	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								        		<span aria-hidden="true">&times;</span>
+								        	</button>
+								        	<h4 class="modal-title" id="myModalLabel">选择酒店</h4>
+								      	</div>
+									    <div class="modal-body">
+									        <div class="select_hotel" >
+									        	<iframe src="{$_W['script_name']}?c=site&a=entry&m=yuexiage_travelmall&do=hotellist" width="100%" height="400px;"></iframe>
+									        </div>
+									    </div>
+								      	<div class="modal-footer">
+								        	<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+								      	</div>
+								    </div>
+							  	</div>
+							</div>
+							<div class="form-group">
+						    	<label for="inputPassword3" class="col-sm-2 control-label">购物</label>
+							    <div class="col-sm-10">
+							    	<textarea name="shopping" class="form-control" >{$stroke['shopping']}</textarea>
+							    </div>
+						  	</div>
+						  	<div class="form-group">
+								<div class="col-sm-12">
+									<input name="submit_stroke" type="submit" value="添加行程" class="btn btn-primary ">
+									<input type="hidden" name="token" value="{$_W['token']}" />
+								</div>
+							</div>
+						  	</form>
+				  		</div>
+				  	</div>
+				</div>
+				<div class="col-sm-5 col-md-5 col-lg-5 col-xs-12">
+					<div class="row">
+						<form action="" method="post" class="form-horizontal form" id="form3">
+						<div class="panel-group col-sm-10 col-md-10" id="accordion" role="tablist" aria-multiselectable="true">
+						  	{loop $strokes $index $row}
+						  	<div class="panel panel-default">
+						    	<div class="panel-heading" role="tab" id="heading{$index}">
+						      		<h4 class="panel-title">
+						      		<input type="text" name="stroke_displayorder[{$row['id']}]" size="2" value="{$row['displayorder']}">
+						        	<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{$index}" aria-expanded="false" aria-controls="collapse{$index}">
+						          第{$row['displayorder']}天
+						        	</a>
+						        	<a href="{php echo $this->createWebUrl('fit', array('op' => 'post','id'=>$id,'stroke_id'=>$index))}" style="float: right;">
+						        		[编辑]
+						        	</a>
+						        	<a href="{php echo $this->createWebUrl('fit', array('op' => 'delete','id'=>$index,'stroke_id'=>$index,'stroke'=>'1'))}" style="float: right;" onclick="return confirm('确认删除此行程吗？');return false;">
+						        		[删除]
+						        	</a>
+						      		</h4>
+						    	</div>
+						    	<div id="collapse{$index}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{$index}">
+						      		<div class="panel-body">
+						        	 <ul>
+						        	 	<li>
+						        	 		<strong>行程：</strong>{$row['stroke']}
+						        	 	</li>
+						        	 	<li>
+						        	 		<strong>餐饮：</strong>
+						        	 		<ul>
+						        	 			<li>
+						        	 				<strong>早餐：</strong>
+						        	 				{$row['breakfast']}
+						        	 			</li>
+						        	 			<li>
+						        	 				<strong>午餐：</strong>
+						        	 				{$row['lunch']}
+						        	 			</li>
+						        	 			<li>
+						        	 				<strong>晚餐：</strong>
+						        	 				{$row['dinner']}
+						        	 			</li>
+						        	 		</ul>
+						        	 	</li>
+						        	 	<li>
+						        	 		<strong>住宿：</strong>
+						        	 		<ul>
+						        	 			{loop $row['stay'] $stay}
+						        	 			<li>
+						        	 				<i class='glyphicon glyphicon-ok'></i>
+						        	 				{$stay}
+						        	 			</li>
+						        	 			{/loop}
+						        	 		</ul>
+						        	 	</li>
+						        	 	<li>
+						        	 		<strong>景点：</strong>
+						        	 		<ul>
+						        	 			{loop $row['viewpoint'] $viewpoint}
+						        	 			<li>
+						        	 				<i class='glyphicon glyphicon-ok'></i>
+						        	 				{$viewpoint}
+						        	 			</li>
+						        	 			{/loop}
+						        	 		</ul>
+						        	 	</li>
+						        	 	<li>
+						        	 		<strong>购物：</strong>
+						        	 		{$row['shopping']}
+						        	 	</li>
+						        	 	<li>
+						        	 		<strong>说明:</strong>
+						        	 		{$row['desc']}
+						        	 	</li>
+						        	 </ul>
+						      		</div>
+						    	</div>
+						  	</div>
+							{/loop}
+						</div>
+						<div class="form-group">
+							<div class="col-sm-12">
+								<input name="displayorder_stroke" type="submit" value="更新" class="btn btn-primary ">
+								<input type="hidden" name="token" value="{$_W['token']}" />
+							</div>
+						</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		{else}
+		<div class="alert alert-danger" role="alert">
+			请先保存线路基本信息!
+		</div>
+		{/if}
+	</div>
+	<div id="tab3" class="tab_content" style="display: none; "> 
+		{if isset($_GET['id']) && $_GET['id']>0 }
+		<div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
+			{if isset($_GET['stroke_id']) && $_GET['stroke_id']>0 }
+				<div class="alert alert-danger" role="alert">
+				当前只可进行修改行程操作;
+				</div>
+			{else}
+			<form action="" method="post" class="form-horizontal form" id="form4">
+				<iframe src="{MODULE_URL}template/calendar2.html?local={$_W['siteroot']}&id={$_GPC['id']}" width="100%" height="550"></iframe>
+				<div class="date_price_list">
+					{loop $amount $row}
+						<input class='{php echo date("Y-m-d",$row["start_date"]);}' type='hidden' name='date[{php echo date("Y-m-d",$row["start_date"]);}]' value='{$row["original_price"]}:{$row["regular_price"]}:{$row["stock"]}'>
+					{/loop}
+				</div>
+				<div class="form-group">
+					<div class="col-sm-12">
+						<input name="submit_date_price" type="submit" value="提交价格" class="btn btn-primary ">
+						<input type="hidden" name="token" value="{$_W['token']}" />
+					</div>
+				</div>
+			</form>
+			{/if}
+		</div>
+		{else}
+		<div class="alert alert-danger" role="alert">
+			请先保存线路基本信息!
+		</div>
+		{/if}
+	</div>
+</div>
+{elseif $do == 'display'}
+<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form action="./index.php" method="get" class="form-horizontal" role="form">
+			<input type="hidden" name="c" value="site" />
+			<input type="hidden" name="a" value="entry" />
+			<input type="hidden" name="m" value="yuexiage_travelmall" />
+			<input type="hidden" name="do" value="fit" />
+			<input type="hidden" name="op" value="display" />
+			<input type="hidden" name="action" value="fit" />
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">关键字</label>
+				<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					<input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}">
+				</div>
+			</div>
+			<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">分类</label>
+					<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					<select name="category_id" class="form-control">
+						<option value="-1" >--选择分类--</option>
+						{loop $categorys $row}
+						<option value="{$row['id']}" {php if($row['id']==$_GPC['category_id']) echo "selected='selected' ;"}> {$row['name']} </option>
+						{/loop}
+					</select>
+					</div>
+				</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">
+				自由行地区
+				</label>
+				<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					{php echo tpl_form_field_category_2level('fit', $countrys, $_citys, $_GPC['fit']['parentid'], $_GPC['fit']['childid']);}
+				</div>
+				<div class="pull-right col-xs-12 col-sm-2 col-md-2 col-lg-2">
+					<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="main">
+	<div class="fit">
+		<form action="" method="post" onsubmit="return formcheck(this)">
+		<div class="panel panel-default">
+		<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th style="width: 6%; text-align:center;">显示顺序</th>
+					<th style="width:25%;">自由行名称</th>
+					<th style="width:50px; text-align:center">状态</th>
+					<th style="width:15%; text-align:center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			{loop $fit $row}
+				<tr>
+					<td class="text-center">
+						<input type="text" class="form-control" name="displayorder[{$row['id']}]" value="{$row['displayorder']}">
+					</td>
+					<td class="text-left">
+						<div style="height:30px;line-height:30px">
+							{$row['name']}
+						</div>
+					</td>
+					<td>
+						{if $row['enabled']==1}
+							<span class="label label-success">发布</span>
+						{else}
+							<span class="label label-default">未发布</span>
+						{/if}
+					</td>
+					<td class="text-right" style="position:relative;">																	
+						<a href="{php echo $this->createWebUrl('fit', array('op' => 'post','id' => $row['id'],'id' => $row['id']));}" title="编辑">编辑</a>&nbsp;-&nbsp;
+						<a href="{php echo $this->createWebUrl('fit', array('op' => 'delete','id' => $row['id']));}" onclick="return confirm('确认删除此自由行吗？');return false;" title="删除">删除</a>
+					</td>
+				</tr>
+			{/loop}
+				<tr>
+					<td colspan="4">
+						<a href="{php echo $this->createWebUrl('fit', array('op' => 'post','action' => 'fit'));}"><i class="fa fa-plus-circle" title="添加新自由行"></i> 添加新自由行</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
+		</div>
+			<div class="form-group col-sm-12">
+				<input name="submit" type="submit" class="btn btn-primary col-lg-1" value="提交">
+				<input type="hidden" name="token" value="{$_W['token']}" />
+			</div>
+		</form>
+	</div>
+</div>
+{$pager}
+{/if}
+{template 'common/footer'}

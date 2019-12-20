@@ -1,0 +1,78 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-icon mui-icon mui-icon-back  mui-pull-left" href="javascript:history.go(-1)"></a>
+    <h1 class="mui-title">
+        我的订单
+    </h1>
+</header>
+<style>
+    body{
+        background-color: #efeff4;
+        padding-top: 60px;
+    }
+    .myorder_li{
+        background-color: #fff;
+        padding:10px;
+        list-style: none;
+        margin-bottom: 10px;
+        overflow: hidden;
+    }
+    .myorder_li h3{
+        padding:0;
+        margin:0;
+    }
+    .myorder_li p{
+        padding:0;
+        margin:5px;
+        font-size: 12px;
+        color: #ccc;
+    }
+    .myorder_li .img{
+        width: 80px;
+        height: 80px;
+        background-size: 80px;
+        background-position: cover;
+        float: left;
+        margin-right: 10px;
+    }
+    .myorder_li .date,.myorder_li .btu_price{
+        position: absolute;
+        font-size: 12px;
+        margin-top: -35px;
+        right: 10px;
+        z-index: 99999;
+    }
+    .myorder_li .date{
+        right: 100px;
+        color: #eee;
+    }
+</style>
+<ul>
+{loop $orders $order}
+<a href="{php echo $this->createMobileUrl('myorder_item',array('id'=>$order['order_id']));}">
+{php $img = iunserializer($order['thumbs']);}
+<li class="myorder_li">
+    <div class="img" style="background: url('{php echo tomedia($img['0'])}') center center no-repeat;background-size:cover;">
+    </div>
+    <h3>{$order['goods_name']}</h3>
+        <p>{php echo date('Y年m月d日',$order['event_day'])} &nbsp;成人：{$order['adult_num']}&nbsp;儿童：{$order['child_num']}</p>
+        <p>￥{$order['adult_price']}</p>
+        <div class="date">
+            {php echo date('Y/m/d',$order['createtime'])}
+        </div>
+        <div class="btu_price">
+            {if $order['status'] == '0'}
+                <button type="button" class="mui-btn mui-btn-warning ">立即付款</button>
+            {elseif $order['status'] == '1'}
+                <button type="button" class="mui-btn mui-btn-success">已付款</button>
+            {elseif $order['status'] == '2'}
+                <button type="button" class="mui-btn">已完成</button>
+            {/if}
+        </div>
+    </li>
+</a>
+{/loop}
+</ul>
+
+{template 'common/footer'}

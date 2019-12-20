@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.we7.cc" versionCode="0.6">
+	<application setting="true">
+		<name><![CDATA[大爱旅游商城]]></name>
+		<identifie><![CDATA[yuexiage_travelmall]]></identifie>
+		<version><![CDATA[1.0]]></version>
+		<type><![CDATA[business]]></type>
+		<ability><![CDATA[针对旅游产品的商城]]></ability>
+		<description><![CDATA[可添加各类旅游产品，并进行不同搭配，并且可创建专题的商城。]]></description>
+		<author><![CDATA[yuexiage]]></author>
+		<url><![CDATA[http://bbs.we7.cc/]]></url>
+	</application>
+	<platform>
+		<subscribes>
+			<message type="text" />
+			<message type="click" />
+			<message type="subscribe" />
+		</subscribes>
+		<handles>
+			<message type="click" />
+			<message type="text" />
+			<message type="subscribe" />
+		</handles>
+		<rule embed="false" />
+		<card embed="false" />
+	</platform>
+	<bindings>
+		<cover>
+			<entry title="旅游商城" do="entrance" state="" direct="true" />
+			<entry title="大转盘" do="turntable" state="" direct="false" />
+			<entry title="刮刮乐" do="scratchcard" state="" direct="false" />
+			<entry title="签证" do="visa" state="" direct="false" />
+		</cover>
+		<menu>
+			<entry title="地区管理" do="regions" state="" direct="false" />
+			<entry title="标签管理" do="tabs" state="" direct="false" />
+			<entry title="主题管理" do="theme" state="" direct="false" />
+			<entry title="分类管理" do="categorys" state="" direct="false" />
+			<entry title="景点管理" do="viewpoint" state="" direct="false" />
+			<entry title="酒店管理" do="hotel" state="" direct="false" />
+			<entry title="常规线路" do="offered" state="" direct="false" />
+			<entry title="订单管理" do="order" state="" direct="false" />
+			<entry title="签证管理" do="visa" state="" direct="false" />
+			<entry title="自由行" do="fit" state="" direct="false" />
+			<entry title="机票" do="flight" state="" direct="false" />
+			<entry title="活动管理" do="activity" state="" direct="false" />
+			<entry title="游记管理" do="travels" state="" direct="false" />
+			<entry title="商家管理" do="businessmen" state="" direct="false" />
+			<entry title="模块管理" do="module" state="" direct="false" />
+			<entry title="邮件管理" do="mail" state="" direct="false" />
+			<entry title="优惠券管理" do="coupon" state="" direct="false" />
+			<entry title="分销管理" do="distribution" state="" direct="false" />
+			<entry title="评论管理" do="comment" state="" direct="false" />
+			<entry title="黑名单管理" do="blacklist" state="" direct="false" />
+		</menu>
+		<home>
+			<entry title="旅游商城" do="entrance" state="" direct="false" />
+		</home>
+		<profile>
+			<entry title="优惠券" do="coupon" state="" direct="false" />
+			<entry title="代金券" do="vouchers" state="" direct="false" />
+			<entry title="我的订单" do="myorder" state="" direct="false" />
+			<entry title="我的收藏" do="mycollection" state="" direct="false" />
+			<entry title="定制游" do="mycollection" state="" direct="false" />
+			<entry title="参团游" do="mycollection" state="" direct="false" />
+		</profile>
+	</bindings>
+	<permissions>
+	</permissions>
+	<install><![CDATA[]]></install>
+	<uninstall><![CDATA[]]></uninstall>
+	<upgrade><![CDATA[]]></upgrade>
+</manifest>

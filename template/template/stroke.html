@@ -1,0 +1,234 @@
+{if !empty($_GET['id']) }
+<div class="container">
+    <div class="row">
+        <div class="col-sm-7 col-md-7 col-lg-7 col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">添加行程</div>
+                <div class="panel-body">
+                    <form action="" method="post" class="form-horizontal form" id="form2">
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">天</label>
+                            <div class="col-sm-10">
+                                <select name="displayorder" class="form-control">
+                                    <option value="-1" >--第几天--</option>
+                                    {php for($i=1;$i<20;$i++):}
+                                    <option value="{$i}" {php if($i==$stroke['displayorder']) echo "selected='selected' ;"}>第{$i}天</option>
+                                    {php endfor;}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">行程</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="stroke" value="{$stroke['stroke']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">餐饮</label>
+                            <div class="col-sm-10">
+                                <label>早餐
+                                    <input type="text" name="breakfast" class="form-control" value="{$stroke['breakfast']}">
+                                </label>
+                                <label>中餐
+                                    <input type="text" name="lunch" class="form-control" value="{$stroke['lunch']}">
+                                </label>
+                                <label>晚餐
+                                    <input type="text" name="dinner" class="form-control" value="{$stroke['dinner']}">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">住宿</label>
+                            <div class="col-sm-10">
+                                <div class="select" data-toggle="modal" data-target="#myModal0">选择</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">酒店列表</label>
+                            <div class="col-sm-10 hotel_list">
+                                <ul style="padding: 0;">
+                                    {loop $stroke['stay'] $index $stay}
+                                    <li>
+                                        <i class='glyphicon glyphicon-remove'></i>{$stay}<input type='hidden' name='hotellist[{$index}]' value='{$stay}' >
+                                    </li>
+                                    {/loop}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">景点</label>
+                            <div class="col-sm-10">
+                                <div class="select" data-toggle="modal" data-target="#myModal1">选择</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">景点列表</label>
+                            <div class="col-sm-10 viewpoint_list">
+                                <ul style="padding: 0;">
+                                    {loop $stroke['viewpoint'] $index $viewpoint}
+                                    <li>
+                                        <i class='glyphicon glyphicon-remove'></i>{$viewpoint}<input type='hidden' name='viewpoint[{$index}]' value='{$viewpoint}' >
+                                    </li>
+                                    {/loop}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">说明</label>
+                            <div class="col-sm-10 viewpoint_list">
+                                <textarea name="desc" id="" class="form-control">{$stroke['desc']}</textarea>
+                            </div>
+                        </div>
+                        <!-- Modal -->
+                        <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document" style="width: 80%;height: 500px;">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h4 class="modal-title" id="myModalLabel">选择景点</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="select_hotel" >
+                                            <iframe src="{php echo $this->createWebUrl('viewpointlist',array())}" width="100%" height="400px;" style="border:none"></iframe>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Modal -->
+                        <div class="modal fade" id="myModal0" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document" style="width: 80%;height: 500px;">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h4 class="modal-title" id="myModalLabel">选择酒店</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="select_hotel" >
+                                            <iframe src="{php echo $this->createWebUrl('hotellist',array())}" width="100%" height="400px;" style="border:none"></iframe>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">购物</label>
+                            <div class="col-sm-10">
+                                <textarea name="shopping" class="form-control" >{$stroke['shopping']}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input name="submit_stroke" type="submit" value="添加行程" class="btn btn-primary ">
+                                <input type="hidden" name="token" value="{$_W['token']}" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-5 col-md-5 col-lg-5 col-xs-12">
+            <div class="row">
+                <form action="" method="post" class="form-horizontal form" id="form3">
+                    <div class="panel-group col-sm-10 col-md-10" id="accordion" role="tablist" aria-multiselectable="true">
+                        {loop $strokes $index $row}
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="heading{$index}">
+                                <h4 class="panel-title">
+                                    <input type="text" name="stroke_displayorder[{$row['stroke_id']}]" size="2" value="{$row['displayorder']}">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{$index}" aria-expanded="false" aria-controls="collapse{$index}">
+                                        第{$row['displayorder']}天
+                                    </a>
+                                    <a href="{php echo $this->createWebUrl('offered', array('op' => 'post','id'=>$offered_id,'stroke_id'=>$index))}" style="float: right;">
+                                        [编辑]
+                                    </a>
+                                    <a href="{php echo $this->createWebUrl('offered', array('op' => 'delete','id'=>$offered_id,'stroke_id'=>$index,'stroke'=>'1'))}" style="float: right;" onclick="return confirm('确认删除此行程吗？');return false;">
+                                        [删除]
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapse{$index}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{$index}">
+                                <div class="panel-body">
+                                    <ul>
+                                        <li>
+                                            <strong>行程：</strong>{$row['stroke']}
+                                        </li>
+                                        <li>
+                                            <strong>餐饮：</strong>
+                                            <ul>
+                                                <li>
+                                                    <strong>早餐：</strong>
+                                                    {$row['breakfast']}
+                                                </li>
+                                                <li>
+                                                    <strong>午餐：</strong>
+                                                    {$row['lunch']}
+                                                </li>
+                                                <li>
+                                                    <strong>晚餐：</strong>
+                                                    {$row['dinner']}
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <strong>住宿：</strong>
+                                            <ul>
+                                                {loop $row['stay'] $stay}
+                                                <li>
+                                                    <i class='glyphicon glyphicon-ok'></i>
+                                                    {$stay}
+                                                </li>
+                                                {/loop}
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <strong>景点：</strong>
+                                            <ul>
+                                                {loop $row['viewpoint'] $viewpoint}
+                                                <li>
+                                                    <i class='glyphicon glyphicon-ok'></i>
+                                                    {$viewpoint}
+                                                </li>
+                                                {/loop}
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <strong>购物：</strong>
+                                            {$row['shopping']}
+                                        </li>
+                                        <li>
+                                            <strong>说明:</strong>
+                                            {$row['desc']}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        {/loop}
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <input name="displayorder_stroke" type="submit" value="更新" class="btn btn-primary ">
+                            <input type="hidden" name="token" value="{$_W['token']}" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{else}
+<div class="alert alert-danger" role="alert">
+    请先保存线路基本信息!
+</div>
+{/if}

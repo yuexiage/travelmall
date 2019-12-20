@@ -1,0 +1,75 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-icon mui-icon mui-icon-back  mui-pull-left" href="javascript:history.go(-1)"></a>
+    <h1 class="mui-title">
+        我的代金券
+    </h1>
+</header>
+<style>
+    body{
+        background-color: #efeff4;
+        padding-top: 60px;
+    }
+    .cash_footer{
+        height: 50px;
+        background-color: #fff;
+        position: fixed;
+        bottom: 0px;
+        width: 100%;    
+        padding: 10px;
+        border-top: 1px solid #eee;
+    }
+    .cash_footer .price,.cash_footer .botton{
+        float: right;
+        margin:0px 10px;
+        line-height: 30px;
+    }
+</style>
+<form action="" method="post">
+<ul class="mui-table-view">
+{loop $cashs $coupon}
+    {php $img = iunserializer($coupon['thumbs']);}
+    <li class="mui-table-view-cell mui-media">
+        <a href="javascript:;">
+            <img class="mui-media-object mui-pull-left" src="{php echo tomedia($img['0'])}">
+            <div class="mui-media-body">
+                {$coupon['name']}
+                <p class='mui-ellipsis'>
+                    {php echo date("Y.m.d",$coupon['createtime'])}-{php echo date("Y.m.d",$coupon['endtime'])}
+                </p>
+            </div>
+            <span class="mui-badge">
+                {if $coupon['endtime']>time()}
+                    {if $coupon['status'] == '1'}
+                        可用
+                        <input type="hidden" name="id[]" value="{$coupon['cuid']}">
+                    {elseif $coupon['status'] == '2'}
+                        使用中
+                    {elseif $coupon['status'] == '3'}
+                        {elseif $coupon['status'] == '2'}
+                    {/if}
+                {elseif $coupon['endtime']< time()}
+                    已过期
+                
+                {/if}
+            </span>
+        </a>
+    </li>
+{/loop}
+</ul>
+<div class="cash_footer">
+    <div class="botton">
+        {if $total}
+        <button type="submit">申请</button>
+        {/if}
+    </div>
+    <div class="price">
+        当前可提现金额：{php echo $total?$total:'0';}￥
+    </div>
+</div>
+{if $total>0}
+    <input type="hidden" name="total" value="{$total}">
+{/if}
+</form>
+{template 'common/footer'}

@@ -1,0 +1,170 @@
+{template 'common/header'}
+<style>
+	.label{line-height: 1.8}
+</style>
+<ul class="nav nav-tabs">
+	<li {if $do == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('blacklist', array('op' => 'display','action' => 'blacklist'));}">会员列表</a></li>
+	{if $do == 'post'}<li class="active"><a href="{php echo url('mc/member/post', array('uid' => $uid));}">会员黑名单操作</a></li>{/if}
+</ul>
+{if $do=='display'}
+<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form action="./index.php" method="get" class="form-horizontal" role="form">
+		<input type="hidden" name="c" value="site" />
+		<input type="hidden" name="a" value="entry" />
+		<input type="hidden" name="m" value="yuexiage_travelmall" />
+		<input type="hidden" name="do" value="blacklist" />
+		<input type="hidden" name="op" value="display" />
+		<input type="hidden" name="action" value="blacklist" />
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">注册时间</label>
+				<div class="col-sm-6 col-md-8 col-lg-8 col-xs-12">
+					{php echo tpl_form_field_daterange('createtime', array('starttime' => date('Y-m-d', $starttime), 'endtime' => date('Y-m-d', $endtime),));}
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">昵称/姓名/手机号码/openid</label>
+				<div class="col-sm-6 col-md-8 col-lg-8 col-xs-12">
+					<input type="text" class="form-control" name="username" value="{$_GPC['username']}" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">uid</label>
+				<div class="col-sm-6 col-md-8 col-lg-8 col-xs-12">
+					<input type="text" class="form-control" name="uid" value="{$_GPC['uid']}" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">所属用户组</label>
+				<div class="col-sm-6 col-md-8 col-lg-8 col-xs-12">
+					<select name="groupid" class="form-control">
+						<option value="" selected="selected">不限</option>
+						{loop $groups $group}
+						<option value="{$group['groupid']}"{if $group['groupid'] == $_GPC['groupid']} selected="selected"{/if}>{$group['title']}</option>
+						{/loop}
+					</select>
+				</div>
+				<div class="pull-right col-xs-12 col-sm-3 col-md-2 col-lg-2">
+					<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+					<input type="hidden" name="token" value="{$_W['token']}"/>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="alert alert-info">
+	<i class="fa fa-info-circle"></i> 当前会员总数:<strong class="text-danger">{$stat['total']}</strong>。今日新增会员:<strong class="text-danger">{$stat['today']}</strong>。昨日新增会员:<strong class="text-danger">{$stat['yesterday']}</strong>。<br>
+	<strong class="text-danger">
+		<i class="fa fa-info-circle"></i> 会员的总积分 = 账户积分 + 账户贡献. 会员所在的会员组是根据 "总积分的多少" 和 "会员组的变更规则" (<根据总积分多少自动升价> 或 <根据总积分多少只升不降>) 自动匹配.<br>
+	</strong>
+</div>
+<form method="post" class="form-horizontal" id="form1">
+<div class="panel panel-default ">
+	<div class="table-responsive panel-body">
+	<table class="table table-hover">
+		<input type="hidden" name="do" value="del" />
+		<thead class="navbar-inner">
+			<tr>
+				<th style="width:44px;">删?</th>
+				<th style="width:80px;">会员编号</th>
+				<th style="width:150px;">昵称/真实姓名</th>
+				<th style="min-width:100px;">手机</th>
+				<th style="min-width:100px;">邮箱</th>
+				<th>余额/积分</th>
+				<th style="min-width:150px;">注册时间</th>
+				<th style="width:210px;text-align:right">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+		{loop $list $k $u_li}
+			<tr>
+				<td><input type="checkbox" name="uid[]" value="{$u_li['uid']}" class=""></td>
+				<td>{$u_li['uid']}</td>
+				<td>
+					{if $u_li['nickname']}{$u_li['nickname']}{else}未完善{/if}
+					<br>
+					{if $u_li['realname']}{$u_li['realname']}{else}未完善{/if}
+				</td>
+				<td>{if $u_li['mobile']}{$u_li['mobile']}{else}未完善{/if}</td>
+				<td>{if $u_li['email_effective'] == 1}{$u_li['email']}{else}未完善{/if}</td>
+				<td>
+					<span class="label label-primary">余额：{$u_li['credit2']}</span>
+					<br>
+					<span class="label label-warning">积分：{$u_li['credit1']}</span>
+				</td>
+				<td>{php echo date('Y-m-d H:i',$u_li['createtime'])}</td>
+				<td class="text-right" style="overflow:visible;">
+					<div class="btn-group">
+					<a href="{php echo $this->createWebUrl('blacklist', array('op' => 'post','action' => 'blacklist','uid' => $u_li['uid']));}	" title="编辑" class="btn btn-default">编辑</a>
+
+					</div>
+				</td>
+			</tr>
+		{/loop}
+		</tbody>
+	</table>
+</div>
+</div>
+	{$pager}
+</form>
+{/if}
+{if $do=='post'}
+<div class="main">
+<style>
+	input[type='checkbox']{
+		width: 20px;
+    	height: 20px;
+	}
+</style>
+<form action="" class="form-horizontal form" method="post" enctype="multipart/form-data">
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">评论</label>
+		<div class="col-sm-8 col-xs-12">
+			<label>
+				<input type="checkbox" value="1" name="comment" {php if ($blacklist['comment']=='1') echo "checked='checked' ";}>不允许
+			</label>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">下单</label>
+		<div class="col-sm-8 col-xs-12">
+			<label>
+				<input type="checkbox" value="1" name="place_an_order" {php if ($blacklist['place_an_order']=='1') echo "checked='checked' ";}>不允许
+			</label>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">提现</label>
+		<div class="col-sm-8 col-xs-12">
+			<label>
+				<input type="checkbox" value="1" name="withdraw" {php if ($blacklist['withdraw']=='1') echo "checked='checked' ";}>不允许
+			</label>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">提现码</label>
+		<div class="col-sm-8 col-xs-12">
+			<label>
+				<input type="checkbox" value="1" name="withdraw_code" {php if ($blacklist['withdraw_code']=='1') echo "checked='checked' ";}>不允许
+			</label>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">签证</label>
+		<div class="col-sm-8 col-xs-12">
+			<label>
+				<input type="checkbox" value="1" name="visa" {php if ($blacklist['visa']=='1') echo "checked='checked' ";}>不允许
+			</label>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-12">
+			<button type="submit" class="btn btn-primary col-lg-1" name="submit" value="提交">提交</button>
+			<input type="hidden" name="token" value="{$_W['token']}" />
+		</div>
+	</div>
+</form>
+</div>
+{/if}
+{template 'common/footer'}

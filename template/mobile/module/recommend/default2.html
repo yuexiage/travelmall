@@ -1,0 +1,62 @@
+<div class="recommend_mod mod_panel {if !empty($recommend['hidden_padding'])} hidden_padding{/if}">
+    {if $recommend['show_title'] =='1'}
+    <div class="mod_panel_title ">
+        <h5>{$recommend['name']}</h5>
+    </div>
+    {/if}
+    <div class="mod_panel_content {if empty($recommend['show_title'])} no-title{/if}">
+        {php $num  = count($recommend['img']['img']);}
+        {if in_array($num,[1,2,3,4])}
+        {php $grid = 12/$num;}
+        <div class="mui-row">
+            {php for ($i=0;$i<$num;$i++):}
+            {php $link = empty($recommend["img"]["link"][$i]) ? '###' :$recommend["img"]["link"][$i];}
+            <div class="mui-col-sm-{$grid} mui-col-xs-{$grid} row_column">
+                <a href="{$link}">
+                    <img src="{php echo tomedia($recommend['img']['img'][$i]);}" width="100%">
+                </a>
+            </div>
+            {php endfor;}
+        </div>
+        {elseif $num >= 5}
+        {php $five_row = array_slice($recommend['img']['img'],0,5,true);}
+        {php $keys = array_keys($five_row);var_export($keys);}
+        <div class="mui-row">
+            <div class="mui-col-sm-4 mui-col-xs-4 row_column">
+                {php $link = empty($recommend["img"]["link"][0]) ? '###' :$recommend["img"]["link"][0];}
+                <a href="{$link}">
+                    <img src="{php echo tomedia($recommend['img']['img'][0]);}" width="100%">
+                </a>
+            </div>
+            <div class="mui-col-sm-4 mui-col-xs-4">
+                <div class="mui-col-sm-12 mui-col-xs-12 row_column">
+                    {php $link = empty($recommend["img"]["link"][1]) ? '###' :$recommend["img"]["link"][1];}
+                    <a href="{$link}">
+                        <img src="{php echo tomedia($recommend['img']['img'][1]);}" width="100%">
+                    </a>
+                </div>
+                <div class="mui-col-sm-12 mui-col-xs-12 row_column">
+                    {php $link = empty($recommend["img"]["link"][2]) ? '###' :$recommend["img"]["link"][2];}
+                    <a href="{$link}">
+                        <img src="{php echo tomedia($recommend['img']['img'][2]);}" width="100%">
+                    </a>
+                </div>
+            </div>
+            <div class="mui-col-sm-4 mui-col-xs-4">
+                <div class="mui-col-sm-12 mui-col-xs-12 row_column">
+                    {php $link = empty($recommend["img"]["link"][3]) ? '###' :$recommend["img"]["link"][3];}
+                    <a href="{$link}">
+                        <img src="{php echo tomedia($recommend['img']['img'][3]);}" width="100%">
+                    </a>
+                </div>
+                <div class="mui-col-sm-12 mui-col-xs-12 row_column">
+                    {php $link = empty($recommend["img"]["link"][4]) ? '###' :$recommend["img"]["link"][4];}
+                    <a href="{$link}">
+                        <img src="{php echo tomedia($recommend['img']['img'][4]);}" width="100%">
+                    </a>
+                </div>
+            </div>
+        </div>
+        {/if}
+    </div>
+</div>

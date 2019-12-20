@@ -1,0 +1,174 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
+
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-icon mui-icon mui-icon-back  mui-pull-left" href="javascript:history.go(-1)"></a>
+    <h1 class="mui-title">
+        确认订单
+    </h1>
+</header>
+<style>
+    body{
+        background-color: #efeff4;
+    }
+</style>
+<form method="post" name="day_s" action="{php echo $this->createMobileUrl('calendar',array('id'=>$_GPC['id'],'op'=>'saveorder'));}" style="margin:50px 0px 70px 0px;">
+    <div class="offered_name">
+        {$offered['name']}
+    </div>
+    <ul class="mui-table-view">
+        <li class="mui-table-view-cell">
+            日期:<em class="adult_price">
+            {php $event_day = explode('-',$_GPC['event_day']);}
+            {php echo $event_day =$_GPC['event_day']?$_GPC['event_day']:date("Y-m-d",strtotime($event_day['2'].'-'.$event_day['0'].'-'.$event_day['1']));}</em>
+        </li>
+        <li class="mui-table-view-cell">
+            成人:<em class="adult_price">{$_GPC['adult_price']}</em>￥x{$_GPC['adult_num']}
+        </li>
+        <li class="mui-table-view-cell">
+            儿童:<em class="child_price">{$_GPC['child_price']}</em>￥x{$_GPC['child_num']}
+        </li>
+        {php $subtotal = $_GPC['child_price']*$_GPC['child_num']+$_GPC['adult_price']*$_GPC['adult_num'];}
+        <li class="mui-table-view-cell">
+            小计:<em class="child_price" style="font-size: 18px;">{php echo $subtotal;}</em>￥
+        </li>
+    </ul>
+    <ul class="mui-table-view">
+        <li class="mui-table-view-cell">
+            {php if($coupon['name']) echo $coupon['name']; else echo count($coupons_num);}(<span style="color:#f80">-{$coupon['amount']}</span>￥)优惠券
+        </li>
+    </ul>
+    {php $credit1 = intval($_W['member']['credit1']);}  
+    
+
+    {php $max_credit1 = $offered['credit_value']/$proportion;}
+    {if $max_credit1>$credit1}
+        {php $credit_num = $credit1;}
+        {php $credit_value = $credit1*$proportion;}
+    {else}
+        {php $credit_value = $max_credit1*$proportion;}
+        {php $credit_num = $max_credit1;}
+    {/if}
+    {if $_GPC['credit_value']>0}
+    <div class="mui-input-row mui-checkbox">
+        <label>积分可抵扣<span style="color:red">{$credit_value}</span>￥</label>
+    </div>       
+    {/if}
+    <div class="mui-input-row mui-checkbox">
+        <label>邀请码：{$_GPC['invitation']}</label>
+        <input type="hidden" name="invitation" value="{php echo $_GPC['invitation']}">
+    </div>
+    
+    {php $a = round($subtotal,'2');}
+    {if $coupon['amount']>0}
+        {php $a = round($subtotal,'2')-round($coupon['amount'],'2');}
+    {/if}
+    {php $b = $a;}
+    {if $credit_value>0 && $_GPC['credit_value']>0}
+        {php $b = round($a,'2')-round($credit_value,'2');}
+    {/if}
+
+    {php $c = round($b,'2');}
+
+    <!-- 优惠券ID -->
+    <input type="hidden" name="coupon_id" value="{php echo $coupon['id']}">
+    <input type="hidden" name="ucid" value="{php echo $_GPC['ucid']}">
+    <!-- 优惠券金额 -->
+    <input type="hidden" name="coupon_price" value="{php echo $coupon['amount']}">
+
+    <!-- 代金券ID -->
+    <input type="hidden" name="cash_id" value="{php echo $cash['id']}">
+    <!-- 代金券金额 -->
+    <input type="hidden" name="cash_price" value="{php echo $cash['achieve']}">
+
+    <input type="hidden" name="event_day" value="{$_GPC['event_day']}">
+    <input type="hidden" name="adult_price" value="{$_GPC['adult_price']}">
+    <input type="hidden" name="adult_num" value="{$_GPC['adult_num']}">
+    <input type="hidden" name="child_price" value="{$_GPC['child_price']}">
+    <input type="hidden" name="child_num" value="{$_GPC['child_num']}">
+    <input type="hidden" name="offered_name" value="{$offered['name']}">
+    <!-- 积分数量 -->
+    <input type="hidden" name="credit_num" value="{$credit_num}">
+    <!-- 积分抵扣金额 -->
+    <input type="hidden" name="credit_value" value="{$credit_value}">
+    <!-- 小计 -->
+    <input type="hidden" name="subtotal" value="{$subtotal}">
+    <!-- 总价 -->
+    <input type="hidden" name="total" value="{php echo $c;}">
+    <input type="hidden" name="day_id" value="{$_GPC['day_id']}">
+
+    <ul class="mui-table-view">
+        <li class="mui-table-view-cell">
+            联系人
+        </li>
+        <li class="mui-table-view-cell">
+            <div class="mui-input-row">
+                <label>姓名:</label>
+                <input name='contact_name' type="hidden" value="{$_GPC['contact_name']}" >{$_GPC['contact_name']}
+            </div>
+            <div class="mui-input-row">
+                <label>电话:</label>
+                <input name='contact_tel' type="hidden" value="{$_GPC['contact_tel']}">{$_GPC['contact_tel']}
+            </div>
+            <div class="mui-input-row">
+                <label>身份证</label>
+                <input name='contact_id' type="hidden" class="mui-input-clear mui-input" value="{$_GPC['contact_id']}">{$_GPC['contact_id']}
+            </div>
+            <div class="mui-input-row">
+                <label>邮箱:</label>
+                <input name='contact_id' type="hidden" class="mui-input-clear mui-input" value="{$_GPC['contact_email']}">{$_GPC['contact_email']}
+            </div>
+        </li>
+    </ul>  
+    {php $num = count($_GPC['join_name']);}
+    {php for($i=0;$i<$num;$i++):}
+    <ul class="mui-table-view">
+        <li class="mui-table-view-cell">
+            参团人{php echo $i+1}:
+        </li>
+        <li class="mui-table-view-cell">
+            <div class="mui-input-row">
+                <label>姓名:</label>
+                <input name='join_name[]' type="hidden" value="{$_GPC['join_name'][$i]}">{$_GPC['join_name'][$i]}
+            </div>
+            <div class="mui-input-row">
+                <label>电话</label>
+                <input name='join_tel[]' type="hidden" value="{$_GPC['join_tel'][$i]}">{$_GPC['join_tel'][$i]}
+            </div>
+            <div class="mui-input-row">
+                <label>身份证</label>
+                <input name='join_id[]' type="hidden"  value="{$_GPC['join_id'][$i]}">{$_GPC['join_id'][$i]}
+            </div>
+        </li>
+    </ul>
+    {php endfor;}
+    
+    <ul class="mui-table-view">
+        <li class="mui-table-view-cell">
+            总价: 
+            <strong style="float: right;color:red;">{php echo $c;}￥</strong>
+        </li>
+    </ul>
+<div class="bottom_nav">
+    <div class="mui-row">
+        <div class="mui-col-sm-6 mui-col-xs-6 prev">
+        <a href="javascript:history.go(-1)">上一步</a>
+        </div>
+        <div class="mui-col-sm-6 mui-col-xs-6 next">
+        <a href="###">提交</a>
+        </div>
+    </div>
+</div>
+</form>
+
+<script type="text/javascript"> 
+    $(function(){
+        $(".next").click(function(){
+            
+            $("form").submit();
+        });
+        
+    });
+</script>
+
+{template 'common/footer'}

@@ -1,0 +1,73 @@
+{template 'common/header'}
+<style>
+	.shortcut a{
+		font-size: 2rem;
+	}
+</style>
+<div class="clearfix welcome-container">
+	<div class="page-header">
+		<h4><i class="fa fa-plane"></i>地域功能菜单</h4>
+	</div>
+	<div class="shortcut clearfix">
+		<div class="row">
+			<div class="col-md-2">
+				<a href="{php echo $this->createWebUrl('module', array('action' => 'slideshow'))}" title="幻灯片">
+					<i class="fa fa-folder"></i>
+					<span>幻灯片</span>
+				</a>
+			</div>
+			<div class="col-md-2">
+				<a href="{php echo $this->createWebUrl('module', array('action' => 'style'))}" title="样式模块">
+					<i class="fa fa-folder"></i>
+					<span>样式模块</span>
+				</a>
+			</div>
+			<div class="col-md-2">
+				<a href="{php echo $this->createWebUrl('module', array('action' => 'category'))}" title="分类模块">
+					<i class="fa fa-folder"></i>
+					<span>分类模块</span>
+				</a>
+			</div>
+			<div class="col-md-2">
+				<a href="{php echo $this->createWebUrl('module', array('action' => 'theme'))}" title="主题模块">
+					<i class="fa fa-folder"></i>
+					<span>主题模块</span>
+				</a>
+			</div>
+			<div class="col-md-2">
+				<a href="{php echo $this->createWebUrl('module', array('action' => 'tab'))}" title="标签模块">
+					<i class="fa fa-folder"></i>
+					<span>标签模块</span>
+				</a>
+			</div>
+			<div class="col-md-2">
+				<a href="{php echo $this->createWebUrl('module', array('action' => 'recommend'))}" title="推荐模块">
+					<i class="fa fa-folder"></i>
+					<span>推荐模块</span>
+				</a>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-2">
+				<a href="{php echo $this->createWebUrl('module', array('action' => 'spike'))}" title="秒杀模块">
+					<i class="fa fa-folder"></i>
+					<span>秒杀模块</span>
+				</a>
+			</div>
+			<div class="col-md-2">
+				<a href="{php echo $this->createWebUrl('module', array('action' => 'filter'))}" title="样式模块">
+					<i class="fa fa-folder"></i>
+					<span>过滤模块</span>
+				</a>
+			</div>
+		</div>
+		<!--
+		<a href="{php echo $this->createWebUrl('module', array('action' => 'poop'))}" title="尾货模块">
+			<i class="fa fa-folder"></i>
+			<span>尾货模块</span>
+		</a>
+		-->
+
+	</div>
+</div>
+{template 'common/footer'}

@@ -1,0 +1,120 @@
+<script>
+        function timer(intDiff,num){
+            window.setInterval(function(){
+                var day=0,
+                        hour=0,
+                        minute=0,
+                        second=0;//时间默认值
+                if(intDiff > 0){
+                    day = Math.floor(intDiff / (60 * 60 * 24));
+                    hour = Math.floor(intDiff / (60 * 60)) - (day * 24);
+                    minute = Math.floor(intDiff / 60) - (day * 24 * 60) - (hour * 60);
+                    second = Math.floor(intDiff) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+                }
+                if (minute <= 9) minute = '0' + minute;
+                if (second <= 9) second = '0' + second;
+                if(day>0){
+                    hour += day*24
+                }
+                $(".countdown").eq(num).children('.hour_show').html('<s id="h"></s>'+hour+':');
+                $(".countdown").eq(num).children('.minute_show').html('<s></s>'+minute+':');
+                $(".countdown").eq(num).children('.second_show').html('<s></s>'+second);
+                intDiff--;
+            }, 1000);
+        }
+    </script>
+<div class="poop_mod">
+    {if $poop['show_title'] =='1'}
+    <h5><img src="../addons/yuexiage_travelmall/images/images/w.png?v=1" width="90px" style="margin-right: 10px;">{$poop['name']}</h5>
+    {/if}
+    <div class="mui-slider">
+        <div class="mui-slider-group">
+            {php $offeredList = array_chunk($offeredList,2);}
+            {loop $offeredList  $offered}
+            {php $firstImg = array_shift(iunserializer($offered[0]['thumbs']));}
+            <div class="mui-col-xs-12 mui-col-sm-12">
+                <div class="mui-slider-item mui-col-xs-6 mui-col-sm-6">
+                    <div class="mui-card-header mui-card-media">
+                        <a href="{php echo $this->createMobileUrl('spike_item',array('id'=>$offered[0]['id']));}">
+                        <img src="{php echo tomedia($firstImg);}" />
+                        <div class="mui-media-body">
+                            <header>{$offered[0]['name']}</header>
+                            <div class="mui-row">
+                                <div class="mui-col-sm-4 mui-col-xs-4">
+                                <strong style="color:red">{$offered[0]['regular_price']}￥</strong>
+                               <s style="color:#eee">{$offered[0]['original_price']}￥</s>
+                                </div> 
+                                <div class="mui-col-sm-8 mui-col-xs-8 time_end">
+                                {if $offered[0]['stock'] > '1'}
+                                    {if $offered[0]['upper_shelf'] == '1'}
+                                        {if $offered[0]['lower_shelf'] > time()}
+                                            <div class="countdown" countdown="{$offered[0]['lower_shelf']}">
+                                                <a class="time-item hour_show">0时</a>
+                                                <a class="time-item minute_show">0分</a>
+                                                <a class="time-item second_show">0秒</a>
+                                            </div>
+                                            {else}
+                                            <strong class="s_end" >销售结束</strong>
+                                        {/if}
+                                    {/if}
+                                {else}        
+                                    <div class="gaoqing">
+                                        <img src="../addons/yuexiage_travelmall/images/images/gqing.png" alt="">
+                                    </div>
+                                {/if}
+                                </div>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+                {php $firstImg = array_shift(iunserializer($offered[1]['thumbs']));}
+                <div class="mui-slider-item mui-col-xs-6 mui-col-sm-6">
+                    <div class="mui-card-header mui-card-media">
+                        <a href="{php echo $this->createMobileUrl('spike_item',array('id'=>$offered[1]['id']));}">
+                        <img src="{php echo tomedia($firstImg);}" />
+                        <div class="mui-media-body">
+                            <header>{$offered[1]['name']}</header>
+                            <div class="mui-row">
+                               <div class="mui-col-sm-4 mui-col-xs-4">
+                               <strong style="color:red">{$offered[1]['regular_price']}￥</strong>
+                               <s style="color:#eee">{$offered[1]['original_price']}￥</s>
+                               </div> 
+                               <div class="mui-col-sm-8 mui-col-xs-8 time_end">
+                                {if $offered[1]['stock'] > '1'}
+                                    {if $offered[1]['upper_shelf'] == '1'}
+                                        {if $offered[1]['lower_shelf'] > time()}
+                                            <div class="countdown" countdown="{$offered[1]['lower_shelf']}">
+                                                <a class="hour_show">0时</a>
+                                                <a class="minute_show">0分</a>
+                                                <a class="second_show">0秒</a>
+                                            </div>
+                                            {else}
+                                            <strong class="s_end" >销售结束</strong>
+                                        {/if}
+                                    {/if}
+                                {else}        
+                                    <div class="gaoqing">
+                                        <img src="../addons/yuexiage_travelmall/images/images/gqing.png" alt="">
+                                    </div>
+                                {/if}
+                                </div>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {/loop}
+        </div>
+    </div>  
+</div>
+<script>
+    var now = Date.parse(new Date())/1000;
+    $(".countdown").each(function(){
+        var num = $(this).index();
+        var endtime = $(this).attr('countdown');
+        var intdiffer =  endtime-now
+        timer(intdiffer,num);
+    })
+</script>

@@ -1,0 +1,132 @@
+<link href="./resource/css/bootstrap.min.css" rel="stylesheet">
+<script type="text/javascript" src="./resource/js/lib/jquery-1.11.1.min.js"></script>
+<script src="{$_W['siteroot']}app/resource/js/require.js"></script>
+<script>
+    function addHotel(id,name){
+        var v = "<li><i class='glyphicon glyphicon-remove'></i>"+name+"<input type='hidden' name='returntrip["+id+"]' value='"+name+"' ></li>";
+        if ( $("input[name='returntrip["+id+"]']",window.parent.document).length > 0 ) {
+            alert('已存在!');
+        }else{
+            $(".return_trip_list ul",window.parent.document).append(v);
+            alert('添加成功!');
+        }
+    }
+</script>
+<style>
+	input[type=radio], input[type=checkbox]{
+		width: 18px;
+		height: 18px;
+		margin-left: 20px;
+	}
+</style>
+<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form action="./index.php" method="get" class="form-horizontal" role="form">
+			<input type="hidden" name="c" value="site" />
+			<input type="hidden" name="a" value="entry" />
+			<input type="hidden" name="m" value="yuexiage_travelmall" />
+			<input type="hidden" name="do" value="flight" />
+			<input type="hidden" name="tp" value="return_trip" />
+            <input type="hidden" name="op" value="display" />
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">关键字</label>
+				<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					<input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">
+				出发地区
+				</label>
+				<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					{php echo tpl_form_field_category_2level('departure', $regions['countrys'], $regions['_citys'], $_GPC['departure']['parentid'], $_GPC['departure']['childid']);}
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">
+				经停城市
+				</label>
+				<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					{php echo tpl_form_field_category_2level('stop_city', $regions['countrys'], $regions['_citys'], $_GPC['stop_city']['parentid'], $_GPC['stop_city']['childid']);}
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">
+				到达地区
+				</label>
+				<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					{php echo tpl_form_field_category_2level('arrival_city', $regions['countrys'], $regions['_citys'], $_GPC['arrival_city']['parentid'], $_GPC['arrival_city']['childid']);}
+				</div>
+				<div class="pull-right col-xs-12 col-sm-2 col-md-2 col-lg-2">
+					<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="main">
+	<div class="flight">
+		<form action="" method="post" onsubmit="return formcheck(this)">
+		<div class="panel panel-default">
+		<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th style="width:25%;">航班名称</th>
+					<th style="width:15%;">出发城市/时间</th>
+					<th style="width:15%;">经停城市</th>
+					<th style="width:15%;">抵达城市城市/时间</th>
+					<th style="width:15%;">飞行时间</th>
+					<th style="width:80px; text-align:center">状态</th>
+					<th style="width:15%; text-align:center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			{loop $flight $row}
+				<tr>
+					<td class="text-left">
+						<div style="height:30px;line-height:30px">
+							{$row['airline']}
+						</div>
+					</td>
+					<td class="text-left">
+						<div style="height:30px;line-height:30px">
+							{$citys[$row['departure_city']]['name']}/{php echo date("H:i",$row['departure_time']);}
+						</div>
+					</td>
+					<td class="text-left">
+						<div style="height:30px;line-height:30px">
+							{$citys[$row['stop_city']]['name']}
+						</div>
+					</td>
+					<td class="text-left">
+						<div style="height:30px;line-height:30px">
+							{$citys[$row['arrival_city']]['name']}/{php echo date("H:i",$row['arrival_time']);}
+						</div>
+					</td>
+					<td class="text-left">
+						<div style="height:30px;line-height:30px">
+							{$row['flight_duration']}小时
+						</div>
+					</td>
+					<td>
+						{if $row['enabled']==1}
+							<span class="label label-success">发布</span>
+						{else}
+							<span class="label label-default">未发布</span>
+						{/if}
+					</td>
+                    <td class="text-right" style="position:relative;">
+                        <a href="javascript:;" onclick="addHotel('{$row['flight_id']}','{$row['airline']}')">选择</a>
+                    </td>
+				</tr>
+			{/loop}
+			</tbody>
+		</table>
+		</div>
+		</div>
+		</form>
+	</div>
+</div>
+{$pager}

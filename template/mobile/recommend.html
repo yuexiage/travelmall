@@ -1,0 +1,149 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
+<header id="header" class="mui-bar mall_header">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">{$title}</h1>
+</header>
+<style>
+    .mui-input-row select {
+        margin:0px;
+    }
+    .mui-grid-view.mui-grid-9 {
+        background-color: #fff;
+    }
+
+    .mui-input-row:after, .mui-input-row:before {
+        right: 10px;
+        position: absolute;
+        top: 14px;
+        border: 6px solid transparent;
+        content: " ";
+        border-top-color: #9fe658;
+        border-top-width: 4px;
+    }
+    .mui-table-view-cell .mui-scroll-wrapper a.mui-control-item {
+        border: 1px solid #ccc;
+        border-radius: 20px;
+    }
+    .mui-segmented-control.mui-scroll-wrapper{
+        height: 40px;
+    }
+    .mui-grid-view.mui-grid-9 .mui-table-view-cell{
+        border:0;
+    }
+    .mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active{
+        color: #04be02;
+        background: 0 0;
+        border: 1px solid #04be02;
+    }
+    .mui-segmented-control .mui-control-item{
+        line-height: 28px;
+    }
+    .mui-grid-view.mui-grid-9{
+        border:0;
+    }
+</style>
+<script>
+    $(function(){
+        $(".mui-control-item").click(function(){
+            getComm(0);
+        });
+    });
+    function getComm(obj){
+        var y = $(".y").val();
+        var x = $(".x").val();
+        var c2 = $(".mui-active").attr("id");
+        $.ajax({
+            url:"{php echo $this->createMobileUrl('recommend',array('op'=>'recommend','id'=>$_GPC['id']));}",
+            data:{
+                latitude:y,
+                longitude:x,
+                t:obj,
+                c2:c2
+                },
+            dataType:'json',
+            type:'post',
+            success:function(data){
+                $(".row_list").text();
+                var html = '';
+                var url = "{php echo $this->createMobileUrl('recommend',array('op'=>'recommend_item'));}";
+                $.each(data, function(idx, obj) {
+                    html+='<li class="mui-table-view-cell mui-media"><a href="'+url+'&id='+obj.id+'"><img class="mui-media-object mui-pull-left" src="'+util.tomedia(obj.img)+'"><div class="mui-media-body"><span style="color:#f0ad4e">['+obj.cname+']</span>'+obj.name+'<p class="mui-ellipsis">'+obj.features+'</p></div></a></li>';    
+                });
+                $(".row_list").html(html);
+            }
+        });
+    }
+</script>
+<ul class="mui-table-view mui-grid-view mui-grid-9" style="margin-top:50px;">
+    <li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
+        <div class="mui-input-row">
+            <select name="distance" onchange="getComm(this.value)">
+                <option value="0">全部</option>
+                <option value="500">附近</option>
+                <option value="1000">1KM</option>
+                <option value="3000">3KM</option>
+                <option value="5000">5KM</option>
+            </select>
+        </div>
+    </li>
+    <li class="mui-table-view-cell mui-media mui-col-xs-9 mui-col-sm-9">
+        <div class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted" style="overflow: hidden;">
+            <div class="mui-scroll">
+                {loop $categorys $key $category}
+                <a class="mui-control-item {php if($key=='1') echo 'mui-active'}" id="{$category['id']}">
+                    {$category['name']}
+                </a>
+                {/loop}
+            </div>
+        </div>
+    </li>
+</ul>
+<ul class="mui-table-view row_list">
+    {loop $recommends $recommend}
+    <li class="mui-table-view-cell mui-media">
+        <a href="{php echo $this->createMobileUrl('recommend',array('op'=>'recommend_item','id'=>$recommend['id']));}">
+            <img class="mui-media-object mui-pull-left" src="{php echo tomedia($recommend['img'])}">
+            <div class="mui-media-body">
+                <span style="color:#f0ad4e">[{$recommend['cname']}]</span>{$recommend['name']}
+                <p class='mui-ellipsis'>{$recommend['features']}</p>
+            </div>
+        </a>
+    </li>
+    {/loop}
+</ul>
+<input type="hidden" class="y" value="116.372679">
+<input type="hidden" class="x" value="39.994584">
+<script>
+    wx.ready(function(){
+        wx.getLocation({
+        type: 'wgs84', 
+        success: function (res) {
+            var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+            var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+            var speed = res.speed; // 速度，以米/每秒计
+            var accuracy = res.accuracy; // 位置精度
+            $.ajax({
+                url:"{php echo $this->createMobileUrl('Conversion');}",
+                data:{
+                    latitude:latitude,
+                    longitude:longitude
+                    },
+                dataType:'json',
+                type:'post',
+                success:function(data){
+                    //当前坐标x,y
+                    var x = data.x;
+                    var y = data.y;
+                    $(".y").val(y);
+                    $(".x").val(x);  
+                }
+            });
+        },  
+        cancel: function (res) {  
+            alert('用户拒绝授权获取地理位置');  
+        } 
+        });
+    });
+</script>
+{template 'common/footer'}

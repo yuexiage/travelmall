@@ -1,0 +1,200 @@
+.calendar{
+    width: 100%;
+    background: white;
+    box-shadow: 0px 1px 1px rgba(0,0,0,.1);
+}
+.calendar .title{
+    height: 50px;
+    position: relative;
+    text-align: center;
+    background: #e9f8df;
+}
+.calendar .title h1{
+  line-height: 50px;
+}
+.calendar .panel-heading{
+    padding: 15px;
+}
+.calendar #calendar-title{
+    font-size: 25px;
+    text-transform: uppercase;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 14px 0 0 0;
+}
+.calendar #calendar-year{
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: normal;
+}
+.calendar #pre{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    /*没规定大小时，图片显示 0X0*/
+    width: 60px;
+    height: 50px;
+    line-height: 50px;
+}
+.calendar #next{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 60px;
+    height: 50px;
+    line-height: 50px;
+}  
+.calendar .body-list ul.days{
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+
+}  
+.calendar .body-list ul li.days_li,
+.calendar .body-list ul.week li{
+    list-style: none;
+    border: 1px solid #eee;
+    /*
+    display:inline-block; 
+    width: 13.3%;
+    */
+    /*100/7 = 14.28%*/
+    display: block;
+    width: 142.98px;
+    float: left;
+    /*规定行高，垂直居中*/
+    height: 142.98px;
+    line-height: 100px;
+    box-sizing: border-box;
+    text-align: left;
+}
+.calendar .body-list ul.week li{
+    text-align: center;
+}
+.calendar .body-list ul li.selection{
+    background: #e9f8df;
+}
+.calendar .lightgrey.body-list{
+  height: 50px;
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+  color:#fff;
+}
+.calendar .lightgrey.body-list ul li{
+  height: 50px;
+  line-height: 50px;
+}
+.calendar .green{
+    color:#6ac13c;
+}
+.calendar .lightgrey{ /*浅灰色显示过去的日期*/
+  color:#a8a8a8;
+}   
+.calendar .darkgrey{ /*深灰色显示将来的日期*/
+  color:#565656;
+}
+/*日期当天用绿色背景绿色文字加以显示*/
+.calendar .greenbox{
+    border: 1px solid #6ac13c;
+    /*background: #e9f8df;*/
+}
+.calendar .fc-day-number {
+    float: right;
+    height: 30px;
+    line-height: 30px;
+    margin-right: 10px;
+}
+.day-content{
+    margin: auto;
+    position: relative;
+    width: 100px;
+    height: 100px;
+    top: 50%;
+    padding: 0px;
+    transform: translateY(-30%);
+  }
+li {list-style-type:none;}
+.day-content .day-content li{
+  padding-top: 10px;
+  font-family: 微软雅黑;
+  font-size: 16px;
+}
+.day-content .day-content-adult-title,
+.day-content .day-content-child-title,
+.day-content .day-content-single-title{
+  position: absolute;
+  width: 20px;
+  border: 2px solid #eee;
+  border-radius: 20px;
+  text-align: center;
+  line-height: 16px;
+  height: 20px;
+  color: #f0ad4e;
+  background-color: #fff;
+}
+.day-content .day-content-child-title{
+  color: #f0ad4e;
+}
+.day-content .day-content-single-title{
+  color: #f0ad4e;
+}
+.day-content .day-content-adult-price,
+.day-content .day-content-child-price,
+.day-content .day-content-single-price{
+  padding-left: 25px;
+  border: 2px solid #eee;
+  border-radius: 20px;
+  color: #fff;
+  background-color: #f0ad4e;
+  height: 20px;
+  line-height: 16px;
+}
+.day-content .day-content-adult,
+.day-content .day-content-child,
+.day-content .day-content-single{
+  width: 100%;
+}
+.from-panel .panel-heading{
+  padding: 13px;
+}
+.from-panel{
+  margin-top: 20px;
+}
+.tabs{
+    height: auto;
+    padding: 0px;
+    overflow: hidden;
+    margin: 0px 0px -1px 0px;
+}
+li{
+    list-style-type: none;
+}
+.tabs li{
+    float: left;
+    border-radius: 4px 4px 0 0;
+}
+.tabs li a{
+    text-decoration:none;
+    position: relative;
+    display: block;
+    padding: 10px 10px;
+    color:#3c763d;
+}
+.tabs li a:hover{
+    color:#3c763d;
+}
+.tab_container{
+    border-top: 1px solid #ddd;
+    padding: 10px;
+}
+.tabs #active{
+    cursor: default;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-bottom-color: transparent;
+}
+.tabs #active a{
+    color: #ec971f;
+}

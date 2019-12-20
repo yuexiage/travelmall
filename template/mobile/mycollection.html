@@ -1,0 +1,34 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-icon mui-icon mui-icon-back  mui-pull-left" href="javascript:history.go(-1)"></a>
+    <h1 class="mui-title">
+        我的收藏
+    </h1>
+</header>
+<style>
+    body{
+        background-color: #efeff4;
+        padding-top: 60px;
+    }
+</style>
+<ul class="mui-table-view">
+{loop $collections $collection}
+    {php $img = iunserializer($collection['thumbs']);}
+    {if $collection['type']=='1'}
+    {php $url = $this->createMobileUrl('spike_item',array('id'=>$collection['offered_id']));}
+    {/if}
+    <li class="mui-table-view-cell mui-media">
+        <a href="{php echo $url;}">
+            <img class="mui-media-object mui-pull-left" src="{php echo tomedia($img['0'])}">
+            <div class="mui-media-body">
+                {$collection['name']}
+                <p class='mui-ellipsis'>
+                    {$collection['description']}
+                </p>
+            </div>
+        </a>
+    </li>
+{/loop}
+</ul>
+{template 'common/footer'}

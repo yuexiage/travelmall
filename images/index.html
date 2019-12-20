@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<link href='css/fullcalendar.css' rel='stylesheet' />
+<link href='css/fullcalendar.print.css' rel='stylesheet' media='print' />
+<link href="css/jquery-ui.css" rel="stylesheet" >
+
+<script src='js/lib/jquery.min.js'></script>
+<script src="js/jquery-ui.js"></script>
+<script src='js/lib/moment.min.js'></script>
+<script src='js/fullcalendar.min.js'></script>
+<script src='js/zh-cn.js'></script>
+
+<script>
+	$(document).ready(function() {
+		$('#calendar').fullCalendar({
+			editable: false,
+			eventLimit: true, // allow "more" link when too many events
+			header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: ''
+            },
+			events: 'event.php',
+			dayClick: function (date, allDay, jsEvent, view) {//日期点击后弹出的jq ui的框，添加日程记录
+				var selectdate = moment(date).format('YYYY-MM-DD');
+				
+				//判断是否有事件被选中
+				var eventhas = $(".fc-event-container .fc-state-highlight").length;
+				if (eventhas) {
+					$("#id_list").text('');
+					$(".fc-event-container .fc-state-highlight").removeClass('fc-state-highlight');
+				};
+				//背景切换
+				var s = $(this).hasClass('fc-state-highlight');
+				if(s){
+					$(this).removeClass('fc-state-highlight');
+					$("#"+selectdate).remove();
+					var num = parseInt($("#nu").text());
+					$("#nu").text(--num);
+					var n = $(".fc-state-highlight").length;
+					if(n=="0")
+					$("#dialog").dialog("close");
+					return false;
+				}else{
+					$(this).addClass('fc-state-highlight');
+					$("<input id='"+selectdate+"' type='hidden' name='date_list[]' value='"+selectdate+"' /> ").appendTo("#id_list");
+					
+				}
+
+
+				var nu = $("#id_list input").length;
+				$("#nu").text(nu);
+                $( "#dialog" ).dialog({
+					resizable: false,
+					width: 280,
+					title:"批量修改<span id='nu'>"+nu+"</span>个日期",
+					modal: false,
+					draggable:false,
+					position: "right",
+					beforeClose: function (event, ui) {
+						$("#id_list").text('');
+						$("#form input").val('');
+					},
+					open: function (event, ui) {
+                 		$(".ui-dialog-titlebar-close", $(this).parent()).hide();
+             		},
+					timeFormat: 'HH:mm{ - HH:mm}',
+					buttons: {
+						"确定": function() {
+						var form  = $("#form").serialize();
+							$.ajax({
+								type: "POST", //使用post方法访问后台
+								url: "event.php", //要访问的后台地址
+								data: form, //要发送的数据
+								success: function (data) {
+									//对话框里面的数据提交完成，data为操作结果
+									var dataset = $.parseJSON(data);
+									$.each(dataset, function (index, term) {
+										$("#calendar").fullCalendar('renderEvent', term, true);
+									});
+									
+								}
+							});
+							$(".fc-state-highlight").removeClass('fc-state-highlight');
+						    $( this ).dialog( "close" );
+						},
+						"取消": function() {
+						  $( this ).dialog( "close" );
+						}
+					}
+				});
+            },
+			eventMouseover: function (calEvent, jsEvent, view) {
+				var selectdate = moment(calEvent.start).format('YYYY-MM-DD');
+                $(this).attr('title', calEvent.title + " - " + selectdate + " " + "标题" + " : " + calEvent.title);
+                $(this).css('font-weight', 'normal');
+                $(this).tooltip({
+                    effect: 'toggle',
+                    cancelDefault: true
+                });
+            },
+			eventClick: function (event) {
+				var selectdate = moment(event.start).format('YYYY-MM-DD');
+				$(".fc-state-highlight").removeClass('fc-state-highlight');
+				$(this).addClass('fc-state-highlight');
+				$("#id_list").text('');
+				$("<input id='"+selectdate+"' type='hidden' name='date_list[]' value='"+selectdate+"' /> ").appendTo("#id_list");
+				var nu = $("#id_list input").length;
+                $( "#dialog" ).dialog({
+					resizable: false,
+					width: 280,
+					draggable:false,
+					title:"批量修改<span id='nu'>"+nu+"</span>个日期",
+					modal: false,
+					position: ['top','right'],
+					beforeClose: function (event, ui) {
+						$("#id_list").text('');
+						$("#form input").val('');
+					},
+					open: function (event, ui) {
+                 		$(".ui-dialog-titlebar-close", $(this).parent()).hide();
+             		},
+					timeFormat: 'HH:mm{ - HH:mm}',
+					buttons: {
+						"更新": function() {
+						var form  = $("#form").serialize();
+						/*
+							$.ajax({
+								type: "POST", //使用post方法访问后台
+								url: "event.php", //要访问的后台地址
+								data: form, //要发送的数据
+								success: function (data) {
+									//对话框里面的数据提交完成，data为操作结果
+									var dataset = $.parseJSON(data);
+									$.each(dataset, function (index, term) {
+										$("#calendar").fullCalendar('updateEvent', term);
+									});
+									
+								}
+							});
+						*/
+							$(".fc-state-highlight").removeClass('fc-state-highlight');
+						    $( this ).dialog( "close" );
+						},
+						"删除": function() {
+							var aa = window.confirm("警告：确定要删除记录，删除后无法恢复！");
+                            if (aa) {
+                                var para = { id: event.id };
+								/*
+                                $.ajax({
+                                    type: "POST", //使用post方法访问后台
+
+                                    url: "../../sr/removedate.ashx", //要访问的后台地址
+                                    data: para, //要发送的数据
+                                    success: function (data) {
+                                        //对话框里面的数据提交完成，data为操作结果
+
+
+                                        $('#calendar').fullCalendar('removeEvents', event.id);
+                                    }
+
+
+                                });
+								*/
+                            }
+                            $(".fc-state-highlight").removeClass('fc-state-highlight');
+                            $(this).dialog("close");
+						},
+						"取消": function() {
+							$(".fc-state-highlight").removeClass('fc-state-highlight');
+                            $(this).dialog("close");
+						}
+					}
+				});
+             	
+            }
+		});
+		$(".fc-state-highlight").removeClass('fc-state-highlight');
+	});
+
+	/*tabs start*/
+	$(document).ready(function() {  
+		//Default Action  
+		$(".tab_content").hide(); //Hide all content  
+		$("ul.tabs li:first").attr("id","active").show(); //Activate first tab  
+		$(".tab_content:first").show(); //Show first tab content  
+		  
+		//On Click Event  
+		$("ul.tabs li").click(function() {  
+			$("#active").attr("id",""); //Remove any "active" class  
+			$(this).attr("id","active"); //Add "active" class to selected tab  
+			$(".tab_content").hide(); //Hide all tab content  
+			var activeTab = $(this).find("a").attr("href"); //Find the rel attribute value to identify the active tab + content  
+			$(activeTab).fadeIn(); //Fade in the active content  
+			return false;  
+		});  
+	  
+	});  
+</script>
+
+<style>
+
+	body {
+		margin: 40px 10px;
+		padding: 0;
+		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+		font-size: 14px;
+	}
+	body a{outline:none;blr:expression(this.onFocus=this.blur());}
+</style>
+</head>
+<body>
+
+<div id='calendar'></div>
+	
+
+	<div id="dialog" title="Basic dialog" style="display:none">
+		<form id="form">	
+		<div class="container">  
+			<ul class="tabs">  
+				<li class="active">
+					<a href="#tab1">内舱房</a>
+				</li>  
+				<li>
+					<a href="#tab2">海景房</a>
+				</li>
+				<li>
+					<a href="#tab3">阳台房</a>
+				</li>  
+				<li>
+					<a href="#tab4">套房</a>
+				</li> 
+			</ul>  
+			<div class="tab_container">  
+				<div id="tab1" class="tab_content" style="display: block; ">
+						<table>
+							<tr>
+								<td>
+									<label for="Inside_Category">
+									类别:
+									</label>
+								</td>
+								<td>
+									<span id="Inside_Category">内舱房</span>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label for="Inside_unitprice">
+									单价成本:
+									</label>
+								</td>
+								<td>
+									<input id="Inside_unitprice" name="Inside_unitprice">
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label for="Inside_instock">
+									库存:
+									</label>
+								</td>
+								<td>
+									<input id="Inside_instock" name="Inside_instock">
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label for="Inside_Agency_one_two">
+									同舱第1/2人价格(同业):
+									</label>
+								</td>
+								<td>
+									<input id="Inside_Agency_one_two" name="Inside_Agency_one_two">
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label for="Inside_Agency_three_four">
+									同舱第3/4人价格(同业):
+									</label>
+								</td>
+								<td>
+									<input id="Inside_Agency_three_four" name="Inside_Agency_three_four">
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label for="Inside_FIT_one_two">
+									同舱第1/2人价格(直客):
+									</label>
+								</td>
+								<td>
+									<input id="Inside_FIT_one_two" name="Inside_FIT_one_two">
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label for="Inside_FIT_three_four">
+									同舱第3/4人价格(直客):
+									</label>
+								</td>
+								<td>
+									<input id="Inside_FIT_three_four" name="Inside_FIT_three_four">
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label for="Inside_FIT_individual">
+									单人入住(直客):
+									</label>
+								</td>
+								<td>
+									<input id="Inside_FIT_individual" name="Inside_FIT_individual">
+								</td>
+							</tr>
+						</table>
+				</div>  
+				<div id="tab2" class="tab_content" style="display: none; ">  
+					<table>
+						<tr>
+							<td>
+								<label for="Oceanview_Category">
+								类别:
+								</label>
+							</td>
+							<td>
+								<span id="Oceanview_Category">海景房</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Oceanview_unitprice">
+								单价成本:
+								</label>
+							</td>
+							<td>
+								<input id="Oceanview_unitprice" name="Oceanview_unitprice">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Oceanview_instock">
+								库存:
+								</label>
+							</td>
+							<td>
+								<input id="Oceanview_instock" name="Oceanview_instock">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Oceanview_Agency_one_two">
+								同舱第1/2人价格(同业):
+								</label>
+							</td>
+							<td>
+								<input id="Oceanview_Agency_one_two" name="Oceanview_Agency_one_two">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Oceanview_Agency_three_four">
+								同舱第3/4人价格(同业):
+								</label>
+							</td>
+							<td>
+								<input id="Oceanview_Agency_three_four" name="Oceanview_Agency_three_four">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Oceanview_FIT_one_two">
+								同舱第1/2人价格(直客):
+								</label>
+							</td>
+							<td>
+								<input id="Oceanview_FIT_one_two" name="Oceanview_FIT_one_two">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Oceanview_FIT_three_four">
+								同舱第3/4人价格(直客):
+								</label>
+							</td>
+							<td>
+								<input id="Oceanview_FIT_three_four" name="Oceanview_FIT_three_four">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Oceanview_FIT_individual">
+								单人入住(直客):
+								</label>
+							</td>
+							<td>
+								<input id="Oceanview_FIT_individual" name="Oceanview_FIT_individual">
+							</td>
+						</tr>
+					</table>
+				</div>  
+				<div id="tab3" class="tab_content" style="display: none; ">  
+					<table>
+						<tr>
+							<td>
+								<label for="Balcony_Category">
+								类别:
+								</label>
+							</td>
+							<td>
+								<span id="Balcony_Category">阳台房</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Balcony_unitprice">
+								单价成本:
+								</label>
+							</td>
+							<td>
+								<input id="Balcony_unitprice" name="Balcony_unitprice">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Balcony_instock">
+								库存:
+								</label>
+							</td>
+							<td>
+								<input id="Balcony_instock" name="Balcony_instock">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Balcony_Agency_one_two">
+								同舱第1/2人价格(同业):
+								</label>
+							</td>
+							<td>
+								<input id="Balcony_Agency_one_two" name="Balcony_Agency_one_two">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Balcony_Agency_three_four">
+								同舱第3/4人价格(同业):
+								</label>
+							</td>
+							<td>
+								<input id="Balcony_Agency_three_four" name="Balcony_Agency_three_four">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Balcony_FIT_one_two">
+								同舱第1/2人价格(直客):
+								</label>
+							</td>
+							<td>
+								<input id="Balcony_FIT_one_two" name="Balcony_FIT_one_two">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Balcony_FIT_three_four">
+								同舱第3/4人价格(直客):
+								</label>
+							</td>
+							<td>
+								<input id="Balcony_FIT_three_four" name="Balcony_FIT_three_four">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Balcony_FIT_individual">
+								单人入住(直客):
+								</label>
+							</td>
+							<td>
+								<input id="Balcony_FIT_individual" name="Balcony_FIT_individual">
+							</td>
+						</tr>
+					</table>
+				</div> 
+				<div id="tab4" class="tab_content" style="display: none; ">  
+					<table>
+						<tr>
+							<td>
+								<label for="Suite_Category">
+								类别:
+								</label>
+							</td>
+							<td>
+								<span id="Suite_Category">套房房</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Suite_unitprice">
+								单价成本:
+								</label>
+							</td>
+							<td>
+								<input id="Suite_unitprice" name="Suite_unitprice">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Suite_instock">
+								库存:
+								</label>
+							</td>
+							<td>
+								<input id="Suite_instock" name="Suite_instock">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Suite_Agency_one_two">
+								同舱第1/2人价格(同业):
+								</label>
+							</td>
+							<td>
+								<input id="Suite_Agency_one_two" name="Suite_Agency_one_two">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Suite_Agency_three_four">
+								同舱第3/4人价格(同业):
+								</label>
+							</td>
+							<td>
+								<input id="Suite_Agency_three_four" name="Suite_Agency_three_four">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Suite_FIT_one_two">
+								同舱第1/2人价格(直客):
+								</label>
+							</td>
+							<td>
+								<input id="Suite_FIT_one_two" name="Suite_FIT_one_two">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Suite_FIT_three_four">
+								同舱第3/4人价格(直客):
+								</label>
+							</td>
+							<td>
+								<input id="Suite_FIT_three_four" name="Suite_FIT_three_four">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Suite_FIT_individual">
+								单人入住(直客):
+								</label>
+							</td>
+							<td>
+								<input id="Suite_FIT_individual" name="Suite_FIT_individual">
+							</td>
+						</tr>
+					</table>
+				</div> 
+			</div>  
+		</div> 
+		<div id="id_list">
+		</div>
+		</form>
+	</div>
+</body>
+</html>

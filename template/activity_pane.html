@@ -1,0 +1,17 @@
+{template 'common/header'}
+<div class="clearfix welcome-container">
+	<div class="page-header">
+		<h4><i class="fa fa-plane"></i>活动功能菜单</h4>
+	</div>
+	<div class="shortcut clearfix">
+		<a href="{php echo $this->createWebUrl('activity', array('action' => 'bigwheel'))}" title="大转盘">
+			<i class="fa fa-folder"></i>
+			<span>大转盘</span>
+		</a>
+		<a href="{php echo $this->createWebUrl('activity', array('action' => 'scratchcard'))}" title="刮刮乐">
+			<i class="fa fa-folder"></i>
+			<span>刮刮乐</span>
+		</a>
+	</div>
+</div>
+{template 'common/footer'}

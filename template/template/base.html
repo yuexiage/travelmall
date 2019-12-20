@@ -1,0 +1,378 @@
+<form action="" method="post" class="form-horizontal form" id="form1">
+    <div class="panel panel-default">
+        <div class="panel-heading">参团游详细设置</div>
+        <div class="panel-body">
+            {if isset($_GET['stroke_id']) && $_GET['stroke_id']>0 }
+            <div class="alert alert-danger" role="alert">
+                当前只可进行修改行程操作;
+            </div>
+            {else}
+            {if !empty($offered['name'])}
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">访问地址</label>
+                <div class="col-sm-8 col-xs-12">
+                    <div class="form-control-static">
+                        <a href="{$_W['siteroot']}app/index.php?c=entry&m=yuexiage_travelmall&do=offered&id={$offered['offered_id']}&i={$_W['uniacid']}" target="_blank">
+                            {$_W['siteroot']}app/index.php?c=entry&m=yuexiage_travelmall&do=offered&id={$offered['offered_id']}&i={$_W['uniacid']}
+                        </a>
+                    </div>
+                    <span class="help-block">您可以根据此地址，添加回复规则，设置访问。</span>
+                </div>
+            </div>
+            {/if}
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">排序</label>
+                <div class="col-sm-8 col-xs-12">
+                    <input type="text" name="displayorder" class="form-control" value="{$offered['displayorder']}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">发布</label>
+                <div class="col-sm-8 col-xs-12">
+                    <label>
+                        <input type="radio" value="1" name="enabled" {php if ($offered['enabled']=='1') echo "checked='checked' ";}>是
+                    </label>
+                    <label>
+                        <input type="radio" value="0" name="enabled" {php if ($offered['enabled']=='0') echo "checked='checked' ";}>否
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">参团游名称</label>
+                <div class="col-sm-8 col-xs-12">
+                    <input type="text" name="name" class="form-control" value="{$offered['name']}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">天数</label>
+                <div class="col-sm-8 col-xs-12">
+                    <input type="text" name="day_night" class="form-control" value="{$offered['day_night']}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">成人促销价</label>
+                <div class="col-sm-8 col-xs-12">
+                    <input type="text" name="adult_price" class="form-control" value="{$offered['adult_price']}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">儿童促销价</label>
+                <div class="col-sm-8 col-xs-12">
+                    <input type="text" name="child_price" class="form-control" value="{$offered['child_price']}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">出发地</label>
+                <div class="col-sm-8 col-xs-12">
+                    {php echo tpl_form_field_category_2level('departure', $regions['countrys'], $regions['_citys'],$offered['departure_country'], $offered['departure_city']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">目的地</label>
+                <div class="col-sm-8 col-xs-12">
+                    {php echo tpl_form_field_category_2level('offered', $regions['countrys'], $regions['_citys'],$offered['destination_country'], $offered['destination_city']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label  class="col-sm-2 control-label">标签</label>
+                <div class="col-sm-10">
+                    <div class="select" data-toggle="modal" data-target="#myModal_tab">选择</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">标签列表</label>
+                <div class="col-sm-10 tab_list">
+                    <ul style="padding: 0;">
+                        {loop $offered['tabs'] $key $tab}
+                        <li>
+                            <i class="glyphicon glyphicon-remove"></i>
+                            {$tab}<input type="hidden" name="tablist[{$key}]" value="{$tab}">
+                        </li>
+                        {/loop}
+                    </ul>
+                </div>
+            </div>
+            <div class="modal fade" id="myModal_tab" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document" style="width: 80%;height: 500px;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">选择标签</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="select_hotel" >
+                                <iframe src="{php echo $this->createWebUrl('tabs',array('op'=>'tablist'))}" width="100%" height="400px;" style="border:none"></iframe>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">主题</label>
+                <div class="col-sm-8 col-xs-12">
+                    <select name="theme_id" class="form-control">
+                        <option value="-1" >--选择主题--</option>
+                        {loop $themes $row}
+                        <option value="{$row['theme_id']}" {php if($row['theme_id']==$offered['theme_id']) echo "selected='selected' ;"}> {$row['name']} </option>
+                        {/loop}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">分类</label>
+                <div class="col-sm-8 col-xs-12">
+                    <select name="category_id" class="form-control">
+                        <option value="-1" >--选择分类--</option>
+                        {loop $categorys $row}
+                        <option value="{$row['category_id']}" {php if($row['category_id']==$offered['category_id']) echo "selected='selected' ;"}> {$row['name']} </option>
+                        {/loop}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label  class="col-sm-2 control-label">去程机票</label>
+                <div class="col-sm-10">
+                    <div class="select" data-toggle="modal" data-target="#myModal_trip">选择</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">去程机票列表</label>
+                <div class="col-sm-10 trip_list">
+                    <ul style="padding: 0;">
+                        {loop $offered['trip'] $key $trip}
+                        <li><i class="glyphicon glyphicon-remove"></i>
+                            {$trip}
+                            <input type="hidden" name="flightlist[{$key}]" value="{$trip}">
+                        </li>
+                        {/loop}
+                    </ul>
+                </div>
+            </div>
+            <div class="modal fade" id="myModal_trip" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document" style="width: 80%;height: 500px;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">选择机票</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="select_hotel" >
+                                <iframe src="{php echo $this->createWebUrl('flight',array('tp'=>'flight_trip'))}" width="100%" height="400px;" style="border:none"></iframe>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label  class="col-sm-2 control-label">返程机票列表</label>
+                <div class="col-sm-10">
+                    <div class="select" data-toggle="modal" data-target="#myModal_return_trip">选择</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">返程机票列表</label>
+                <div class="col-sm-10 return_trip_list">
+                    <ul style="padding: 0;">
+                        {loop $offered['return_trip'] $key $return_trip}
+                        <li><i class="glyphicon glyphicon-remove"></i>
+                            {$return_trip}
+                            <input type="hidden" name="flightlist[{$key}]" value="{$return_trip}">
+                        </li>
+                        {/loop}
+                    </ul>
+                </div>
+            </div>
+            <div class="modal fade" id="myModal_return_trip" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document" style="width: 80%;height: 500px;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">选择机票</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="select_hotel" >
+                                <iframe src="{php echo $this->createWebUrl('flight',array('tp'=>'return_trip'))}" width="100%" height="400px;" style="border:none"></iframe>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">启用下架时间</label>
+                <div class="col-sm-8 col-xs-12">
+                    <label>
+                        <input type="radio" name="upper_shelf" value="1" {php if ($offered['upper_shelf']=='1') echo "checked='checked' ";}>启用
+                    </label>
+                    <label>
+                        <input type="radio" name="upper_shelf" value="0" {php if ($offered['upper_shelf']=='0') echo "checked='checked' ";}>不启用
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">下架时间</label>
+                <div class="col-sm-8 col-xs-12">
+                    {php echo tpl_form_field_date('lower_shelf',$offered['lower_shelf'],true);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">参团游图片</label>
+                <div class="col-sm-8 col-xs-12">
+                    {php echo tpl_form_field_multi_image('thumbs', $offered['thumbs'])}
+                </div>
+                <br>
+                <em>推荐尺寸900*500</em>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">特别说明</label>
+                <div class="col-sm-8 col-xs-12">
+                    <textarea name="description" class="form-control" cols="70">{$offered['description']}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">费用包含</label>
+                <div class="col-sm-8 col-xs-12">
+                    {php echo tpl_ueditor('contain', $offered['contain']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">费用不含</label>
+                <div class="col-sm-8 col-xs-12">
+                    {php echo tpl_ueditor('not_included', $offered['not_included']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">签证说明</label>
+                <div class="col-sm-8 col-xs-12">
+                    {php echo tpl_ueditor('visa', $offered['visa']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">预订须知</label>
+                <div class="col-sm-8 col-xs-12">
+                    {php echo tpl_ueditor('booked', $offered['booked']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">客服电话</label>
+                <div class="col-sm-8 col-xs-12">
+                    <input type="text" name="customer" class="form-control" value="{$offered['customer']}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">库存</label>
+                <div class="col-sm-2 col-xs-12">
+                    <input type="text" name="stock" class="form-control" value="{$offered['stock']}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">返利积分</label>
+                <div class="col-sm-2 col-xs-12">
+                    <select name="credit_setting" class="credit_setting" class="form-control">
+                        <option value="1" {if $offered['credit_setting'] == 1} selected {/if}>--继承全局配置--</option>
+                        <option value="2" {if $offered['credit_setting'] == 2} selected {/if}>--自定义配置--</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group credit" style="display: {if $offered['credit_setting'] == 1} none {/if};">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">返利积分</label>
+                <div class="col-sm-2 col-xs-12">
+                    <input type="text" name="credit" class="form-control" value="{$offered['credit']}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">积分最高可抵扣金额</label>
+                <div class="col-sm-2 col-xs-12">
+                    <select name="credit_value_setting" class="credit_value_setting" class="form-control">
+                        <option value="1" {if $offered['credit_value_setting'] == 1} selected {/if}>--继承全局配置--</option>
+                        <option value="2" {if $offered['credit_value_setting'] == 2} selected {/if}>--自定义配置--</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group credit_value" style="display: {if $offered['credit_setting'] == 1} none {/if};">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">积分最高可抵扣金额</label>
+                <div class="col-sm-2 col-xs-12">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="credit_value"  placeholder="可抵扣" value="{$offered['credit_value']}">
+                        <div class="input-group-addon">￥</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">选择优惠券</label>
+                <div class="col-sm-2 col-xs-12">
+                    <select name="coupon[]" class="form-control" size="5" multiple="multiple">
+                        <option value="1" >--继承全局配置--</option>
+                        {loop $coupons $coupon}
+                        <option value="{$coupon['coupon_id']}" {if in_array($coupon['coupon_id'],$offered['coupons'])} selected='selected'{/if}>{$coupon['name']}</option>
+                        {/loop}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">选择现金券</label>
+                <div class="col-sm-2 col-xs-12">
+                    <select name="cashs[]" class="form-control"  size="5" multiple="multiple">
+                        <option value="1" >--继承全局配置--</option>
+                        {loop $cash_coupons $cash}
+                        <option value="{$cash['coupon_id']}" {if in_array($cash['coupon_id'],$offered['cashs'])} selected='selected'{/if}>{$cash['name']}</option>
+                        {/loop}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">评论</label>
+                <div class="col-sm-8 col-xs-12">
+                    <label>
+                        <input type="radio" value="1" name="comment" {php if ($offered['comment']=='1') echo "checked='checked' ";}>允许
+                    </label>
+                    <label>
+                        <input type="radio" value="0" name="comment" {php if ($offered['comment']=='0') echo "checked='checked' ";}>不允许
+                    </label>
+                </div>
+            </div>
+            {/if}
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <input name="submit" type="submit" value="提交" class="btn btn-primary col-lg-1">
+            <input type="hidden" name="token" value="{$_W['token']}" />
+        </div>
+    </div>
+</form>
+<script>
+    $(function(){
+        $(".credit_setting").on('change',function(){
+            var id = $(this).val();
+            if(id == 1){
+                $(".credit").hide();
+            }else if(id == 2){
+                $(".credit").show();
+            }
+        });
+
+        $(".credit_value_setting").on('change',function(){
+            var id = $(this).val();
+            if(id == 1){
+                $(".credit_value").hide();
+            }else if(id == 2){
+                $(".credit_value").show();
+            }
+        });
+    });
+</script>

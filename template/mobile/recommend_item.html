@@ -1,0 +1,99 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=9112f5fe8e098f1488ccaf92b619f974"></script>
+<header id="header" class="mui-bar mall_header">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">{$title}</h1>
+</header>
+
+<img src="{php echo tomedia($recommend['img']);}" width="100%">
+<ul class="mui-table-view">
+    <li class="mui-table-view-cell">
+        <label>商家名称:</label>
+        <strong style="color:#FB6F18">({$recommend['bname']})</strong>{$recommend['name']}
+    </li>
+    <li class="mui-table-view-cell">
+        <label>商家电话:</label>
+        {$recommend['tel']}
+    </li>
+    <li class="mui-table-view-cell">
+        <label>商家地址:</label>
+        {$recommend['address']}
+    </li>
+</ul>
+<div style="color:#FB6F18;padding:5px 10px;border:1px solid #FB6F18;margin:5px;">该商家与您当前距离 xxx米</div>
+<h3>商家简介:</h3>
+<p style="padding:10px;">
+    {$recommend['features']}
+</p>
+<h3>商家详情:</h3>
+<p style="padding:10px;">
+    {$recommend['description']}
+</p>
+<form class="mui-input-group" autocomplete="off" action="{php echo $this->createMobileUrl('recommend',array('id'=>$_GPC['id'],'op'=>'recommend_item'));}" method="post" onsubmit="return check()">
+    <div class="mui-input-row">
+        <label>商家密码:</label>
+    <input type="password" class="mui-input-password" autocomplete="off" placeholder="请输入商家密码" name="businessmen_pwd">
+    </div>
+    <div class="mui-input-row">
+        <label>用户密码</label>
+        <input type="password" class="mui-input-password" autocomplete="off" placeholder="请输入用户密码" name="user_pwd">
+    </div>
+    <div class="mui-button-row">
+        <input type="hidden" name="token" value="{$_W['token']}" />
+        <input type="hidden" name="submit" value="submit" />
+        <input type="hidden" name="recommend_id" value="{$recommend['id']}" />
+        <button type="submit" class="mui-btn mui-btn-primary">提交</button>
+    </div>
+</form>
+<script>
+    function check(){
+        var businessmen_pwd  = $("input[name='businessmen_pwd']").val();
+        var user_pwd  = $("input[name='user_pwd']").val();
+        if(businessmen_pwd=='' || user_pwd==''){
+            mui.alert('密码不能为空!','提示框');
+            return false;
+        }
+        return true;
+    }
+</script>
+{php $coordinate = explode(',',$recommend["coordinate"]);}
+<script>
+    wx.ready(function(){
+        wx.getLocation({
+        type: 'wgs84', 
+        success: function (res) {
+            var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+            var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+            var speed = res.speed; // 速度，以米/每秒计
+            var accuracy = res.accuracy; // 位置精度
+            $.ajax({
+                url:"{php echo $this->createMobileUrl('Conversion');}",
+                data:{
+                    latitude:latitude,
+                    longitude:longitude
+                    },
+                dataType:'json',
+                type:'post',
+                success:function(data){
+                    //当前坐标x,y
+                    var x = data.x;
+                    var y = data.y;
+                    //目标坐标
+                    var nx = '{php echo $coordinate["0"]}';
+                    var ny = '{php echo $coordinate["1"]}';
+
+                    var map = new BMap.Map("allmap");
+                    var myP1 = new BMap.Point(x,y);    //起点
+                    var myP2 = new BMap.Point(nx,ny);    //终点
+                   alert((map.getDistance(myP1,myP2)).toFixed(2)+'米'); 
+                }
+            });
+        },  
+        cancel: function (res) {  
+            alert('用户拒绝授权获取地理位置');  
+        } 
+        });
+    });
+</script>
+{template 'common/footer'}

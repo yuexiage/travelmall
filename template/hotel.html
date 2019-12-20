@@ -1,0 +1,317 @@
+{template 'common/header'}
+<ul class="nav nav-tabs">
+	<li {if $do == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('hotel', array('op' => 'display'));}">管理酒店</a></li>											
+	<li {if $do == 'post' && empty($id)}class="active"{/if}><a href="{php echo $this->createWebUrl('hotel', array('op' => 'post'));}">添加酒店</a></li>
+	{if $do == 'post' && $id}
+	<li {if $do == 'post' && !empty($id)}class="active"{/if}><a href="{php echo $this->createWebUrl('hotel', array('op' => 'post','id'=>$hotel_id));}">编辑</a></li>
+	{/if}
+</ul>
+<style>
+	input[type=radio], input[type=checkbox]{
+		width: 18px;
+		height: 18px;
+		margin-left: 20px;
+	}
+</style>
+{if $do == 'post'}
+<div class="main">
+	<form action="" method="post" class="form-horizontal form" id="form1">
+		<div class="panel panel-default">
+			<div class="panel-heading">酒店详细设置</div>
+			<div class="panel-body">
+				{if !empty($hotel['name'])}
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">访问地址</label>
+					<div class="col-sm-8 col-xs-12">
+						<div class="form-control-static">
+						<a href="{$_W['siteroot']}app/index.php?c=entry&m=yuexiage_travelmall&do=hotel&id={$hotel['country_id']}&i={$_W['uniacid']}" target="_blank">
+							{$_W['siteroot']}app/index.php?c=entry&m=yuexiage_travelmall&do=hotel&id={$hotel['country_id']}&i={$_W['uniacid']}
+						</a>
+						</div>
+						<span class="help-block">您可以根据此地址，添加回复规则，设置访问。</span>
+					</div>
+				</div>
+				{/if}
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">排序</label>
+					<div class="col-sm-8 col-xs-12">
+						<input type="text" name="displayorder" class="form-control" value="{$hotel['displayorder']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">发布</label>
+					<div class="col-sm-8 col-xs-12">
+						<label>
+							<input type="radio" value="1" name="enabled" {php if ($hotel['enabled']=='1') echo "checked='checked' ";}>是
+						</label>
+						<label>
+							<input type="radio" value="0" name="enabled" {php if ($hotel['enabled']=='0') echo "checked='checked' ";}>否
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">酒店名称</label>
+					<div class="col-sm-8 col-xs-12">
+						<input type="text" name="name" class="form-control" value="{$hotel['name']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">星级</label>
+					<div class="col-sm-8 col-xs-12">
+						<select name="star" class="form-control">
+							<option value="1" {php if ($hotel['star']=='1') echo "selected='selected' ";}>1星</option>
+							<option value="2" {php if ($hotel['star']=='2') echo "selected='selected' ";}>2星</option>
+							<option value="3" {php if ($hotel['star']=='3') echo "selected='selected' ";}>3星</option>
+							<option value="4" {php if ($hotel['star']=='4') echo "selected='selected' ";}>4星</option>
+							<option value="5" {php if ($hotel['star']=='5') echo "selected='selected' ";}>5星</option>
+							<option value="6" {php if ($hotel['star']=='6') echo "selected='selected' ";}>6星</option>
+							<option value="7" {php if ($hotel['star']=='7') echo "selected='selected' ";}>7星</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">地区</label>
+					<div class="col-sm-8 col-xs-12">
+					{php echo tpl_form_field_category_2level('hotel', $regions['countrys'], $regions['_citys'],$hotel['country_id'], $hotel['city_id']);}
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">酒店图片</label>
+					<div class="col-sm-8 col-xs-12">
+					{php echo tpl_form_field_multi_image('thumbs', $hotel['thumbs'])}
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">房间设施</label>
+					<div class="col-sm-8 col-xs-12">
+						<label>
+							<input type="checkbox" value="1" name="facilities[room][1]" {php if ($hotel['facilities'][room][1]=='1') echo "checked='checked' ";}>宽带上网
+						</label>
+						<label>
+							<input type="checkbox" value="1" name="facilities[room][2]" {php if ($hotel['facilities'][room][2]=='1') echo "checked='checked' ";}>空调
+						</label>
+						<label>
+							<input type="checkbox" value="1" name="facilities[room][3]" {php if ($hotel['facilities'][room][3]=='1') echo "checked='checked' ";}>国际长途电话
+						</label>
+						<label>
+							<input type="checkbox" value="1" name="facilities[room][4]" {php if ($hotel['facilities'][room][4]=='1') echo "checked='checked' ";}>吹风机
+						</label>
+						<label>
+							<input type="checkbox" value="1" name="facilities[room][5]" {php if ($hotel['facilities'][room][5]=='1') echo "checked='checked' ";}>24小时热水
+						</label>
+						<label>
+							<input type="checkbox" value="1" name="facilities[room][6]" {php if ($hotel['facilities'][room][6]=='1') echo "checked='checked' ";}>暖气
+						</label>
+						<label>
+							<input type="checkbox" value="1" name="facilities[room][7]" {php if ($hotel['facilities'][room][7]=='1') echo "checked='checked' ";}>市内电话
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">酒店设施</label>
+					<div class="col-sm-8 col-xs-12">
+						<label>
+							<input type="checkbox" value="1" name="facilities[hotel][1]" {php if ($hotel['facilities'][hotel][1]=='1') echo "checked='checked' ";}>西式餐厅
+						</label>
+						<label>
+							<input type="checkbox" value="1" name="facilities[hotel][2]" {php if ($hotel['facilities'][hotel][2]=='1') echo "checked='checked' ";}>中式餐厅
+						</label>
+						<label>
+							<input type="checkbox" value="1" name="facilities[hotel][3]" {php if ($hotel['facilities'][hotel][3]=='1') echo "checked='checked' ";}>室外游泳池
+						</label>
+						<label>
+							<input type="checkbox" value="1" name="facilities[hotel][4]" {php if ($hotel['facilities'][hotel][4]=='1') echo "checked='checked' ";}>室内游泳池
+						</label>
+						<label>
+							<input type="checkbox" value="1" name="facilities[hotel][5]" {php if ($hotel['facilities'][hotel][5]=='1') echo "checked='checked' ";}>会议室
+						</label>
+						<label>
+							<input type="checkbox" value="1" name="facilities[hotel][6]" {php if ($hotel['facilities'][hotel][6]=='1') echo "checked='checked' ";}>健身房
+						</label>
+						<label>
+							<input type="checkbox" value="1" name="facilities[hotel][7]" {php if ($hotel['facilities'][hotel][7]=='1') echo "checked='checked' ";}>商务中心
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">酒店服务</label>
+					<div class="col-sm-8 col-xs-12">
+						<label>
+							<input type="checkbox" value="1" name="service[1]" {php if ($hotel['service'][1]=='1') echo "checked='checked' ";}>接待外宾
+						</label>
+						<label>
+							<input type="checkbox" value="1" name="service[2]" {php if ($hotel['service'][2]=='1') echo "checked='checked' ";}>洗衣服务
+						</label>
+						<label>
+							<input type="checkbox" value="1" name="service[3]" {php if ($hotel['service'][3]=='1') echo "checked='checked' ";}>行李寄存
+						</label>
+						<label>
+							<input type="checkbox" value="1" name="service[4]" {php if ($hotel['service'][4]=='1') echo "checked='checked' ";}>携带宠物
+						</label>
+						<label>
+							<input type="checkbox" value="1" name="service[5]" {php if ($hotel['service'][5]=='1') echo "checked='checked' ";}>叫醒服务
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">网络设施</label>
+					<div class="col-sm-8 col-xs-12">
+						<label>
+							<input type="radio" value="1" name="wifi" {php if ($hotel['wifi']=='1') echo "checked='checked' ";}>酒店各处提供wifi
+						</label>
+						<label>
+							<input type="radio" value="0" name="wifi" {php if ($hotel['wifi']=='0') echo "checked='checked' ";}>公共区域和部分房间提供wifi
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">停车场</label>
+					<div class="col-sm-8 col-xs-12">
+						<label>
+							<input type="radio" value="1" name="park" {php if ($hotel['park']=='1') echo "checked='checked' ";}><strong style="color:#bbb;font-size: 18px;">不
+							</strong>提供停车场
+						</label>
+						<label>
+							<input type="radio" value="2" name="park" {php if ($hotel['park']=='2') echo "checked='checked' ";}>提供<strong style="color:green;font-size: 18px;">免费</strong>停车场
+						</label>
+						<label>
+							<input type="radio" value="3" name="park" {php if ($hotel['park']=='3') echo "checked='checked' ";}>提供<strong style="color:red;font-size: 18px;">收费</strong>停车场
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">地址</label>
+					<div class="col-sm-8 col-xs-12">
+						<input type="text" name="address" class="form-control" value="{$hotel['address']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">酒店描述</label>
+					<div class="col-sm-8 col-xs-12">
+						<textarea name="description" class="form-control" cols="70">{$hotel['description']}</textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">联系方式</label>
+					<div class="col-sm-4 col-xs-6">
+						<input type="text" name="contact" class="form-control" value="{$hotel['contact']}" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-12">
+				<input name="submit" type="submit" value="提交" class="btn btn-primary col-lg-1">
+				<input type="hidden" name="token" value="{$_W['token']}" />
+			</div>
+		</div>
+	</form>
+</div>
+<script type="text/javascript">
+	$("#form1").submit(function(){
+		if($("input[name='name']").val() == '') {
+			util.message('请输入酒店名称', '', 'error');
+			return false;
+		}
+	});
+</script>
+{elseif $do == 'display'}
+<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form action="./index.php" method="get" class="form-horizontal" role="form">
+			<input type="hidden" name="c" value="site" />
+			<input type="hidden" name="a" value="entry" />
+			<input type="hidden" name="m" value="yuexiage_travelmall" />
+			<input type="hidden" name="do" value="hotel" />
+			<input type="hidden" name="op" value="display" />
+			<input type="hidden" name="action" value="hotel" />
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">关键字</label>
+				<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					<input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">
+				酒店地区
+				</label>
+				<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					{php echo tpl_form_field_category_2level('hotel', $regions['countrys'], $regions['_citys'], $_GPC['hotel']['parentid'], $_GPC['hotel']['childid']);}
+				</div>
+				<div class="pull-right col-xs-12 col-sm-2 col-md-2 col-lg-2">
+					<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="main">
+	<div class="hotel">
+		<form action="" method="post" onsubmit="return formcheck(this)">
+		<div class="panel panel-default">
+		<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th style="width: 6%; text-align:center;">显示顺序</th>
+					<th style="width:25%;">酒店名称</th>
+					<th style="width:5%;">星级</th>
+					<th style="width:50px; text-align:center">状态</th>
+					<th style="width:8%;">联系电话</th>
+					<th style="width:15%; text-align:center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			{loop $hotel $row}
+				<tr>
+					<td class="text-center">
+						<input type="text" class="form-control" name="displayorder[{$row['hotel_id']}]" value="{$row['displayorder']}">
+					</td>
+					<td class="text-left">
+						<div style="height:30px;line-height:30px">
+							<strong>
+								[{$regions['countrys'][$row['country_id']]['name']}]
+								[{$regions['citys'][$row['city_id']]['name']}]
+							</strong>
+							{$row['name']}
+						</div>
+					</td>
+					<td>
+						{$row['star']}星
+					</td>
+					<td>
+						{if $row['enabled']==1}
+							<span class="label label-success">发布</span>
+						{else}
+							<span class="label label-default">未发布</span>
+						{/if}
+					</td>
+					<td>
+						{$row['contact']}
+					</td>
+					<td class="text-right" style="position:relative;">																	
+						<a href="{php echo $this->createWebUrl('hotel', array('op' => 'post','id' => $row['hotel_id']));}" title="编辑">编辑</a>&nbsp;-&nbsp;
+						<a href="{php echo $this->createWebUrl('hotel', array('op' => 'delete','id' => $row['hotel_id']));}" onclick="return confirm('确认删除此酒店吗？');return false;" title="删除">删除</a>
+					</td>
+				</tr>
+			{/loop}
+				<tr>
+					<td colspan="6">
+						<a href="{php echo $this->createWebUrl('hotel', array('op' => 'post','action' => 'hotel'));}"><i class="fa fa-plus-circle" title="添加新酒店"></i> 添加新酒店</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
+		</div>
+			<div class="form-group col-sm-12">
+				<input name="submit" type="submit" class="btn btn-primary col-lg-1" value="提交">
+				<input type="hidden" name="token" value="{$_W['token']}" />
+			</div>
+		</form>
+	</div>
+</div>
+{$pager}
+{/if}
+{template 'common/footer'}

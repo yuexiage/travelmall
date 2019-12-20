@@ -1,0 +1,463 @@
+{template 'common/header'}
+<ul class="nav nav-tabs">
+	<li {if $do == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('activity', array('op' => 'display','action'=>'scratchcard'));}">管理刮刮了活动</a></li>											
+	{if $do == 'post' && $id}
+	<li {if $do == 'post' && !empty($id)}class="active"{/if}><a href="{php echo $this->createWebUrl('activity', array('op' => 'post','id'=>$id));}">编辑</a></li>
+	{/if}
+</ul>
+{if $do == 'post'}
+<div class="main">
+	<form action="" method="post" class="form-horizontal form" id="form1">
+		<div class="panel panel-default">
+			<div class="panel-heading">活动详细设置</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">活动名称</label>
+					<div class="col-sm-8 col-xs-12">
+						<input type="text" name="title" class="form-control" value="{$activity['title']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">发布</label>
+					<div class="col-sm-8 col-xs-12">
+						<label>
+							<input type="radio" value="1" name="enabled" {php if ($activity['enabled']=='1') echo "checked='checked' ";}>是
+						</label>
+						<label>
+							<input type="radio" value="0" name="enabled" {php if ($activity['enabled']=='0') echo "checked='checked' ";}>否
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">活动说明</label>
+					<div class="col-sm-8 col-xs-12">
+						<textarea style="height:60px;" id="description" name="description" class="form-control" cols="60">{$activity['description']}</textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">活动时间</label>
+					<div class="col-sm-8 col-xs-12">
+						<?php  echo tpl_form_field_daterange('datelimit', array('start' => $activity['datelimit_start'], 'end' => $activity['datelimit_end']));?>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">必须关注</label>
+					<div class="col-sm-8 col-xs-12">
+						<label>
+							<input type="radio" value="1" name="follow" {php if ($activity['follow']=='1') echo "checked='checked' ";}>必须关注
+						</label>
+						<label>
+							<input type="radio" value="0" name="follow" {php if ($activity['follow']=='0') echo "checked='checked' ";}>不必须关注
+						</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+		<div class="panel panel-default">
+			<div class="panel-heading">活动详细设置</div>
+			<div class="panel-body">
+				<div class="form-group">
+            		<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span> 奖品设置</label>
+            		<div class="col-sm-9 col-xs-12">
+						<div class="panel panel-default">
+               				<div class="panel-body table-responsive">
+								<table class="table">
+									<thead>
+										<tr>
+											<th>奖品类别(10字以内)</th>
+											<th>奖品名称(50字以内)</th>
+											<th>奖品数量</th>
+                                    		<th>中奖概率(%)</th>
+										</tr>
+									</thead>
+									<tbody id="re-items">
+									<tr id="c_one">
+										<td>
+										<select class="form-control jiangpin" name="c_type_one" id="one" style="width:100px;">
+											<option value="1" {if $activity['c_type_one'] == '1'} selected="selected" {/if}>积分</option>
+											<option value="2" {if $activity['c_type_one'] == '2'} selected="selected" {/if}>优惠券</option>
+											<option value="4" {if $activity['c_type_one'] == '4'} selected="selected" {/if}>代金券</option>
+											<option value="3" {if $activity['c_type_one'] == '3'} selected="selected" {/if}>其他</option>
+										</select>
+										</td>
+										<td class="name_one">
+										{if $activity['c_type_one']==1}
+											<input id="c_name_one" name="c_name_one" type="text" class="form-control" value="{$activity['c_name_one']}" maxlength="50">
+										{else if $activity['c_type_one']==2}
+											<select class="form-control" name="c_name_one" style="width:100px;">
+											{loop $coupons $coupon}
+												<option value="{$coupon['id']}" {if $coupon['id']==$activity['c_name_one']} selected="selected" {/if}>
+													{$coupon['name']}
+												</option>
+											{/loop}
+											</select>
+										{else if $activity['c_type_one']==3}
+											<input id="c_name_one" name="c_name_one" type="text" class="form-control" value="{$activity['c_name_one']}" maxlength="50">
+										{else if $activity['c_type_one']==4}
+											<select class="form-control" name="c_name_one" style="width:100px;">
+											{loop $vouchers $voucher}
+												<option value="{$voucher['id']}" {if $voucher['id']==$activity['c_name_one']} selected="selected" {/if}>
+													{$voucher['name']}
+												</option>
+											{/loop}
+											</select>
+										{else}
+											<input id="c_name_one" name="c_name_one" type="text" class="form-control" value="{$activity['c_name_one']}" maxlength="50">
+										{/if}
+										</td>
+										<td><input id="c_num_one" name="c_num_one" type="text" class="form-control" value="{$activity['c_num_one']}"></td>
+										<td><input id="c_rate_one" name="c_rate_one" type="text" class="form-control" value="{$activity['c_rate_one']}"></td>
+									</tr>
+									<tr id="c_two">
+										<td>
+										<select class="form-control jiangpin" name="c_type_two" id="two" style="width:100px;">
+											<option value="1" {if $activity['c_type_two'] == '1'} selected="selected" {/if}>积分</option>
+											<option value="2" {if $activity['c_type_two'] == '2'} selected="selected" {/if}>优惠券</option>
+											<option value="4" {if $activity['c_type_two'] == '4'} selected="selected" {/if}>代金券</option>
+											<option value="3" {if $activity['c_type_two'] == '3'} selected="selected" {/if}>其他</option>
+										</select>
+										</td>
+										<td class="name_two">
+										{if $activity['c_type_two']==1}
+											<input id="c_name_two" name="c_name_two" type="text" class="form-control" value="{$activity['c_name_two']}" maxlength="50">
+										{else if $activity['c_type_two']==2}
+											<select class="form-control" name="c_name_two" style="width:100px;">
+											{loop $coupons $coupon}
+												<option value="{$coupon['id']}" {if $coupon['id']==$activity['c_name_two']} selected="selected" {/if}>
+													{$coupon['name']}
+												</option>
+											{/loop}
+											</select>
+										{else if $activity['c_type_two']==3}
+											<input id="c_name_two" name="c_name_two" type="text" class="form-control" value="{$activity['c_name_two']}" maxlength="50">
+										{else if $activity['c_type_two']==4}
+											<select class="form-control" name="c_name_two" style="width:100px;">
+											{loop $vouchers $voucher}
+												<option value="{$voucher['id']}" {if $voucher['id']==$activity['c_name_two']} selected="selected" {/if}>
+													{$voucher['name']}
+												</option>
+											{/loop}
+											</select>
+										{else}
+											<input id="c_name_two" name="c_name_two" type="text" class="form-control" value="{$activity['c_name_two']}" maxlength="50">
+										{/if}
+										</td>
+										<td><input id="c_num_two" name="c_num_two" type="text" class="form-control" value="{$activity['c_num_two']}"></td>
+										<td><input id="c_rate_two" name="c_rate_two" type="text" class="form-control" value="{$activity['c_rate_two']}"></td>
+									</tr>
+									<tr id="c_three">
+										<td>
+										<select class="form-control jiangpin" name="c_type_three" id="three" style="width:100px;">
+											<option value="1" {if $activity['c_type_three'] == '1'} selected="selected" {/if}>积分</option>
+											<option value="2" {if $activity['c_type_three'] == '2'} selected="selected" {/if}>优惠券</option>
+											<option value="4" {if $activity['c_type_three'] == '4'} selected="selected" {/if}>代金券</option>
+											<option value="3" {if $activity['c_type_three'] == '3'} selected="selected" {/if}>其他</option>
+										</select>
+										</td>
+										<td class="name_three">
+											{if $activity['c_type_three']==1}
+											<input id="c_name_three" name="c_name_three" type="text" class="form-control" value="{$activity['c_name_three']}" maxlength="50">
+										{else if $activity['c_type_three']==2}
+											<select class="form-control" name="c_name_three" style="width:100px;">
+											{loop $coupons $coupon}
+												<option value="{$coupon['id']}" {if $coupon['id']==$activity['c_name_three']} selected="selected" {/if}>
+													{$coupon['name']}
+												</option>
+											{/loop}
+											</select>
+										{else if $activity['c_type_three']==3}
+											<input id="c_name_three" name="c_name_three" type="text" class="form-control" value="{$activity['c_name_three']}" maxlength="50">
+										{else if $activity['c_type_three']==4}
+											<select class="form-control" name="c_name_three" style="width:100px;">
+											{loop $vouchers $voucher}
+												<option value="{$voucher['id']}" {if $voucher['id']==$activity['c_name_three']} selected="selected" {/if}>
+													{$voucher['name']}
+												</option>
+											{/loop}
+											</select>
+										{else}
+											<input id="c_name_three" name="c_name_three" type="text" class="form-control" value="{$activity['c_name_three']}" maxlength="50">
+										{/if}		
+										</td>
+										<td><input id="c_num_three" name="c_num_three" type="text" class="form-control" value="{$activity['c_num_three']}"></td>
+										<td><input id="c_rate_three" name="c_rate_three" type="text" class="form-control" value="{$activity['c_rate_three']}"></td>
+									</tr>
+									<tr id="c_four">
+										<td>
+										<select class="form-control jiangpin" name="c_type_four" id="four" style="width:100px;">
+											<option value="1" {if $activity['c_type_four'] == '1'} selected="selected" {/if}>积分</option>
+											<option value="2" {if $activity['c_type_four'] == '2'} selected="selected" {/if}>优惠券</option>
+											<option value="4" {if $activity['c_type_four'] == '4'} selected="selected" {/if}>代金券</option>
+											<option value="3" {if $activity['c_type_four'] == '3'} selected="selected" {/if}>其他</option>
+										</select>
+										</td>
+										<td class="name_four">
+										{if $activity['c_type_four']==1}
+											<input id="c_name_four" name="c_name_four" type="text" class="form-control" value="{$activity['c_name_four']}" maxlength="50">
+										{else if $activity['c_type_four']==2}
+											<select class="form-control" name="c_name_four" style="width:100px;">
+											{loop $coupons $coupon}
+												<option value="{$coupon['id']}" {if $coupon['id']==$activity['c_name_four']} selected="selected" {/if}>
+													{$coupon['name']}
+												</option>
+											{/loop}
+											</select>
+										{else if $activity['c_type_four']==3}
+											<input id="c_name_four" name="c_name_four" type="text" class="form-control" value="{$activity['c_name_four']}" maxlength="50">
+										{else if $activity['c_type_four']==4}
+											<select class="form-control" name="c_name_four" style="width:100px;">
+											{loop $vouchers $voucher}
+												<option value="{$voucher['id']}" {if $voucher['id']==$activity['c_name_four']} selected="selected" {/if}>
+													{$voucher['name']}
+												</option>
+											{/loop}
+											</select>
+										{else}
+											<input id="c_name_four" name="c_name_four" type="text" class="form-control" value="{$activity['c_name_four']}" maxlength="50">
+										{/if}		
+										</td>
+										<td><input id="c_num_four" name="c_num_four" type="text" class="form-control" value="{$activity['c_num_four']}"></td>
+										<td><input id="c_rate_four" name="c_rate_four" type="text" class="form-control" value="{$activity['c_rate_four']}"></td>
+									</tr>
+									<tr id="c_five">
+										<td>
+										<select class="form-control jiangpin" name="c_type_five" id="five" style="width:100px;">
+											<option value="1" {if $activity['c_type_five'] == '1'} selected="selected" {/if}>积分</option>
+											<option value="2" {if $activity['c_type_five'] == '2'} selected="selected" {/if}>优惠券</option>
+											<option value="4" {if $activity['c_type_five'] == '4'} selected="selected" {/if}>代金券</option>
+											<option value="3" {if $activity['c_type_five'] == '3'} selected="selected" {/if}>其他</option>
+										</select>
+										</td>
+										<td class="name_five">
+										{if $activity['c_type_five']==1}
+											<input id="c_name_five" name="c_name_five" type="text" class="form-control" value="{$activity['c_name_five']}" maxlength="50">
+										{else if $activity['c_type_five']==2}
+											<select class="form-control" name="c_name_five" style="width:100px;">
+											{loop $coupons $coupon}
+												<option value="{$coupon['id']}" {if $coupon['id']==$activity['c_name_five']} selected="selected" {/if}>
+													{$coupon['name']}
+												</option>
+											{/loop}
+											</select>
+										{else if $activity['c_type_five']==3}
+											<input id="c_name_five" name="c_name_five" type="text" class="form-control" value="{$activity['c_name_five']}" maxlength="50">
+										{else if $activity['c_type_five']==4}
+											<select class="form-control" name="c_name_five" style="width:100px;">
+											{loop $vouchers $voucher}
+												<option value="{$voucher['id']}" {if $voucher['id']==$activity['c_name_five']} selected="selected" {/if}>
+													{$voucher['name']}
+												</option>
+											{/loop}
+											</select>
+										{else}
+											<input id="c_name_five" name="c_name_five" type="text" class="form-control" value="{$activity['c_name_five']}" maxlength="50">
+										{/if}		
+										</td>
+										<td><input id="c_num_five" name="c_num_five" type="text" class="form-control" value="{$activity['c_num_five']}"></td>
+										<td><input id="c_rate_five" name="c_rate_five" type="text" class="form-control" value="{$activity['c_rate_five']}"></td>
+									</tr>
+									<tr id="c_six">
+										<td>
+										<select class="form-control jiangpin" name="c_type_six" id="six" style="width:100px;">
+											<option value="1" {if $activity['c_type_six'] == '1'} selected="selected" {/if}>积分</option>
+											<option value="2" {if $activity['c_type_six'] == '2'} selected="selected" {/if}>优惠券</option>
+											<option value="4" {if $activity['c_type_six'] == '4'} selected="selected" {/if}>代金券</option>
+											<option value="3" {if $activity['c_type_six'] == '3'} selected="selected" {/if}>其他</option>
+										</select>
+										</td>
+										<td class="name_six">
+											{if $activity['c_type_six']==1}
+											<input id="c_name_six" name="c_name_six" type="text" class="form-control" value="{$activity['c_name_six']}" maxlength="50">
+										{else if $activity['c_type_six']==2}
+											<select class="form-control" name="c_name_six" style="width:100px;">
+											{loop $coupons $coupon}
+												<option value="{$coupon['id']}" {if $coupon['id']==$activity['c_name_six']} selected="selected" {/if}>
+													{$coupon['name']}
+												</option>
+											{/loop}
+											</select>
+										{else if $activity['c_type_six']==3}
+											<input id="c_name_six" name="c_name_six" type="text" class="form-control" value="{$activity['c_name_six']}" maxlength="50">
+										{else if $activity['c_type_six']==4}
+											<select class="form-control" name="c_name_six" style="width:100px;">
+											{loop $vouchers $voucher}
+												<option value="{$voucher['id']}" {if $voucher['id']==$activity['c_name_six']} selected="selected" {/if}>
+													{$voucher['name']}
+												</option>
+											{/loop}
+											</select>
+											{else}
+											<input id="c_name_six" name="c_name_six" type="text" class="form-control" value="{$activity['c_name_six']}" maxlength="50">
+										{/if}		
+										</td>
+										<td><input id="c_num_six" name="c_num_six" type="text" class="form-control" value="{$activity['c_num_six']}"></td>
+										<td><input id="c_rate_six" name="c_rate_six" type="text" class="form-control" value="{$activity['c_rate_six']}"></td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+		            </div>
+		        </div>
+
+				<div class="form-group">
+		 			<label class="col-xs-12 col-sm-3 col-md-2 control-label">每人最多获奖次数</label>
+		            <div class="col-sm-5 col-xs-6">
+		               	<div class="input-group">
+							<input type="text" class="form-control" name="award_times" value="{$activity['award_times']}">
+							<span class="input-group-addon">次</span>
+						</div>
+						<div class="help-block">单个用户最多共享几个奖项，0为不限制，推荐设置为1次!</div>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <label class="col-xs-12 col-sm-3 col-md-2 control-label">每人最多抽奖次数</label>
+		            <div class="col-sm-5 col-xs-6">
+		               	<div class="input-group">
+							<input type="text" class="form-control" name="number_times" value="{$activity['number_times']}">
+							<span class="input-group-addon">次</span>
+						</div>
+						<div class="help-block">抽奖总次数限制,0为不限制</div>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <label class="col-xs-12 col-sm-3 col-md-2 control-label">每人每天最多抽奖次数</label>
+		            <div class="col-sm-5 col-xs-6">
+		               	<div class="input-group">
+							<input type="text" class="form-control" name="most_num_times" value="{$activity['most_num_times']}">
+							<span class="input-group-addon">次</span>
+						</div>
+						<div class="help-block">必须小于总抽奖次数！ 0 为不限制 抽完总数就不能抽了! 可以抽奖天数 = 总数/每天抽奖次数!</div>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>显示奖品数量</label>
+		            <div class="col-sm-9 col-xs-12">
+		               	<label class="radio-inline">
+		                	<input type="radio" name="show_num" value="1" {if $activity['show_num']=='1' } checked="checked" {/if}>显示
+		                </label>
+		                <label class="radio-inline">
+		                	<input type="radio" name="show_num" value="2" {if $activity['show_num']=='2' } checked="checked" {/if}>不显示
+		                </label>
+		            </div>
+		        </div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-12">
+				<input name="submit" type="submit" value="提交" class="btn btn-primary col-lg-1">
+				<input type="hidden" name="token" value="{$_W['token']}" />
+			</div>
+		</div>
+	</form>
+</div>
+<script>
+	$(function(){
+		var vouchers = {php echo json_encode($vouchers);};
+		var coupons  = {php echo json_encode($coupons);};
+		$(".jiangpin").change(function(){
+			var val = $(this).val();
+			var id  = $(this).attr("id");
+			var html = '<input id="c_name_'+id+'" name="c_name_'+id+'" type="text" class="form-control" value="" maxlength="50">';
+			switch(val)
+			{
+			case '1':
+				$(".name_"+id).html(html);
+				break;
+			case '2':
+				var html = '<select class="form-control" name="c_name_'+id+'" style="width:100px;">';
+				var len = coupons.length;
+				for (var i = 0; i < len; i++) {
+					html+='<option value="'+coupons[i]['id']+'">'+coupons[i]['name']+'</option>';
+				}
+				html+='</select>';
+				$(".name_"+id).html(html);
+				break;
+			case '3':
+				$(".name_"+id).html(html);
+				break;
+			case '4':
+				var html = '<select class="form-control" name="c_name_'+id+'" style="width:100px;">';
+				var len = vouchers.length;
+				for (var i = 0; i < len; i++) {
+					html+='<option value="'+vouchers[i]['id']+'">'+vouchers[i]['name']+'</option>';
+				}
+				html+='</select>';
+				$(".name_"+id).html(html);
+				break;
+			default:
+				
+			}
+		});
+	});
+</script>
+{elseif $do == 'display'}
+<div class="main">
+	<div class="activity">
+		<form action="" method="post" onsubmit="return formcheck(this)">
+		<div class="panel panel-default">
+		<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>活动名称</th>
+					<th>开始时间</th>
+					<th>结束时间</th>
+					<th style="width:150px; text-align:center">状态</th>
+					<th style="width:15%; text-align:center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			{loop $activity $row}
+				<tr>
+					<td class="text-left">
+						<div style="height:30px;line-height:30px">
+							{$row['title']}
+						</div>
+					</td>
+					<td class="text-left">
+						<div style="height:30px;line-height:30px">
+							{$row['datelimit_start']}
+						</div>
+					</td>
+					<td class="text-left">
+						<div style="height:30px;line-height:30px">
+							{$row['datelimit_end']}
+						</div>
+					</td>
+					<td>
+						{if $row['enabled']==1}
+							<span class="label label-success">发布</span>
+						{else}
+							<span class="label label-default">未发布</span>
+						{/if}
+					</td>
+					<td class="text-right" style="position:relative;">				<a href="{php echo $this->createWebUrl('activity', array('op' => 'display','action'=>'scratchcardlist'));}" title="名单">名单</a>&nbsp;-&nbsp;													
+						<a href="{php echo $this->createWebUrl('activity', array('op' => 'post','action'=>'scratchcard','id' => $row['id'],'id' => $row['id']));}" title="编辑">编辑</a>&nbsp;-&nbsp;
+						<a href="{php echo $this->createWebUrl('activity', array('op' => 'delete','action'=>'scratchcard','id' => $row['id']));}" onclick="return confirm('确认删除此活动吗？');return false;" title="删除">删除</a>
+					</td>
+				</tr>
+			{/loop}
+			{if !count($activity)}
+				<tr>
+					<td colspan="5">
+						<a href="{php echo $this->createWebUrl('activity', array('op' => 'post','action' => 'scratchcard'));}"><i class="fa fa-plus-circle" title="添加新活动"></i> 添加新活动</a>
+					</td>
+				</tr>
+			{/if}
+			</tbody>
+		</table>
+		</div>
+		</div>
+			<div class="form-group col-sm-12">
+				<input name="submit" type="submit" class="btn btn-primary col-lg-1" value="提交">
+				<input type="hidden" name="token" value="{$_W['token']}" />
+			</div>
+		</form>
+	</div>
+</div>
+{$pager}
+{/if}
+{template 'common/footer'}

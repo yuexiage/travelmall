@@ -1,0 +1,46 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
+<header id="header" class="mui-bar mui-bar-transparent">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title"></h1>
+</header>
+<style>
+    .mui-ellipsis{
+        color: red;
+    }
+    .des{
+
+        word-wrap: break-word;
+        white-space: pre-wrap;
+    }
+	.mui-btn-danger{
+		padding:5px;
+		border-radius:0;
+	}
+	.goods_title{
+		font-size:16px;
+	}
+</style>
+<div class="mui-content">
+    {if $theme['img']}
+    <img src="{php echo tomedia($theme['img']);}" width="100%">
+    {/if}
+    <ul class="mui-table-view">
+    {loop $offered $val}
+        {php $imgs = iunserializer($val['thumbs']);}
+        <li class="mui-table-view-cell mui-media">
+            
+            <a href="{php echo $this->createMobileUrl('spike_item',array('id'=>$val['id']));}">
+            <img class="mui-media-object mui-pull-left" src="{php echo tomedia($imgs['0']);}" style="width: 120px;height: 80px;max-width: 120px;">
+                <div class="mui-media-body">
+                    <span class="goods_title" style="">{$val['name']}</span>
+                    <p><span class="mui-badge">{$val['tiname']}</span></p>
+                    <div class="des">{php echo mb_substr($val['description'],0,24,'utf-8');}</div>
+                    <div class='mui-ellipsis'>￥{php echo $val['adult_price']}<div  class="mui-btn mui-btn-danger" style="float:right;">立即预订</div></div>
+                </div>
+            </a>
+        </li>
+    {/loop}
+    </ul>
+</div>
+{template 'common/footer'}

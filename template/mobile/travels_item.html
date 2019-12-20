@@ -1,0 +1,45 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
+<header id="header" class="mui-bar mui-bar-transparent">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title"></h1>
+</header>
+<style>
+    .tabs{
+        overflow: hidden;
+        margin-left: 10px;
+    }
+    .tabs li{
+        float: left;
+
+        background-color: #04be02;
+        color:#fff;
+        padding:2px 10px;
+        border-radius: 3px;
+        margin-left: 10px;
+    }
+    .introduction,.content{
+        padding: 10px;
+        background-color: #fff;
+        margin:10px;
+    }
+</style>
+<div class="mui-content">
+    <img src="{php echo tomedia($travel['thumbs']);}" width="100%">
+    <h3>{$travel['name']}[{$travel['destination']}]</h3>
+    <ul class="tabs">
+        <li>{$countrys[$travel['country_id']]['name']}</li>
+        <li>{$citys[$travel['city_id']]['name']}</li>
+        <li style="background-color: #f80">
+            {$season[$travel['season']]}
+        </li>
+    </ul>
+    <div class="introduction">
+        <i>{$travel['introduction']}</i>
+    </div>
+    <div class="content">
+        {php echo htmlspecialchars_decode($travel['description']);}
+    </div>
+
+</div>
+{template 'common/footer'}

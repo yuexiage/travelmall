@@ -1,0 +1,72 @@
+缓存方法：
+$citys =  com_load_cache(array(
+            'cache_key'=>'lib\config_cache.php 中的 $_W['cache_create']',
+        ));
+
+获取国家和城市二级联动数据：
+$regions = select_country_city();
+//国家 $regions['countrys']
+//城市 $regions['_citys']
+
+数据表：
+    所有表增加is_del自动 1删除 0未删除
+价格单位：分
+常规线路：
+    1.多标签
+    2.单分类
+    3.多标签
+    4.多主题
+    5.库存问题
+
+缓存：
+同表缓存，key值同前缀
+//分类
+$categorys =  com_load_cache(array(
+        'cache_key'=>'category',
+    ));
+
+//优惠券
+$coupons =  com_load_cache(array(
+    'cache_key'=>'coupon_type',
+    'type'     =>2,
+));
+
+//代金券
+$cash_coupons =  com_load_cache(array(
+    'cache_key'=>'coupon_type',
+    'type'     =>1,
+));
+
+//行程
+$cash_coupons =  com_load_cache(array(
+    'cache_key'=>'stroke',
+    'offered_id'     =>1,
+));
+
+//单个行程
+$stroke     =  com_load_cache(array(
+    'cache_key' =>'stroke',
+    'stroke_id'=>$stroke_id,
+));
+
+//主题
+$themes     =  com_load_cache(array(
+    'cache_key'=>'theme',
+));
+
+//轮播图
+$slideshow  =  com_load_cache(array(
+     'cache_key'=>'slideshow',
+     'pid'      =>1,
+ ));
+
+ //样式
+ $style  =  com_load_cache(array(
+      'cache_key'=>'style',
+      'pid'      =>1,
+  ));
+
+ //分类
+$category  =  com_load_cache(array(
+   'cache_key'=>'category',
+));

@@ -1,0 +1,72 @@
+.container {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+.mui-bar {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+.write{
+    color: #fff;
+}
+.black{
+    color: #333;
+}
+.mod_panel{
+    background-color: #fff;
+    margin-bottom: 10px;
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-bottom: 15px;
+}
+.mod_panel_title h5{
+    padding:20px 0px 15px 0px;
+    font-family: 'Microsoft YaHei';
+    line-height: 1.2rem;
+    padding-left: .4rem;
+    font-size: 1.8rem;
+    color: #333;
+}
+.no-title{
+    padding-top: 15px;
+}
+/**幻灯片**/
+.mod_panel.mod_slideshow{
+    padding-right: 0px;
+    padding-left: 0px;
+    margin-bottom: 5px;
+    padding-bottom: 0px;
+}
+.mod_panel.mod_slideshow{
+    padding-right: 0px;
+    padding-left: 0px;
+}
+.mui-slider-indicator .mui-active.mui-indicator {
+    box-shadow: none;
+    width: 15px;
+    border-radius: 3px;
+    height: 5px;
+}
+.mui-slider-indicator{
+    text-align: right;
+    padding-right: 20px;
+}
+.mui-slider-indicator .mui-indicator{
+    background-color: rgba(247, 247, 247, 0.667);
+    box-shadow:none;
+    margin: 1px 2px;
+}
+/***结束幻灯片*/
+/**推荐模块**/
+.recommend_mod .row_column{
+    padding:.1rem;
+}
+.recommend_mod.hidden_padding{
+    padding: 0rem;
+
+}
+.recommend_mod.hidden_padding .no-title{
+    padding-top: 0px;;
+}
+
+/**结束推荐模块**/

@@ -1,0 +1,267 @@
+{template 'common/header'}
+<ul class="nav nav-tabs">
+	<li {if $do == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('travels', array('op' => 'display'));}">管理游记</a></li>											
+	<li {if $do == 'post' && empty($id)}class="active"{/if}><a href="{php echo $this->createWebUrl('travels', array('op' => 'post'));}">添加游记</a></li>
+	{if $do == 'post' && $id}
+	<li {if $do == 'post' && !empty($id)}class="active"{/if}><a href="{php echo $this->createWebUrl('travels', array('op' => 'post','id'=>$id));}">编辑</a></li>
+	{/if}
+</ul>
+{if $do == 'post'}
+<div class="main">
+	<form action="" method="post" class="form-horizontal form" id="form1">
+		<div class="panel panel-default">
+			<div class="panel-heading">游记详细设置</div>
+			<div class="panel-body">
+				{if !empty($travels['name'])}
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">访问地址</label>
+					<div class="col-sm-8 col-xs-12">
+						<div class="form-control-static">
+						<a href="{$_W['siteroot']}app/index.php?c=entry&m=yuexiage_travelmall&do=travels&id={$travels['id']}&i={$_W['uniacid']}" target="_blank">
+							{$_W['siteroot']}app/index.php?c=entry&m=yuexiage_travelmall&do=travels&id={$travels['id']}&i={$_W['uniacid']}
+						</a>
+						</div>
+						<span class="help-block">您可以根据此地址，添加回复规则，设置访问。</span>
+					</div>
+				</div>
+				{/if}
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">排序</label>
+					<div class="col-sm-8 col-xs-12">
+						<input type="text" name="displayorder" class="form-control" value="{$travels['displayorder']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">发布</label>
+					<div class="col-sm-8 col-xs-12">
+						<label>
+							<input type="radio" value="1" name="enabled" {php if ($travels['enabled']=='1') echo "checked='checked' ";}>是
+						</label>
+						<label>
+							<input type="radio" value="0" name="enabled" {php if ($travels['enabled']=='0') echo "checked='checked' ";}>否
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">游记名称</label>
+					<div class="col-sm-8 col-xs-12">
+						<input type="text" name="name" class="form-control" value="{$travels['name']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">目的地</label>
+					<div class="col-sm-8 col-xs-12">
+	<input type="text" name="destination" class="form-control" value="{$travels['destination']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">季节</label>
+					<div class="col-sm-8 col-xs-12">
+						<select name="season" class="form-control">
+							<option value="1" {php if ($travels['season']=='1') echo "selected='selected' ";}>春季</option>
+							<option value="2" {php if ($travels['season']=='2') echo "selected='selected' ";}>夏季</option>
+							<option value="3" {php if ($travels['season']=='3') echo "selected='selected' ";}>秋季</option>
+							<option value="4" {php if ($travels['season']=='4') echo "selected='selected' ";}>冬季</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">地区</label>
+					<div class="col-sm-8 col-xs-12">
+					{php echo tpl_form_field_category_2level('travels', $countrys, $_citys,$travels['country_id'], $travels['city_id']);}
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">游记封面</label>
+					<div class="col-sm-8 col-xs-12">
+					{php echo tpl_form_field_image('thumbs', $travels['thumbs'])}
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">游记简介</label>
+					<div class="col-sm-8 col-xs-12">
+						<textarea name="introduction" class="form-control" cols="70" maxlength="200">{$travels['introduction']}</textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">游记描述</label>
+					<div class="col-sm-8 col-xs-12">
+					{php echo tpl_ueditor('description', $travels['description']);}
+						
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">标签</label>
+					<div class="col-sm-8 col-xs-12">
+						<label>
+							<input type="checkbox" value="1" name="tabs[1]" {php if ($travels['tabs'][1]=='1') echo "checked='checked' ";}>海岛
+						</label>
+						<label>
+							<input type="checkbox" value="2" name="tabs[2]" {php if ($travels['tabs'][2]=='2') echo "checked='checked' ";}>亲子
+						</label>
+						<label>
+							<input type="checkbox" value="3" name="tabs[3]" {php if ($travels['tabs'][3]=='3') echo "checked='checked' ";}>蜜月
+						</label>
+						<label>
+							<input type="checkbox" value="4" name="tabs[4]" {php if ($travels['tabs'][4]=='4') echo "checked='checked' ";}>美食
+						</label>
+						<label>
+							<input type="checkbox" value="5" name="tabs[5]" {php if ($travels['tabs'][5]=='5') echo "checked='checked' ";}>摄影
+						</label>
+						<label>
+							<input type="checkbox" value="6" name="tabs[6]" {php if ($travels['tabs'][6]=='6') echo "checked='checked' ";}>自驾
+						</label>
+						<label>
+							<input type="checkbox" value="7" name="tabs[7]" {php if ($travels['tabs'][7]=='7') echo "checked='checked' ";}>古镇
+						</label>
+						<label>
+							<input type="checkbox" value="8" name="tabs[8]" {php if ($travels['tabs'][8]=='8') echo "checked='checked' ";}>免签
+						</label>
+						<label>
+							<input type="checkbox" value="9" name="tabs[9]" {php if ($travels['tabs'][9]=='9') echo "checked='checked' ";}>文艺
+						</label>
+						<label>
+							<input type="checkbox" value="10" name="tabs[10]" {php if ($travels['tabs'][10]=='10') echo "checked='checked' ";}>独行
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">允许评论？</label>
+					<div class="col-sm-8 col-xs-12">
+						<label>
+							<input type="radio" value="1" name="comment" {php if ($travels['comment']=='1') echo "checked='checked' ";}>是
+						</label>
+						<label>
+							<input type="radio" value="0" name="comment" {php if ($travels['comment']=='0') echo "checked='checked' ";}>否
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">阅读次数</label>
+					<div class="col-sm-1 col-xs-1">
+						<input type="text" name="click" class="form-control" value="{$travels['click']}">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-12">
+				<input name="submit" type="submit" value="提交" class="btn btn-primary col-lg-1">
+				<input type="hidden" name="token" value="{$_W['token']}" />
+			</div>
+		</div>
+	</form>
+</div>
+<script type="text/javascript">
+	$("#form1").submit(function(){
+		if($("input[name='name']").val() == '') {
+			util.message('请输入游记名称', '', 'error');
+			return false;
+		}
+	});
+</script>
+{elseif $do == 'display'}
+<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form action="./index.php" method="get" class="form-horizontal" role="form">
+			<input type="hidden" name="c" value="site" />
+			<input type="hidden" name="a" value="entry" />
+			<input type="hidden" name="m" value="yuexiage_travelmall" />
+			<input type="hidden" name="do" value="travels" />
+			<input type="hidden" name="op" value="display" />
+			<input type="hidden" name="action" value="travels" />
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">关键字</label>
+				<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					<input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">
+				游记地区
+				</label>
+				<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					{php echo tpl_form_field_category_2level('travels', $countrys, $_citys, $_GPC['travels']['parentid'], $_GPC['travels']['childid']);}
+				</div>
+				<div class="pull-right col-xs-12 col-sm-2 col-md-2 col-lg-2">
+					<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="main">
+	<div class="travels">
+		<form action="" method="post" onsubmit="return formcheck(this)">
+		<div class="panel panel-default">
+		<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th style="width: 6%; text-align:center;">显示顺序</th>
+					<th style="width:25%;">游记名称</th>
+					<th style="width:50px; text-align:center">季节</th>
+					<th style="width:50px; text-align:center">状态</th>
+					<th style="width:15%; text-align:center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			{loop $travels $row}
+				<tr>
+					<td class="text-center">
+						<input type="text" class="form-control" name="displayorder[{$row['id']}]" value="{$row['displayorder']}">
+					</td>
+					<td class="text-left">
+						<div style="height:30px;line-height:30px">
+							<strong>
+								[{$countrys[$row['country_id']]['name']}]
+								[{$citys[$row['city_id']]['name']}]
+								({$row['destination']})
+							</strong>
+							{$row['name']}
+						</div>
+					</td>
+					<td>
+						{if $row['season'] == 1}
+						    <span class="label label-success">春季</span>
+						{elseif $row['season'] == 2}
+						    <span class="label label-warning">夏季</span>
+						{elseif $row['season'] == 3}
+						    <span class="label label-danger">秋季</span>
+						{elseif $row['season'] == 4}
+							<span class="label label-default">冬季</span>
+						{/if}
+					</td>
+					<td>
+						{if $row['enabled']==1}
+							<span class="label label-success">发布</span>
+						{else}
+							<span class="label label-default">未发布</span>
+						{/if}
+					</td>
+					<td class="text-right" style="position:relative;">																	
+						<a href="{php echo $this->createWebUrl('travels', array('op' => 'post','id' => $row['id'],'id' => $row['id']));}" title="编辑">编辑</a>&nbsp;-&nbsp;
+						<a href="{php echo $this->createWebUrl('travels', array('op' => 'delete','id' => $row['id']));}" onclick="return confirm('确认删除此游记吗？');return false;" title="删除">删除</a>
+					</td>
+				</tr>
+			{/loop}
+				<tr>
+					<td colspan="5">
+						<a href="{php echo $this->createWebUrl('travels', array('op' => 'post','action' => 'travels'));}"><i class="fa fa-plus-circle" title="添加新游记"></i> 添加新游记</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
+		</div>
+			<div class="form-group col-sm-12">
+				<input name="submit" type="submit" class="btn btn-primary col-lg-1" value="提交">
+				<input type="hidden" name="token" value="{$_W['token']}" />
+			</div>
+		</form>
+	</div>
+</div>
+{$pager}
+{/if}
+{template 'common/footer'}

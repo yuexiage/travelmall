@@ -1,0 +1,576 @@
+{template 'common/header'}
+{template 'template/header'}
+<header id="header" class="mui-bar mui-bar-transparent">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title"></h1>
+</header>
+<script>
+function s(id){
+	var hei = $(id).get(0).offsetTop-20;
+	$("html,body").scrollTop(hei)
+}
+</script>
+<div class="mui-content" id="mui-content">
+    <div class="mui-slider">
+        <div class="mui-slider-group"></div>
+        <div class="mui-slider-indicator"></div>
+    </div>
+    <div class="besa_info">
+        <h5 class="spick_item_title"></h5>
+		<div class="spick_item_feature"></div>
+        <div id="priceInfo" class="priceInfo">
+            <div class="price ordinary">            
+                <span class="promoCommon">
+                    ￥<strong></strong>/<span>人起</span>
+                </span>
+            </div>  
+        </div>
+    </div>
+    <div class="xiajia">
+        当前商品已下架
+    </div>
+    <ul class="mui-table-view spike_panel_li">
+        {if $spike_item['coupon_id']>0 && $spike_item['end'] !='1'}
+        <li class="mui-table-view-cell">
+            <a class="mui-navigate-right coupon" id="{$coupon['id']}"><span class="mui-badge">领取</span>{$coupon['name']}</a>
+        </li>
+        {/if}
+        {if $spike_item['credit']>0}
+        <li class="mui-table-view-cell">
+            <span class="credit_icon">积分</span>购买可得{$spike_item['credit']}积分
+        </li>
+        {/if}
+    </ul>
+    <ul class="mui-table-view spike_panel_li">
+        <li class="mui-table-view-cell">
+			出发城市：<span class="spike_departure_city"></span>
+        </li>
+    </ul>
+	<ul class="mui-table-view mui-grid-view mui-grid-9 spike_panel_li">
+		<li class="mui-table-view-cell mui-media mui-col-xs-12 mui-col-sm-12 spike_date_title">
+			<h5><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>出发日期：
+				<a href="#">
+					<span class="mui-icon mui-icon-arrowright"></span>
+				</a>
+			</h5>
+		</li>
+	</ul>
+
+    <div class="journey-nav">
+        <div class="bar single">
+			<div class="li xselect" hr="#001">
+				<a href="#001" onclick="s('#001')">详细行程</a>
+			</div>
+			<div class="li" hr="#002">
+				<a href="#002" onclick="s('#002')">费用说明</a>
+			</div>
+			<div class="li" hr="#003">
+				<a href="#003" onclick="s('#003')">签证说明</a>
+			</div>
+			<div class="li" hr="#004">
+				<a href="#004" onclick="s('#004')">预订须知</a>
+			</div>
+            
+            
+        </div> 
+    </div>
+    <!-- 行程 -->
+    <div class="journey-content-nobg" id="xcjs">  
+		<a name="001" id="001" ></a>
+        <div class="journeys">      
+            <div class="journeys-main journeys-summary" id="J_journeys">    
+                <div class="journeys-dt">                                   
+                    <ul>                        
+                        <li>                            
+                            <div class="journeys-dt-container">    
+                                {loop $strokes $stroke}
+                                <div class="journeys-dt-item">    
+                                    <div class="dt-item-title">     
+                                        <span class="dt-icon-summary"><i></i>
+                                        </span>
+                                        <p class="dt-item-day">第{$stroke['displayorder']}天</p>
+                                        <p style="font-weight:700">行程<i class="dt-icon-traffic-t icon-link_plane"></i>
+                                        {$stroke['stroke']}
+                                        </p>
+                                    </div>                                  
+                                    <div class="dt-item-content">    
+                                        <dl class="dt-item-table-summary">    
+                                            <dt>
+                                                <i class="dt-icon-t icon-overview_hotel"></i>
+                                                住宿：
+                                            </dt>
+                                            <dd>&nbsp;
+                                {loop $stroke['stay'] $stay}
+                                <a href="javascript:;" class="stay_li" id="{$stay['id']}">{$stay['name']}</a> 
+								<div id="stay_li_id{$stay['id']}" class="stay_li_id">
+									<div class="stay_li_title">
+										{$stay['name']}
+										<span class="mui-icon mui-icon-closeempty"></span>
+									</div>
+									<div class="stay_li_content">
+										{loop $stay['thumbs'] $thumbs}
+											<img src="http://wx.btourb.com/attachment/{$thumbs}" width="100%">
+										{/loop}
+										<div class="viewpoint_li_content_text">
+										{$stay['description']}
+										</div>
+										<div class="facilities">
+											<div class="form-group">
+												<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">房间设施</label>
+												<div class="col-sm-8 col-xs-12">
+													<label>
+													{php if($stay['facilities'][room][1]=='1') echo '<div  class="list_icon">宽带上网</div>';}
+													</label>
+													<label>
+														{php if($stay['facilities'][room][2]=='1') echo '<div  class="list_icon">空调</div>';}
+													</label>
+													<label>
+														{php if($stay['facilities'][room][3]=='1') echo '<div  class="list_icon">国际长途电话</div>';}
+													</label>
+													<label>
+														{php if($stay['facilities'][room][4]=='1') echo '<div  class="list_icon">吹风机</div>';}
+													</label>
+													<label>
+														{php if($stay['facilities'][room][5]=='1') echo '<div  class="list_icon">24小时热水</div>';}
+													</label>
+													<label>
+														{php if($stay['facilities'][room][6]=='1') echo '<div  class="list_icon">暖气</div>';}
+													</label>
+													<label>
+														{php if($stay['facilities'][room][7]=='1') echo '<div  class="list_icon">市内电话</div>';}
+													</label>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">酒店设施</label>
+												<div class="col-sm-8 col-xs-12">
+													<label>
+														{php if($stay['facilities'][hotel][1]=='1') echo '<div  class="list_icon">西式餐厅</div>';}
+													</label>
+													<label>
+														{php if($stay['facilities'][hotel][2]=='1') echo '<div  class="list_icon">中式餐厅</div>';}
+													</label>
+													<label>
+														{php if($stay['facilities'][hotel][3]=='1') echo '<div  class="list_icon">室外游泳池</div>';}
+													</label>
+													<label>
+														{php if($stay['facilities'][hotel][4]=='1') echo '<div  class="list_icon">室内游泳池</div>';}
+													</label>
+													<label>
+														{php if($stay['facilities'][hotel][5]=='1') echo '<div  class="list_icon">会议室</div>';}
+													</label>
+													<label>
+														{php if($stay['facilities'][hotel][6]=='1') echo '<div  class="list_icon">健身房</div>';}
+													</label>
+													<label>
+														{php if($stay['facilities'][hotel][7]=='1') echo '<div  class="list_icon">商务中心</div>';}
+													</label>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">酒店服务</label>
+												<div class="col-sm-8 col-xs-12">
+													<label>
+														{php if($stay[service][1]=='1') echo '<div  class="list_icon">接待外宾</div>';}
+													</label>
+													<label>
+														{php if($stay[service][2]=='1') echo '<div  class="list_icon">洗衣服务</div>';}
+													</label>
+													<label>
+														{php if($stay[service][3]=='1') echo '<div  class="list_icon">行李寄存</div>';}
+													</label>
+													<label>
+														{php if($stay[service][4]=='1') echo '<div  class="list_icon">携带宠物</div>';}
+													</label>
+													<label>
+														{php if($stay[service][5]=='1') echo '<div  class="list_icon">叫醒服务</div>';}
+													</label>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">网络设施</label>
+												<div class="col-sm-8 col-xs-12">
+													<label>
+														{php if($stay[wifi]=='1') echo '<div  class="list_icon">酒店各处提供wifi</div>';}
+													</label>
+													<label>
+														{php if($stay[wifi]=='0') echo '<div  class="list_icon">公共区域和部分房间提供wifi</div>';}
+													</label>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">停车场</label>
+												<div class="col-sm-8 col-xs-12">
+													<label>
+														{php if($stay[park]=='1') echo '<div  class="list_icon">不提供停车场</div>';}
+													</label>
+													<label>
+														{php if($stay[park]=='2') echo '<div  class="list_icon">免费停车场</div>';}
+													</label>
+													<label>
+														{php if($stay[park]=='3') echo '<div  class="list_icon">收费停车场</div>';}
+													</label>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">地址</label>
+												<div class="col-sm-8 col-xs-12">
+													{$stay['address']}
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">联系方式</label>
+												<div class="col-sm-4 col-xs-6">
+													{$stay['contact']}
+												</div>
+											</div>
+										</div>
+										
+									</div>
+								</div> 	
+                                {/loop}
+                                            </dd>
+											<dt>
+                                                <i class="dt-icon-t icon-play-free"></i>景点：
+                                            </dt>
+                                            <dd class="dt-table-act">&nbsp;
+                                {loop $stroke['viewpoint'] $viewpoint}
+                                <a href="javascript:;" class="viewpoint_li" id="{$viewpoint['id']}" >{$viewpoint['name']}</a>
+								<div id="viewpoint_li_id{$viewpoint['id']}" class="viewpoint_li_id">
+									<div class="viewpoint_li_title">
+										{$viewpoint['name']}
+										<span class="mui-icon mui-icon-closeempty"></span>
+									</div>
+									<div class="viewpoint_li_content">
+										{loop $viewpoint['thumbs'] $thumbs}
+											<img src="http://wx.btourb.com/attachment/{$thumbs}" width="100%">
+										{/loop}
+										<div class="viewpoint_li_content_text">
+										{$viewpoint['description']}
+										</div>
+										
+									</div>
+								</div>              
+                                {/loop}             
+                                            </dd>
+											<dt>
+                                                <i class="dt-icon-t icon-play-free"></i>早餐：
+                                            </dt>
+                                            <dd>&nbsp;{$stroke['breakfast']}
+                                            </dd>
+											<dt>
+                                                <i class="dt-icon-t icon-play-free"></i>午餐：
+                                            </dt>
+                                            <dd>&nbsp;{$stroke['lunch']}
+                                            </dd>
+											<dt>
+                                                <i class="dt-icon-t icon-play-free"></i>晚餐：
+                                            </dt>
+                                            <dd>&nbsp;{$stroke['dinner']}
+                                            </dd>
+											
+											
+                                            {if $stroke['shopping']}
+                                            <dt><i class="dt-icon-t icon-play-free"></i>购物：</dt>
+                                            <dd class="dt-table-act">&nbsp;{$stroke['shopping']}</dd>
+                                            {/if}
+                                            {if $stroke['desc']}
+                                            <dt><i class="dt-icon-t icon-play-free"></i>说明：</dt>
+                                            <dd class="dt-table-act">&nbsp;{$stroke['desc']}</dd>
+                                            {/if}
+                                        </dl>
+                                    </div>
+                                </div>                                            
+                                {/loop}
+                            </div>                      
+                        </li>                   
+                    </ul>                           
+                </div>                      
+            </div>              
+        </div>  
+    </div>
+
+    <!-- 费用包含 -->
+    <div class="contain">
+		<a name="002" id="002" ></a>
+        <h5>费用说明</h5>
+		<strong>费用包含：</strong><br>
+        <span class="spick_item_contain"></span>
+		<strong>费用不含：</strong><br>
+		<span class="spick_item_not_included"></span>
+    </div>
+
+    <!-- 签证说明 -->
+    <div class="not_included">
+		<a name="003" id="003" ></a>
+        <h5>签证说明</h5>
+		<span class="spick_item_visa"></span>
+    </div>
+    <!-- 预订须知 -->
+    <div class="booked">
+		<a name="004" id="004" ></a>
+        <h5>预订须知</h5>
+		<span class="spick_item_booked"></span>
+    </div>
+
+</div>
+
+<div class="bottom_nav">
+    <div class="mui-row">
+        <div class="mui-col-sm-3 mui-col-xs-3 kefu">
+        <p style="    padding: 0; margin: 0;">
+            <i class="mui-icon mui-icon-phone"></i>
+        </p>
+        <a href="tel:{php echo $this->settings['consumer'];}">客服电话</a>
+        
+        </div>
+        <div class="mui-col-sm-3 mui-col-xs-3 shoucang {if $collection} active{/if}" style="
+    cursor: pointer;">
+        <p style="    padding: 0; margin: 0;">
+            <i class="mui-icon mui-icon-star"></i>
+        </p>
+        收藏
+        </div>
+        <div class="mui-col-sm-6 mui-col-xs-6 next " id="orderButton">
+        下一步
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function(){
+        $.ajax({
+            url: "{php echo $this->createMobileUrl('spike_item',array('id'=>$_GPC['id']));}",
+            type: "GET",
+            beforeSend:function(){
+                mui.showLoading("正在加载..","div");
+			},
+            complete:function(){
+                mui.hideLoading();
+            },
+            async: false,
+            success: function(data) {
+                resp = data;
+                resp = $.parseJSON(resp);
+				console.log(resp);
+                //轮播图
+                $.each(resp.data.spike.thumbs,function(i,val){
+                    $(".mui-slider-group").append('<div class="mui-slider-item"><img src="'+util.tomedia(val)+'" width="100%"></div>');
+					$(".mui-slider-indicator").append('<div class="mui-indicator"></div>');
+                });
+                var gallery = mui('.mui-slider');
+                gallery.slider({
+                    /*自动轮播图的间隔时间*/
+                    interval: 1000
+                });
+
+                //是否下架判断
+				if( (resp.data.spike.enabled==0) || (resp.data.spike.upper_shelf ==1 && resp.data.spike.end == 1) ){
+					$(".xiajia").show();
+				}
+
+				//标题
+				$(".besa_info h5").text(resp.data.spike.name);
+				//特色
+                $(".spick_item_feature").text(resp.data.spike.description);
+				//价格
+				$('.promoCommon strong').text(resp.data.spike.adult_price);
+				//优惠券
+                /*if( resp.data.spike.coupon_id >0 && resp.data.spike.end != 1 ){
+                    $(".xiajia").show();
+                }*/
+                //出发城市
+				city_id = resp.data.spike.departure_city;
+				$(".spike_departure_city").text(resp.data.city[city_id].name);
+				//日期
+				var html = '';
+                $.each(resp.data.spike.date,function(i,val){
+                    var active = '';
+                    if(i==0){
+						$(".spike_date_title a").prepend(val.oa);
+                        var active = 'date_active';
+					}
+                    var date = "{php echo date('Y')}-"+val.oa;    //此处也可以写成 17/07/2014 一样识别    也可以写成 07-17-2014  但需要正则转换
+                    var day = new Date(Date.parse(date));   //需要正则转换的则 此处为 ： var day = new Date(Date.parse(date.replace(/-/g, '/')));
+                    var today = new Array('周日','周一','周二','周三','周四','周五','周六');
+                    var week = today[day.getDay()];
+                    $(".mui-grid-9").append('<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3 spike_date_item '+active+'"><a href="#"><span>'+val.oa+week+'</span><div class="mui-media-body"><sub>￥</sub>'+val.adult_price+'</div></a></li>');
+                });
+				//费用包含
+                $(".spick_item_contain").html(resp.data.spike.contain);
+				//费用不包含
+				$(".spick_item_not_included").html(resp.data.spike.not_included);
+				//签证说明
+                $(".spick_item_visa").html(resp.data.spike.visa);
+				//预定须知
+                $(".spick_item_booked").html(resp.data.spike.booked);
+            }
+        })
+
+        var bannerHeight = $("#header").get(0).offsetHeight;
+		$("div").scroll(function() {
+            //页面header滚动渐变开始
+            var top = $(".mui-content").scrollTop();//针对Firefox，chrome浏览器
+            //  console.log(top);
+            // 当页面滚动的高度大于轮播图的高度时，背景颜色的透明度为0.85不变
+            // 小于时，背景颜色的透明度从0到0.85逐渐变大；
+            if (top > bannerHeight) {
+                $("#header").css("background-color","rgba(255,255,255,0.85)");
+            }else {
+                var  scale = top/bannerHeight*0.85;
+                if(scale==0){
+                    $(".mui-title").text('');
+				}else{
+                    $(".mui-title").text(resp.data.spike.name);
+				}
+                $("#header").css("background-color","rgba(255,255,255,"+ scale+")");
+            }
+            //页面header滚动渐变结束
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			var nav_top = $("#001").offset().top;
+			var top001 = $("#001").offset().top;
+			var top002 = $("#002").offset().top;
+			var top003 = $("#003").offset().top;
+			var top004 = $("#004").offset().top;
+
+			if(nav_top <=5 && top002 >nav_top){
+				$(".journey-nav").css({"position":'fixed','top':0});
+				$("#header").hide();
+			}else{
+				$(".journey-nav").css({"position":''});
+				$(".single .li").removeClass("xselect");
+				$(".single .li:eq(0)").addClass("xselect");
+				$("#header").show();
+			}
+
+			if(top002<=50 && top003 >top002){
+				$(".single .li").removeClass("xselect");
+				$(".single .li:eq(1)").addClass("xselect");
+			}else if(top002 >50 && top001<0){
+				$(".single .li").removeClass("xselect");
+				$(".single .li:eq(0)").addClass("xselect");
+			}
+
+
+			if(top003<=50 && top004 >top003){
+				$(".single .li").removeClass("xselect");
+				$(".single .li:eq(2)").addClass("xselect");
+			}else if(top003 > 50 && top002<0){
+				$(".single .li").removeClass("xselect");
+				$(".single .li:eq(1)").addClass("xselect");
+			}
+
+
+			if(top004<=50 ){
+				$(".single .li").removeClass("xselect");
+				$(".single .li:eq(3)").addClass("xselect");
+			}else if(top004 >50 && top003<0){
+				$(".single .li").removeClass("xselect");
+				$(".single .li:eq(2)").addClass("xselect");
+			}
+		});
+
+
+
+		$(".viewpoint_li,.stay_li").click(function(){
+			var id = $(this).attr("id");
+			$(".viewpoint_li_id,.stay_li_id").hide();
+			if($(this).hasClass("viewpoint_li")){
+				$("#viewpoint_li_id"+id).show();
+			}else{
+				$("#stay_li_id"+id).show();
+			}
+
+		});
+
+		$(".mui-icon-closeempty").click(function(){
+			$(this).parent().parent().hide();
+		});
+
+
+
+        $(".coupon").click(function(){
+            var id = $(this).attr('id');
+            mui.ajax("{php echo $this->createMobileUrl('getCoupon',array('country_id'=>$coupon['id'],'id'=>$_GPC['id']));}",{
+
+                dataType:'html',//服务器返回json格式数据
+                type:'get',//HTTP请求类型
+                timeout:10000,//超时时间设置为10秒；
+                headers:{'Content-Type':'application/json'},
+                success:function(data){
+                    var dataset = $.parseJSON(data);
+                    mui.toast(dataset.msg);
+                },
+                error:function(xhr,type,errorThrown){
+                    console.log(type);
+                }
+            });
+        });
+        $(".shoucang").click(function(){
+            mui.ajax("{php echo $this->createMobileUrl('collection',array('id'=>$_GPC['id']));}",{
+
+                dataType:'html',//服务器返回json格式数据
+                type:'get',//HTTP请求类型
+                timeout:10000,//超时时间设置为10秒；
+                headers:{'Content-Type':'application/json'},
+                success:function(data){
+                    var dataset = $.parseJSON(data);
+                    if(dataset.error=='0'){
+                        $(".shoucang").addClass('active');
+                        mui.toast(dataset.msg);
+                    }
+                },
+                error:function(xhr,type,errorThrown){
+                    console.log(type);
+                }
+            });
+        });
+    });
+    mui.plusReady(function() {
+    });
+    document.getElementById('orderButton').addEventListener('tap', function() {
+        var id = {$_GPC['id']};
+        mui.ajax("{php echo $this->createMobileUrl('Checkuser',array('t'=>'place_an_order'));}",{
+            data:{
+                id:id,
+            },
+            dataType:'html',//服务器返回json格式数据
+            type:'get',//HTTP请求类型
+            timeout:10000,//超时时间设置为10秒；
+            headers:{'Content-Type':'application/json'},
+            success:function(data){
+                var dataset = $.parseJSON(data);
+                if(dataset.error ==0){
+                    if(!dataset.msg.place_an_order || dataset.msg==false){
+                        mui.openWindow({
+                            url: "{php echo $this->createMobileUrl('calendar',array('id'=>$_GPC['id']));}",
+                            id:'info'
+                        });
+                    }else{
+                        mui.toast('没有权限!');
+                    }
+                }else{
+                    mui.toast('没有权限!');
+                }
+            },
+            error:function(xhr,type,errorThrown){
+                //异常处理；
+                console.log(type);
+            }
+        });
+    });
+
+</script>
+{template 'common/footer'}

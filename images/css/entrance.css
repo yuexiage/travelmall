@@ -1,0 +1,42 @@
+.mui-bar-city{
+    text-align: center;
+    font-size:0.8em;
+}
+.mui-bar-city .mui-icon{
+    font-size:0.8em;
+}
+.mui-bar-nav {
+    box-shadow: none;
+}
+.mui-bar .mui-row{
+    height: 44px;
+    line-height: 44px;
+}
+.mui-bar-search{
+    padding: 0px 10px;
+}
+.mui-bar-search input{
+    background-color: #fff;
+    border-radius: 25px;
+}
+.mui-bar input[type=search] {
+    text-align: left;
+    padding-left: 33px;
+    font-size: 0.8em;
+    background-image: url(../images/search.png);
+    background-repeat: no-repeat;
+    background-size: 20px;
+    background-position: 8px;
+}
+
+.mui-bar-nav.mui-bar .mui-bar-search span {
+    position: absolute;
+    top: 0;
+    z-index: 23;
+    color: #eee;
+    padding-left: 16px;
+}
+.mui-bar-nav~.mui-content.entrance {
+    padding-top: 0px;
+}
+

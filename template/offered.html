@@ -1,0 +1,233 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/calendar.css?{TIMESTAMP}">
+<script src="../addons/yuexiage_travelmall/images/js/calendar.js?{TIMESTAMP}"></script>
+<ul class="nav nav-tabs">
+	<li {if $do == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('offered', array('op' => 'display'));}">管理参团游</a></li>					
+	<li {if $do == 'post' && empty($id)}class="active"{/if}><a href="{php echo $this->createWebUrl('offered', array('op' => 'post'));}">添加参团游</a></li>
+	{if $do == 'post' && $id}
+	<li {if $do == 'post' && !empty($id)}class="active"{/if}><a href="{php echo $this->createWebUrl('offered', array('op' => 'post','id'=>$offered_id));}">编辑</a></li>
+	{/if}
+</ul>
+<style>
+	.select{
+		padding:10px;
+		border-radius: 5px;
+		border:1px solid #ddd;
+		width: 80px;
+		text-align: center;
+		cursor:pointer;
+	}
+	.select:hover{
+		border:1px solid #bbb;
+		background-color: #ddd;
+	}
+	input[type='radio']{
+		width: 20px;
+		height:20px;
+	}
+</style>
+{if $do == 'post'}
+{if isset($_GET['stroke_id']) && $_GET['stroke_id']>0 }
+    <h3>
+    <a href="{php echo $this->createWebUrl('offered', array('op' => 'post','id'=>$offered_id))}">
+        <span class="label label-warning"><<返回</span>
+    </a>
+    </h3>
+{/if}
+<ul class="tabs">
+    <li id="active">
+    	<a href="#tab1">基础信息
+    	</a>
+    </li>											
+	<li>
+    	<a href="#tab2">行程
+    	</a>
+    </li>
+    <li>
+    	<a href="#tab3">日期
+    	</a>
+    </li>
+</ul>
+<div class="tab_container"> 
+	<div id="tab1" class="tab_content main" style="display: block; ">
+        {template 'template/base'}
+	</div>
+	<div id="tab2" class="tab_content" style="display: none; ">
+        {template 'template/stroke'}
+	</div>
+	<div id="tab3" class="tab_content" style="display: none; "> 
+		{if isset($_GET['id']) && $_GET['id']>0 }
+		<div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
+			{if isset($_GET['stroke_id']) && $_GET['stroke_id']>0 }
+				<div class="alert alert-danger" role="alert">
+				当前只可进行修改行程操作;
+				</div>
+			{else}
+                {template 'template/calendar'}
+			{/if}
+		</div>
+		{else}
+		<div class="alert alert-danger" role="alert">
+			请先保存线路基本信息!
+		</div>
+		{/if}
+	</div>
+</div>
+<script>
+	$(function(){
+	    $(".skin-default").addClass('main-lg-body'); //宽屏显示
+        $("ul.tabs li").click(function() {
+            $("#active").attr("id",""); //Remove any "active" class
+            $(this).attr("id","active"); //Add "active" class to selected tab
+            $(".tab_content").hide(); //Hide all tab content
+            var activeTab = $(this).find("a").attr("href"); //Find the rel attribute value to identify the active tab + content
+            $(activeTab).fadeIn(); //Fade in the active content
+            return false;
+        });
+        $(document).on('click','.glyphicon-remove',function(){
+            var li = $(this).parent();
+            $(li).remove();
+        });
+        $("#form1").submit(function(){
+            if($("input[name='name']").val() == '') {
+                util.message('请输入参团游名称', '', 'error');
+                return false;
+            }
+        });
+	});
+</script>
+{elseif $do == 'display'}
+<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form action="./index.php" method="get" class="form-horizontal" role="form">
+			<input type="hidden" name="c" value="site" />
+			<input type="hidden" name="a" value="entry" />
+			<input type="hidden" name="m" value="yuexiage_travelmall" />
+			<input type="hidden" name="do" value="offered" />
+			<input type="hidden" name="op" value="display" />
+			<input type="hidden" name="action" value="offered" />
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">关键字</label>
+				<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					<input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}">
+				</div>
+			</div>
+			<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">分类</label>
+					<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					<select name="category_id" class="form-control">
+						<option value="-1" >--选择分类--</option>
+						{loop $categorys $row}
+						<option value="{$row['category_id']}" {php if($row['category_id']==$_GPC['category_id']) echo "selected='selected' ;"}> {$row['name']} </option>
+						{/loop}
+					</select>
+					</div>
+				</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">
+				出发城市
+				</label>
+				<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					{php echo tpl_form_field_category_2level('offered', $regions['countrys'], $regions['_citys'], $_GPC['offered']['parentid'], $_GPC['offered']['childid']);}
+				</div>
+				<div class="pull-right col-xs-12 col-sm-2 col-md-2 col-lg-2">
+					<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="main">
+	<div class="offered">
+		<form action="" method="post" onsubmit="return formcheck(this)">
+		<div class="panel panel-default">
+		<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th style="width: 6%; text-align:center;">显示顺序</th>
+					<th style="width:15%;">参团游名称</th>
+                    <th class="text-center" style="width:10%;">分类</th>
+                    <th class="text-center" style="width:10%;">出发城市</th>
+                    <th class="text-center" style="width:10%;">目的地</th>
+                    <th class="text-center" style="width:10%;">成人价</th>
+                    <th class="text-center" style="width:10%;">儿童价</th>
+                    <th style="width:10%;">下架时间</th>
+					<th style="width:15px; text-align:center">状态</th>
+					<th style="width:15%; text-align:center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			{loop $offered $row}
+				<tr>
+					<td class="text-center">
+						<input type="text" class="form-control" name="displayorder[{$row['offered_id']}]" value="{$row['displayorder']}">
+					</td>
+					<td class="text-left">
+						<div style="">
+							{$row['name']}
+						</div>
+					</td>
+                    <td class="text-center">
+                        <div style="">
+                            {$categorys[$row['category_id']]['name']}
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <div style="">
+                            {$citys[$row['departure_city']]['name']}
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <div style="">
+                            {$citys[$row['destination_city']]['name']}
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <div style="">
+                            {$row['adult_price']}
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <div style="">
+                            {$row['child_price']}
+                        </div>
+                    </td>
+                    <td class="text-left">
+                        <div style="">
+                            {php echo date('Y-m-d H:i:s',$row['lower_shelf']);}
+                        </div>
+                    </td>
+					<td class="text-center">
+						{if $row['enabled']==1}
+							<span class="label label-success">发布</span>
+						{else}
+							<span class="label label-default">未发布</span>
+						{/if}
+					</td>
+					<td class="text-center" style="position:relative;">
+						<a href="{php echo $this->createWebUrl('offered', array('op' => 'post','id' => $row['offered_id']));}" title="编辑">编辑</a>&nbsp;-&nbsp;
+						<a href="{php echo $this->createWebUrl('offered', array('op' => 'delete','id' => $row['offered_id']));}" onclick="return confirm('确认删除此参团游吗？');return false;" title="删除">删除</a>
+					</td>
+				</tr>
+			{/loop}
+				<tr>
+					<td colspan="4">
+						<a href="{php echo $this->createWebUrl('offered', array('op' => 'post','action' => 'offered'));}"><i class="fa fa-plus-circle" title="添加新参团游"></i> 添加新参团游</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
+		</div>
+			<div class="form-group col-sm-12">
+				<input name="submit" type="submit" class="btn btn-primary col-lg-1" value="提交">
+				<input type="hidden" name="token" value="{$_W['token']}" />
+			</div>
+		</form>
+	</div>
+</div>
+{$pager}
+{/if}
+{template 'common/footer'}

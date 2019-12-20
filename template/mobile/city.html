@@ -1,0 +1,63 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=9112f5fe8e098f1488ccaf92b619f974"></script>
+<script>
+    wx.ready(function(){
+        wx.getLocation({
+        type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+        success: function (res) {
+            var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+            var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+            var speed = res.speed; // 速度，以米/每秒计
+            var accuracy = res.accuracy; // 位置精度
+            $.ajax({
+                url:"{php echo $this->createMobileUrl('Getgps',array('getGps'=>'1'));}",
+                data:{
+                    latitude:latitude,
+                    longitude:longitude
+                    },
+                dataType:'json',
+                type:'post',
+                success:function(data){
+                    data=eval('('+data+')');
+                    console.log(data);
+                    if(data.status=='0'){
+                        $(".gps a").attr('href',"{php echo $this->createMobileUrl('entrance');}"+"&newCity="+data.result.addressComponent.city); 
+                        $(".gps .mui-media-body").text(data.result.addressComponent.city);
+                    }
+                        
+                }
+   
+            });
+        }
+        });
+    });
+</script>
+<header class="mui-bar mui-bar-nav city">
+    <a class="mui-icon mui-icon-back  mui-pull-left" href="javascript:history.back()"></a>
+    <input type="hidden" id="nowGPSCity" value="">
+    <h1 class="mui-title">{$title}</h1>
+</header>
+<div class="mui-content">
+    <h5>根据您的定位推荐</h5>
+    <ul class="mui-table-view mui-grid-view mui-grid-9 gps">
+        <li class="mui-col-xs-4 mui-col-sm-3">
+            <a href="#">
+                <span class="mui-media-body"></span>
+            </a>
+        </li>
+    </ul>
+    <h5>所有城市</h5>
+    <ul class="mui-table-view mui-grid-view mui-grid-9 allcity">
+        {loop $citys $city}
+        <li class="mui-col-xs-4 mui-col-sm-3">
+            <a href="{php echo $this->createMobileUrl('entrance');}&newCity={$city['name']}">
+                <div class="mui-media-body">{$city['name']}</div>
+            </a>
+        </li>
+        {/loop}
+    </ul>
+</div>
+
+
+{template 'common/footer'}

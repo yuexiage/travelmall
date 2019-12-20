@@ -1,0 +1,34 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-icon mui-icon mui-icon-back  mui-pull-left" href="javascript:history.go(-1)"></a>
+    <h1 class="mui-title">
+        保存订单
+    </h1>
+</header>
+<style>
+    body{
+        background-color: #efeff4;
+    }
+</style>
+{if $order_status['error'] =='0'}
+    <div class="order_status">
+        <i class="mui-icon mui-icon-checkmarkempty">{$order_status['msg']}……!</i>
+    </div>
+{else}
+    <div class="order_status">
+        <i class="mui-icon mui-icon-closeempty"></i>
+        <p class="closeempty_p">{$order_status['msg']}!</p>
+    </div>
+{/if}   
+<script type="text/javascript"> 
+    $(function(){
+        $(".next").click(function(){
+            
+            $("form").submit();
+        });
+        
+    });
+</script>
+
+{template 'common/footer'}

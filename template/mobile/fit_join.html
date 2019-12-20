@@ -1,0 +1,202 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
+<link rel="stylesheet" type="text/css" href="../addons/yuexiage_travelmall/images/css/custom_2.css" />
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-icon mui-icon mui-icon-back  mui-pull-left" href="javascript:history.go(-1)"></a>
+    <h1 class="mui-title">
+        参团人
+    </h1>
+</header>
+<style>
+    body{
+        background-color: #efeff4;
+    }
+    i{color: green;}
+</style>
+<form method="post" name="day_s" action="{php echo $this->createMobileUrl('fit_calendar',array('id'=>$_GPC['id'],'op'=>'confirm'));}" style="margin:50px 0px 70px 0px;">
+    <div class="offered_name">
+        {$offered['name']}
+    </div>
+    <ul class="mui-table-view">
+        <li class="mui-table-view-cell">
+            日期:<em class="adult_price">
+            {php $event_day = explode('-',$_GPC['event_day']);}
+            {php echo $event_day =$_GET['event_day']?$_GET['event_day']:date("Y-m-d",strtotime($event_day['2'].'-'.$event_day['0'].'-'.$event_day['1']));}</em>
+        </li>
+        <li class="mui-table-view-cell">
+            成人:<em class="adult_price">{$_GPC['adult_price']}</em>￥x{$_GPC['adult_num']}
+        </li>
+        <li class="mui-table-view-cell">
+            儿童:<em class="child_price">{$_GPC['child_price']}</em>￥x{$_GPC['child_num']}
+        </li>
+        {php $subtotal = $_GPC['child_price']*$_GPC['child_num']+$_GPC['adult_price']*$_GPC['adult_num'];}
+        <li class="mui-table-view-cell">
+            小计:<em class="child_price" style="font-size: 18px;">{php echo $subtotal;}</em>￥
+        </li>
+    </ul>
+    <ul class="mui-table-view">
+        {if $coupon['name']}
+            <li class="mui-table-view-cell">
+                <a class="mui-navigate-left"><i class="mui-icon mui-icon-checkmarkempty"></i>{$coupon['name']}</a>
+            </li>
+        {else}
+            {if count($coupons_num)}
+            <li class="mui-table-view-cell">
+                <a class="mui-navigate-right" id="choice_coupon"><span class="mui-badge">{php if($coupon['name']) echo $coupon['name']; else echo count($coupons_num);}</span>优惠券</a>
+            </li>
+            {/if}
+        {/if}
+        {if count($cashs_num)}
+        <select name="choice_cash" id="choice_cash">
+            <option value="-1">选择现金券</option>
+            {loop $cashs_num $cash}
+            <option value="{$cash['id']}">{$cash['name']}</option>
+            {/loop}
+        </select>
+        {/if}
+    </ul>
+    {php $max_credit1 = $offered['credit_value']/$proportion;}
+    {if $max_credit1>$credit1}
+        {php $credit_num = $credit1;}
+        {php $credit_value = $credit1*$proportion;}
+    {else}
+        {php $credit_value = $max_credit1*$proportion;}
+        {php $credit_num = $max_credit1;}
+    {/if}
+    {if $credit_value>0}
+    <div class="mui-input-row mui-checkbox">
+        <label>积分可抵扣<span style="color:red">{$credit_value}</span>￥</label>
+        <input name="credit_value" value="1" type="checkbox">
+    </div>       
+    {/if}
+    <ul class="mui-table-view">
+        <li class="mui-table-view-cell">
+            <div class="mui-input-row mui-col-xs-7 mui-col-sm-7" style="float: left;">
+                <label>邀请码</label>
+                <input type="text" name="invitation" placeholder="输入邀请码">
+            </div> 
+            <div style="float: right;border: 1px solid #ddd;padding: 5px;border-radius: 5px;cursor:pointer">查
+            </div>  
+        </li>
+    </ul>
+    <input type="hidden" name="event_day" value="{$event_day}">
+    <input type="hidden" name="adult_price" value="{$_GPC['adult_price']}">
+    <input type="hidden" name="adult_num" value="{$_GPC['adult_num']}">
+    <input type="hidden" name="child_price" value="{$_GPC['child_price']}">
+    <input type="hidden" name="child_num" value="{$_GPC['child_num']}">
+    <input type="hidden" name="day_id" value="{$_GPC['day_id']}">
+    <input type="hidden" name="country_id" value="{$_GPC['country_id']}">
+    <input type="hidden" name="ucid" value="{$_GPC['ucid']}">
+    <ul class="mui-table-view">
+        <li class="mui-table-view-cell">
+            联系人
+        </li>
+        <li class="mui-table-view-cell">
+            <div class="mui-input-row">
+                <label>姓名:</label>
+                <input name='contact_name' type="text" class="mui-input-clear mui-input" placeholder="请输入姓名">
+            </div>
+            <div class="mui-input-row">
+                <label>电话</label>
+                <input name='contact_tel' type="text" class="mui-input-clear mui-input" placeholder="请输入电话">
+            </div>
+            <div class="mui-input-row">
+                <label>身份证</label>
+                <input name='contact_id' type="text" class="mui-input-clear mui-input" placeholder="请输入身份证">
+            </div>
+            <div class="mui-input-row">
+                <label>邮箱</label>
+                <input name='contact_email' type="text" class="mui-input-clear mui-input" placeholder="请输入邮箱">
+            </div>
+        </li>
+    </ul>  
+    {php $num = $_GPC['adult_num']+$_GPC['child_num'];}
+    {php for($i=0;$i<$num;$i++):}
+    <ul class="mui-table-view">
+        <li class="mui-table-view-cell">
+            参团人{php echo $i+1}:
+        </li>
+        <li class="mui-table-view-cell">
+            <div class="mui-input-row">
+                <label>姓名:</label>
+                <input name='join_name[]' type="text" class="mui-input-clear mui-input join" placeholder="请输入姓名">
+            </div>
+            <div class="mui-input-row">
+                <label>电话</label>
+                <input name='join_tel[]' type="text" class="mui-input-clear mui-input join" placeholder="请输入身份证">
+            </div>
+            <div class="mui-input-row">
+                <label>身份证</label>
+                <input name='join_id[]' type="text" class="mui-input-clear mui-input join" placeholder="请输入身份证">
+            </div>
+        </li>
+    </ul>
+    {php endfor;}
+<div class="bottom_nav">
+    <div class="mui-row">
+        <div class="mui-col-sm-6 mui-col-xs-6 prev">
+        <a href="javascript:history.go(-1)">上一步</a>
+        </div>
+        <div class="mui-col-sm-6 mui-col-xs-6 next">
+        <a href="###">下一步</a>
+        </div>
+    </div>
+</div>
+</form>
+
+<script type="text/javascript"> 
+    $(function(){
+        $(".next").click(function(){
+            var contact_name    = $('input[name="contact_name"]').val();
+            var contact_tel     = $('input[name="contact_tel"]').val();
+            var contact_id      = $('input[name="contact_id"]').val();
+            if(contact_name=='' || contact_tel=='' || contact_id==''){
+                mui.alert('联系人信息不能为空!','提示框');
+                return false;
+            }
+            $(".join").each(function(){
+                var v = $(this).val();
+                if(v==''){
+                    mui.alert('参团人信息不能为空!','提示框');
+                    return false; 
+                }
+            });
+            $("form").submit();
+        });
+        $(document).on('click','.price_day',function(){
+            var adult = $(this).attr('adult');
+            var child = $(this).attr('child');
+            $(".adult_price").text(adult);
+            $("input[name='adult_price']").val(adult);
+            $(".child_price").text(child);
+            $("input[name='child_price']").val(child);
+            $(".fc-content").css("background",'#fff');
+            $(this).parent().parent().css("background",'#f80');
+        });
+    });
+</script>
+<script type="text/javascript">
+    document.getElementById('choice_coupon').addEventListener('tap', function() {
+        //打开关于页面
+        mui.openWindow({
+            url: "{php echo $this->createMobileUrl('choice_coupon',array('id'=>$_GPC['id'],'subtotal'=>$subtotal,'event_day'=>$event_day,'adult_price'=>$_GPC['adult_price'],'adult_num'=>$_GPC['adult_num'],'child_price'=>$_GPC['child_price'],'day_id'=>$_GPC['day_id'], 'child_num'=>$_GPC['child_num']));}", 
+            id:'info',
+            extras:{
+                id:{php echo $_GPC["id"]},
+            },
+            createNew:true,//是否重复创建同样id的webview，默认为false:不重复创建，直接显示
+            show:{
+              autoShow:true,//页面loaded事件发生后自动显示，默认为true
+              aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+              duration:100,//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+              event:'titleUpdate',//页面显示时机，默认为titleUpdate事件时显示
+              extras:{}//窗口动画是否使用图片加速
+            },
+            waiting:{
+                autoShow:true,//自动显示等待框，默认为true
+                title:'正在加载...'//等待对话框上显示的提示内容
+            }
+        });
+    });
+</script>
+{template 'common/footer'}

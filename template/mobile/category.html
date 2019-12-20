@@ -1,0 +1,39 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
+<header id="header" class="mui-bar mui-bar-transparent">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title"></h1>
+</header>
+<div class="mui-content">
+    {if $category['img']}
+    <div class="cate_img" style="height:150px;overflow:hidden">
+        <img src="{php echo tomedia($category['img']);}" width="100%">
+        <div style="position: absolute;
+    z-index: 999;
+    left: 32%;
+    font-family: cursive;
+    color: #fff;
+    top: 77px;
+    font-size: 50px;">{$title}</div>
+    </div>
+    {/if}
+    <ul class="mui-table-view">
+    {loop $offered $val}
+        {php $imgs = iunserializer($val['thumbs']);}
+        <li class="mui-table-view-cell mui-media">
+            <span class="mui-badge">{$val['tiname']}:{$val['day_night']}晚</span>
+            <a href="{php echo $this->createMobileUrl('spike_item',array('id'=>$val['id']));}">
+            <img class="mui-media-object mui-pull-left" src="{php echo tomedia($imgs['0']);}">
+                <div class="mui-media-body">
+                    {$val['name']}
+                    <p class='mui-ellipsis'>￥{php echo $val['adult_price']}</p>
+                </div>
+            </a>
+        </li>
+    {/loop}
+    </ul>
+
+ 
+
+</div>
+{template 'common/footer'}

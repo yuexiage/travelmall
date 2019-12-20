@@ -1,0 +1,112 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
+<form class="mui-input-group" action="{php echo $this->createMobileUrl('search',array());}" method="post">
+    <div class="mui-input-row mui-search">
+        <input type="search" class="mui-input-clear" placeholder="搜索" name="keyword" maxlength="10">
+    </div>
+</form>
+<style>
+    .card{
+        box-shadow: 0px 5px 5px #ddd;
+        margin-bottom: 15px;
+    }
+    .card_bottom{
+        overflow: hidden;
+    }
+    .card_text {
+        float: left;
+        padding: 8px;
+    }
+    .card_bottom .card_sub{
+        background-color: #e85529;
+        color: #fff;
+        width: 80px;
+        float: right;
+        padding: 10px;
+        text-align: center;
+        font-size: 14px;
+    }
+    .card_bottom .card_sub p{
+        padding:0px;
+        margin:0px;
+    }
+</style>
+{if trim($_GPC['keyword'])!=''}
+    <h5>参团游</h5>
+    <ul class="mui-table-view tabItem">
+    {loop $offereds $offered}
+    {php $imgs = iunserializer($offered['thumbs']);}
+        <li class="mui-table-view-cell mui-media">
+            <a href="{php echo $this->createMobileUrl('spike_item',array('id'=>$offered['id']));}">
+                <div class="card_tab">参团游</div>
+                <img class="mui-media-object mui-pull-left" src="{php echo tomedia($imgs['0'])}">
+                <div class="mui-media-body">
+                    {$offered['name']}
+                    <p class="mui-ellipsis">{$offered['description']}</p>
+                    <p class="adult_price"><sub>￥</sub>{$offered['adult_price']}<sub>起</sub></p>
+                </div>
+            </a>
+        </li>
+    {/loop}
+    </ul>
+    <h5>自由行:</h5>
+    <ul class="mui-table-view tabItem">
+    {loop $fits $offered}
+    {php $imgs = iunserializer($offered['thumbs']);}
+        <li class="mui-table-view-cell mui-media">
+            <a href="{php echo $this->createMobileUrl('spike_item',array('id'=>$offered['id']));}">
+                <div class="card_tab">自由行</div>
+                <img class="mui-media-object mui-pull-left" src="{php echo tomedia($imgs['0'])}">
+                <div class="mui-media-body">
+                    {$offered['name']}
+                    <p class="mui-ellipsis">{$offered['description']}</p>
+                    <p class="adult_price"><sub>￥</sub>{$offered['adult_price']}<sub>起</sub></p>
+                </div>
+            </a>
+        </li>
+    {/loop}
+    </ul>
+
+    签证:<br>
+    <ul class="mui-table-view">
+    {loop $visas $offered}
+    {php $imgs = iunserializer($offered['thumbs']);}
+    <li class="mui-table-view-cell mui-media">
+        <a class="mui-navigate-right" href="{php echo $this->createMobileUrl('visa',array('id'=>$offered['id'],'op'=>'visa_item'));}">
+            <img class="mui-media-object mui-pull-left" src="{php echo tomedia($imgs['0'])}">
+            <div class="mui-media-body">
+                {$offered['name']}
+                
+            </div>
+        </a>
+    </li>
+    {/loop}
+    </ul>
+    
+    游记:<br>
+    <ul class="mui-table-view">
+    {loop $travels $offered}
+    <li class="mui-table-view-cell mui-media">
+        <a class="mui-navigate-right" href="{php echo $this->createMobileUrl('travel',array('id'=>$offered['id'],'op'=>'travels_item'));}">
+            <img class="mui-media-object mui-pull-left" src="{php echo tomedia($offered['thumbs'])}">
+            <div class="mui-media-body">
+                {$offered['name']}
+            </div>
+        </a>
+    </li>
+    {/loop}
+    </ul>
+{else}
+<ul class="mui-table-view">
+    <li class="mui-table-view-cell">最近搜索:</li>
+    {loop $keywords $keyword}
+    <li class="mui-table-view-cell">
+        <a href="{php echo $this->createMobileUrl('search',array('keyword'=>$keyword['keyword']));}">
+        {$keyword['keyword']}
+        </a>
+    </li>
+    {/loop}
+</ul>
+{/if}
+
+{template 'common/footer'}

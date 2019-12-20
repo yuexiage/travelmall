@@ -1,0 +1,104 @@
+<link href="./resource/css/bootstrap.min.css" rel="stylesheet">
+<script type="text/javascript" src="./resource/js/lib/jquery-1.11.1.min.js"></script>
+<script src="{$_W['siteroot']}app/resource/js/require.js"></script>
+<script>
+	function addHotel(id,name){
+		var v = "<li><i class='glyphicon glyphicon-remove'></i>"+name+"<input type='hidden' name='hotellist["+id+"]' value='"+name+"' ></li>";
+        if ( $("input[name='hotellist["+id+"]']",window.parent.document).length > 0 ) {
+            alert('已存在!');
+        }else{
+            $(".hotel_list ul",window.parent.document).append(v);
+            alert('添加成功!');
+        }
+	}
+</script>
+<style>
+	input[type=radio], input[type=checkbox]{
+		width: 18px;
+		height: 18px;
+		margin-left: 20px;
+	}
+</style>
+<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form action="./index.php" method="get" class="form-horizontal" role="form">
+			<input type="hidden" name="c" value="site" />
+			<input type="hidden" name="a" value="entry" />
+			<input type="hidden" name="m" value="yuexiage_travelmall" />
+			<input type="hidden" name="do" value="hotellist" />
+			<input type="hidden" name="op" value="display" />
+			<input type="hidden" name="action" value="hotellist" />
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">关键字</label>
+				<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					<input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">
+				酒店地区
+				</label>
+				<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					{php echo tpl_form_field_category_2level('hotel', $regions['countrys'], $regions['_citys'], $_GPC['hotel']['parentid'], $_GPC['hotel']['childid']);}
+				</div>
+				<div class="pull-right col-xs-12 col-sm-2 col-md-2 col-lg-2">
+					<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="main">
+	<div class="hotel">
+		<form action="" method="post" onsubmit="return formcheck(this)">
+		<div class="panel panel-default">
+		<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th style="width:25%;">酒店名称</th>
+					<th style="width:5%;">星级</th>
+					<th style="width:50px; text-align:center">状态</th>
+					<th style="width:8%;">联系电话</th>
+					<th style="width:15%; text-align:center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			{loop $hotel $row}
+				<tr>
+					<td class="text-left">
+						<div style="height:30px;line-height:30px">
+							<strong>
+								[{$regions['countrys'][$row['country_id']]['name']}]
+								[{$citys[$row['city_id']]['name']}]
+							</strong>
+							{$row['name']}
+						</div>
+					</td>
+					<td>
+						{$row['star']}星
+					</td>
+					<td>
+						{if $row['enabled']==1}
+							<span class="label label-success">发布</span>
+						{else}
+							<span class="label label-default">未发布</span>
+						{/if}
+					</td>
+					<td>
+						{$row['contact']}
+					</td>
+					<td class="text-right" style="position:relative;">
+						<a href="javascript:;" onclick="addHotel('{$row['hotel_id']}','{$row['name']}')">选择</a>
+					</td>
+				</tr>
+			{/loop}
+			</tbody>
+		</table>
+		</div>
+		</div>
+		</form>
+	</div>
+</div>
+{$pager}

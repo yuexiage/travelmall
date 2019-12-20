@@ -1,0 +1,234 @@
+{template 'common/header'}
+<ul class="nav nav-tabs">
+	<li {if $do == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('module', array('op' => 'display','action'=>'poop'));}">管理甩尾</a></li>					
+	<li {if $do == 'post' && empty($id)}class="active"{/if}><a href="{php echo $this->createWebUrl('module', array('op' => 'post','action'=>'poop'));}">添加甩尾</a></li>
+	{if $do == 'post' && $id}
+	<li {if $do == 'post' && !empty($id)}class="active"{/if}><a href="{php echo $this->createWebUrl('module', array('op' => 'post','id'=>$id,'action'=>'poop'));}">编辑</a></li>
+	{/if}
+</ul>
+<style>
+	.select{
+		padding:10px;
+		border-radius: 5px;
+		border:1px solid #ddd;
+		width: 80px;
+		text-align: center;
+		cursor:pointer;
+	}
+	.select:hover{
+		border:1px solid #bbb;
+		background-color: #ddd;
+	}
+	input[type='radio']{
+		width: 20px;
+		height:20px;
+	}
+</style>
+{if $do == 'post'}
+<div class="tab_container"> 
+	<div id="tab1" class="tab_content main" style="display: block; ">
+	<form action="" method="post" class="form-horizontal form" id="form1">
+		<div class="panel panel-default">
+			<div class="panel-heading">甩尾详细设置</div>
+			<div class="panel-body">
+				{if !empty($module_post['name'])}
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">访问地址</label>
+					<div class="col-sm-8 col-xs-12">
+						<div class="form-control-static">
+						<a href="{$_W['siteroot']}app/index.php?c=entry&m=yuexiage_travelmall&do=module&id={$module['id']}&i={$_W['uniacid']}" target="_blank">
+							{$_W['siteroot']}app/index.php?c=entry&m=yuexiage_travelmall&do=module&id={$module_post['id']}&i={$_W['uniacid']}
+						</a>
+						</div>
+						<span class="help-block">您可以根据此地址，添加回复规则，设置访问。</span>
+					</div>
+				</div>
+				{/if}
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">排序</label>
+					<div class="col-sm-8 col-xs-12">
+						<input type="text" name="displayorder" class="form-control" value="{$module_post['displayorder']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">发布</label>
+					<div class="col-sm-8 col-xs-12">
+						<label>
+							<input type="radio" value="1" name="enabled" {php if ($module_post['enabled']=='1') echo "checked='checked' ";}>是
+						</label>
+						<label>
+							<input type="radio" value="0" name="enabled" {php if ($module_post['enabled']=='0') echo "checked='checked' ";}>否
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">显示标题</label>
+					<div class="col-sm-8 col-xs-12">
+						<label>
+							<input type="radio" value="1" name="show_title" {php if ($module_post['show_title']=='1') echo "checked='checked' ";}>是
+						</label>
+						<label>
+							<input type="radio" value="0" name="show_title" {php if ($module_post['show_title']=='0') echo "checked='checked' ";}>否
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">甩尾名称</label>
+					<div class="col-sm-8 col-xs-12">
+						<input type="text" name="name" class="form-control" value="{$module_post['name']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">位置</label>
+					<div class="col-sm-8 col-xs-12">
+					{template 'position'}
+					</div>
+				</div>
+				<fieldset>
+					<legend>选择线路</legend>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">选择线路</label>
+						<div class="col-sm-8 col-xs-12 link">
+							<div class="select" data-toggle="modal" data-target="#myModal">选择</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">线路列表</label>
+						<div class="col-sm-8 col-xs-12 link">
+							<div class="lineList1"><ul class="list-group">
+								{php $line_f = array_shift($line);}
+								{loop $line_f $k $l}
+									<li class='list-group-item'>
+										<i class='glyphicon glyphicon-remove'></i>{$l}
+										<input type='hidden' name='line[1][{$k}]' value='{$l}' ></li>
+								{/loop}
+							</ul></div>
+						<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+							<div class="modal-dialog" role="document" style="width: 80%;height: 500px;">
+							    <div class="modal-content">
+							    	<div class="modal-header">
+							        	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							        		<span aria-hidden="true">&times;</span>
+							        	</button>
+							        	<h4 class="modal-title" id="myModalLabel">选择线路</h4>
+							      	</div>
+								    <div class="modal-body">
+								        <div class="select_hotel" >
+								        	<iframe src="{$_W['script_name']}?c=site&a=entry&m=yuexiage_travelmall&do=offeredlist&n=1" width="100%" height="400px;"></iframe>
+								        </div>
+								    </div>
+							      	<div class="modal-footer">
+							        	<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+							      	</div>
+							    </div>
+						  	</div>
+						</div>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-12">
+				<input name="submit" type="submit" value="提交" class="btn btn-primary col-lg-1">
+				<input type="hidden" name="token" value="{$_W['token']}" />
+			</div>
+		</div>
+	</form>
+	</div>
+	<script type="text/javascript">
+		$("#form1").submit(function(){
+			if($("input[name='name']").val() == '') {
+				util.message('请输入甩尾名称', '', 'error');
+				return false;
+			}
+		});
+		$(function(){
+			$(document).on('click','.glyphicon-remove',function(){
+				$(this).parent().remove();
+			});
+		});
+	</script>
+</div>
+{elseif $do == 'display'}
+<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form action="./index.php" method="get" class="form-horizontal" role="form">
+			<input type="hidden" name="c" value="site" />
+			<input type="hidden" name="a" value="entry" />
+			<input type="hidden" name="m" value="yuexiage_travelmall" />
+			<input type="hidden" name="do" value="module" />
+			<input type="hidden" name="op" value="display" />
+			<input type="hidden" name="action" value="module" />
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">关键字</label>
+				<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					<input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="pull-right col-xs-12 col-sm-2 col-md-2 col-lg-2">
+					<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="main">
+	<div class="module">
+		<form action="" method="post" onsubmit="return formcheck(this)">
+		<div class="panel panel-default">
+		<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th style="width: 6%; text-align:center;">显示顺序</th>
+					<th style="width:25%;">甩尾名称</th>
+					<th style="width:50px; text-align:center">状态</th>
+					<th style="width:15%; text-align:center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			{loop $modules $row}
+				<tr>
+					<td class="text-center">
+						<input type="text" class="form-control" name="displayorder[{$row['id']}]" value="{$row['displayorder']}">
+					</td>
+					<td class="text-left">
+						<div style="height:30px;line-height:30px">
+							{$row['name']}
+						</div>
+					</td>
+					<td>
+						{if $row['enabled']==1}
+							<span class="label label-success">发布</span>
+						{else}
+							<span class="label label-default">未发布</span>
+						{/if}
+					</td>
+					<td class="text-right" style="position:relative;">		
+						<a href="{php echo $this->createWebUrl('module', array('op' => 'post','id' => $row['id'],'id' => $row['id'],'action'=>'poop'));}" title="编辑">编辑</a>&nbsp;-&nbsp;
+						<a href="{php echo $this->createWebUrl('module', array('op' => 'delete','id' => $row['id'],'action'=>'poop'));}" onclick="return confirm('确认删除此甩尾吗？');return false;" title="删除">删除</a>
+					</td>
+				</tr>
+			{/loop}
+				<tr>
+					<td colspan="4">
+						<a href="{php echo $this->createWebUrl('module', array('op' => 'post','action' => 'poop'));}"><i class="fa fa-plus-circle" title="添加新甩尾"></i> 添加新甩尾</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
+		</div>
+			<div class="form-group col-sm-12">
+				<input name="submit" type="submit" class="btn btn-primary col-lg-1" value="提交">
+				<input type="hidden" name="token" value="{$_W['token']}" />
+			</div>
+		</form>
+	</div>
+</div>
+{$pager}
+{/if}
+{template 'common/footer'}

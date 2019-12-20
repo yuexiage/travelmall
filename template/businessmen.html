@@ -1,0 +1,21 @@
+{template 'common/header'}
+<div class="clearfix welcome-container">
+	<div class="page-header">
+		<h4><i class="fa fa-plane"></i>商家功能菜单</h4>
+	</div>
+	<div class="shortcut clearfix">
+		<a href="{php echo $this->createWebUrl('businessmen', array('action' => 'businessmen_categorys'))}" title="分类">
+			<i class="fa fa-folder"></i>
+			<span>分类</span>
+		</a>
+		<a href="{php echo $this->createWebUrl('businessmen', array('action' => 'businessmen_info'))}" title="商家信息">
+			<i class="fa fa-folder"></i>
+			<span>商家信息</span>
+		</a>
+		<a href="{php echo $this->createWebUrl('businessmen', array('action' => 'businessmen_order'))}" title="商家信息">
+			<i class="fa fa-folder"></i>
+			<span>商家订单</span>
+		</a>
+	</div>
+</div>
+{template 'common/footer'}

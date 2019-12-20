@@ -1,0 +1,102 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
+<header class="mui-bar mui-bar-nav mui-bar-transparent">
+    <a class="mui-icon mui-icon mui-icon-back  mui-pull-left" href="javascript:history.go(-1)"></a>
+    <h1 class="mui-title">
+        {$order['goods_name']}
+    </h1>
+    <a class="mui-icon mui-icon mui-icon-search  mui-pull-right" href="javascript:history.go(-1)"></a>
+</header>
+<style>
+    body{
+        background-color: #efeff4;
+        padding-top: 30px;
+    }
+</style>
+{php $img = iunserializer($order['thumbs']);}
+<ul class="mui-table-view">
+    <li class="mui-table-view-cell mui-media">
+        <a href="javascript:;">
+            <img class="mui-media-object mui-pull-left" src="{php echo tomedia($img['0'])}">
+            <div class="mui-media-body">
+                {$order['goods_name']}
+                <p class='mui-ellipsis'>{$order['description']}</p>
+            </div>
+            <span class="mui-badge">
+            {if $order['status'] == '0'}
+                待付款
+            {elseif $order['status'] == '1'}
+                已付款
+            {elseif $order['status'] == '2'}
+                已完成
+            {/if}
+            </span>
+        </a>
+    </li>
+</ul>
+<p>订单信息:</p>
+<ul class="mui-table-view">
+    <li class="mui-table-view-cell">
+        <label>订单号:</label>
+        {$order['ordersn']}
+    </li>
+    <li class="mui-table-view-cell">
+        <label>出团日期:</label>
+        {php echo date("Y-m-d",$order['event_day'])}
+    </li>
+    <li class="mui-table-view-cell">
+        <label>成人价格/数量:</label>
+        {$order['adult_price']}/{$order['adult_num']}
+    </li>
+    <li class="mui-table-view-cell">
+        <label>儿童价格/数量:</label>
+        {$order['child_price']}/{$order['child_num']}
+    </li>
+    <li class="mui-table-view-cell">
+        <label>邀请码:</label>
+        {$order['invitation']}
+    </li>
+    {if $order['coupon_price']}
+    <li class="mui-table-view-cell">
+        <label>优惠券金额:</label>
+        {$order['coupon_price']}
+    </li>
+    {/if}
+    {if $order['credit_num']}
+    <li class="mui-table-view-cell">
+        <label>扣除积分:</label>
+        {$order['credit_num']}
+    </li>
+    {/if}
+    {if $order['credit_value']}
+    <li class="mui-table-view-cell">
+        <label>积分抵扣金额:</label>
+        {$order['credit_value']}
+    </li>
+    {/if}
+    <li class="mui-table-view-cell">
+    <label>总价:</label>
+    {$order['total']}
+    </li>
+</ul>
+<p>联系人信息:</p>
+<ul class="mui-table-view">
+    <li class="mui-table-view-cell">
+        <label>姓名:</label>
+        {$order['contact_name']}
+    </li>
+    <li class="mui-table-view-cell">
+        <label>电话:</label>
+        {$order['contact_tel']}
+    </li>
+    <li class="mui-table-view-cell">
+        <label>身份证:</label>
+        {$order['contact_id']}
+    </li>
+    <li class="mui-table-view-cell">
+        <label>邮箱:</label>
+        {$order['contact_email']}
+    </li>
+</ul>
+
+{template 'common/footer'}

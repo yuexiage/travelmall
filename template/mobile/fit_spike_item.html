@@ -1,0 +1,312 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
+<header id="header" class="mui-bar mui-bar-transparent">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title"></h1>
+</header>
+<style>
+	.dt-item-day{
+		font-weight:700;
+	}
+	dt{
+		font-weight:700;
+	}
+</style>
+<div class="mui-content">
+    <div class="mui-slider">
+        <div class="mui-slider-group">
+            {loop $spike_item['thumbs'] $row}
+            <div class="mui-slider-item">
+              <img src="{php echo tomedia($row);}" width="100%">
+            </div>
+            {/loop}
+        </div>
+    </div>
+    <div class="besa_info">
+        <h5>
+            {$spike_item['name']}
+        </h5>  
+        <div id="priceInfo" class="priceInfo">
+            <div class="price ordinary">            
+                <span class="promoCommon">
+                    促销价&nbsp;&nbsp;￥<strong>{$spike_item['adult_price']}</strong> 起                                         
+                </span>
+            </div>  
+        </div>
+    </div>
+    {if $spike_item['upper_shelf'] =='1' && $spike_item['end'] =='1'}
+    <div class="xiajia">
+        当前商品已下架
+    </div>
+    {/if}
+    <ul class="mui-table-view spike_panel_li">
+        {if $spike_item['coupon_id']>0 && $spike_item['end'] !='1'}
+        <li class="mui-table-view-cell">
+            <a class="mui-navigate-right coupon" id="{$coupon['id']}"><span class="mui-badge">领取</span>{$coupon['name']}</a>
+        </li>
+        {/if}
+        {if $spike_item['credit']>0}
+        <li class="mui-table-view-cell">
+            <span class="credit_icon">积分</span>购买可得{$spike_item['credit']}积分
+        </li>
+        {/if}
+    </ul>
+    <ul class="mui-table-view spike_panel_li">
+        <li class="mui-table-view-cell">
+            出发城市：{$spike_item['lname']}
+        </li>
+    </ul>
+    <div id="receptionAgency" class="reception-agency">     
+        <div class="agency-name">           
+            <p class="agency">特别说明</p>     
+        </div>      
+        <div class="agency-description">            
+            {$spike_item['description']}                      
+        </div>  
+    </div>
+
+    <ul class="mui-table-view spike_panel_li">
+        <li class="mui-table-view-cell">
+            <i class="glyphicon glyphicon-plane"></i>去程航班：{$flights[$spike_item['trip']]['airline']} ({$flights[$spike_item['trip']]['aircraft_type']}){$flights[$spike_item['trip']]['air_num']}  
+        </li>
+    </ul>
+
+    <div id="receptionAgency" class="reception-agency">     
+        <div class="agency-name">           
+            <p class="agency">{$citys[$flights[$spike_item['trip']]['departure_city']]['name']}/{php echo date("H:i",$spike_item['departure_time']);}
+            {if $flights[$spike_item['trip']]['stop_city_yid']}
+                -><span class="glyphicon glyphicon-stop"></span>{php echo $citys[$flights[$spike_item['trip']]['stop_city_yid']]['name'];}
+            {/if}
+            ->{php echo $citys[$flights[$spike_item['trip']]['arrival_city_yid']]['name'];}/
+            {php echo date("H:i",$spike_item['arrival_time']);}
+            </p>     
+        </div>      
+        <div class="agency-description">            
+            乘机：{$flights[$spike_item['trip']]['flight_duration']}  小时            
+        </div>  
+    </div>
+     <ul class="mui-table-view spike_panel_li">
+        <li class="mui-table-view-cell">
+            <i class="glyphicon glyphicon-plane"></i>返程航班：{$flights[$spike_item['return_trip']]['airline']} ({$flights[$spike_item['return_trip']]['aircraft_type']}){$flights[$spike_item['return_trip']]['air_num']}  
+        </li>
+    </ul>
+
+    <div id="receptionAgency" class="reception-agency">     
+        <div class="agency-name">           
+            <p class="agency">{$citys[$flights[$spike_item['return_trip']]['departure_city']]['name']}/{php echo date("H:i",$spike_item['departure_time']);}
+            {if $flights[$spike_item['return_trip']]['stop_city_yid']}
+                -><span class="glyphicon glyphicon-stop"></span>{php echo $citys[$flights[$spike_item['return_trip']]['stop_city_yid']]['name'];}
+            {/if}
+            ->{php echo $citys[$flights[$spike_item['return_trip']]['arrival_city_yid']]['name'];}/
+            {php echo date("H:i",$spike_item['arrival_time']);}
+            </p>     
+        </div>      
+        <div class="agency-description">            
+            乘机：{$flights[$spike_item['return_trip']]['flight_duration']}  小时            
+        </div>  
+    </div>
+
+    <div class="journey-nav">
+        <div class="bar single">
+            <ul>
+                <li class="xselect">行程</li>
+                <li>费用包含</li>
+                <li>费用不包含</li>
+                <li>签证说明</li>
+                <li>预订须知</li>
+            </ul>
+        </div> 
+    </div>
+    <!-- 行程 -->
+    <div class="journey-content-nobg" id="xcjs">        
+        <div class="journeys">      
+            <div class="journeys-main journeys-summary" id="J_journeys">    
+                <div class="journeys-dt">                                   
+                    <ul>                        
+                        <li>                            
+                            <div class="journeys-dt-container">    
+                                {loop $strokes $stroke}
+                                <div class="journeys-dt-item">    
+                                    <div class="dt-item-title">     
+                                        <span class="dt-icon-summary"><i></i>
+                                        </span>
+                                        <p class="dt-item-day">第{$stroke['displayorder']}天</p>
+                                        <p style="font-weight:700">行程<i class="dt-icon-traffic-t icon-link_plane"></i>
+                                        {$stroke['stroke']}
+                                        </p>
+                                    </div>                                  
+                                    <div class="dt-item-content">    
+                                        <dl class="dt-item-table-summary">    
+                                            <dt>
+                                                <i class="dt-icon-t icon-overview_hotel"></i>
+                                                住宿：
+                                            </dt>
+                                            <dd>&nbsp;
+                                {loop $stroke['stay'] $stay}
+                                <a href="javascript:;">{$stay['name']}</a>                    
+                                {/loop}
+                                            </dd>
+                                           
+                                            <dt><i class="dt-icon-t icon-play-free"></i>景点：</dt>
+                                            
+                                            <dd class="dt-table-act">&nbsp;
+                                {loop $stroke['viewpoint'] $viewpoint}
+
+                                    <div class="mui-slider" style="width:300px">
+                                        <div class="mui-slider-group">
+                                            {loop $viewpoint['thumbs'] $thumb}
+                                            <div class="mui-slider-item">
+                                              <img src="{php echo tomedia($thumb);}" width="100%">
+                                              <p class="mui-slider-title">{$viewpoint['name']}</p>
+                                            </div>
+                                            {/loop}
+                                        </div>
+                                    </div>           
+                                {/loop}             
+                                            </dd>
+                                            <dt>
+                                                <i class="dt-icon-t icon-play-free"></i>早餐：
+                                            </dt>
+                                            <dd>&nbsp;{$stroke['breakfast']}
+                                            </dd>
+											<dt>
+                                                <i class="dt-icon-t icon-play-free"></i>午餐：
+                                            </dt>
+                                            <dd>&nbsp;{$stroke['lunch']}
+                                            </dd>
+											<dt>
+                                                <i class="dt-icon-t icon-play-free"></i>晚餐：
+                                            </dt>
+                                            <dd>&nbsp;{$stroke['dinner']}
+                                            </dd>
+                                            <dt><i class="dt-icon-t icon-play-free"></i>购物：</dt>
+                                            <dd class="dt-table-act">&nbsp;{$stroke['shopping']}</dd>
+                                        </dl>
+                                    </div>
+                                </div>                                            
+                                {/loop}
+                            </div>                      
+                        </li>                   
+                    </ul>                           
+                </div>                      
+            </div>              
+        </div>  
+    </div>
+
+    <!-- 费用包含 -->
+    <div class="contain">
+        <h5>费用包含</h5>
+        {php echo htmlspecialchars_decode($spike_item['contain']);}
+    </div>
+    <!-- 费用不包含 -->
+    <div class="not_included">
+        <h5>费用不包含</h5>
+        {php echo htmlspecialchars_decode($spike_item['not_included']);}
+    </div>
+    <!-- 签证说明 -->
+    <div class="not_included">
+        <h5>签证说明</h5>
+        {php echo htmlspecialchars_decode($spike_item['visa']);}
+    </div>
+    <!-- 预订须知 -->
+    <div class="booked">
+        <h5>预订须知</h5>
+        {php echo htmlspecialchars_decode($spike_item['booked']);}
+    </div>
+</div>
+<div class="bottom_nav">
+    <div class="mui-row">
+        <div class="mui-col-sm-3 mui-col-xs-3 kefu">
+        <p style="    padding: 0; margin: 0;">
+            <i class="mui-icon mui-icon-phone"></i>
+        </p>
+        <a href="tel:{php echo $this->settings['consumer'];}">客服电话</a>
+        
+        </div>
+        <div class="mui-col-sm-3 mui-col-xs-3 shoucang {if $collection} active{/if}" style="
+    cursor: pointer;">
+        <p style="    padding: 0; margin: 0;">
+            <i class="mui-icon mui-icon-star"></i>
+        </p>
+        收藏
+        </div>
+        <div class="mui-col-sm-6 mui-col-xs-6 next " id="orderButton">
+        下一步
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function(){
+        $(".coupon").click(function(){ 
+            var id = $(this).attr('id');
+            mui.ajax("{php echo $this->createMobileUrl('getCoupon',array('country_id'=>$coupon['id'],'id'=>$_GPC['id']));}",{
+ 
+                dataType:'html',//服务器返回json格式数据
+                type:'get',//HTTP请求类型
+                timeout:10000,//超时时间设置为10秒；
+                headers:{'Content-Type':'application/json'},                  
+                success:function(data){
+                    var dataset = $.parseJSON(data);
+                    mui.toast(dataset.msg);
+                },
+                error:function(xhr,type,errorThrown){   
+                    console.log(type);
+                }
+            });
+        });
+
+        $(".shoucang").click(function(){ 
+            mui.ajax("{php echo $this->createMobileUrl('collection',array('id'=>$_GPC['id']));}",{
+ 
+                dataType:'html',//服务器返回json格式数据
+                type:'get',//HTTP请求类型
+                timeout:10000,//超时时间设置为10秒；
+                headers:{'Content-Type':'application/json'},                  
+                success:function(data){
+                    var dataset = $.parseJSON(data);
+                    if(dataset.error=='0'){
+                        $(".shoucang").addClass('active');
+                        mui.toast(dataset.msg);
+                    } 
+                },
+                error:function(xhr,type,errorThrown){   
+                    console.log(type);
+                }
+            });
+        });
+    });
+    mui.plusReady(function() {
+    });
+    document.getElementById('orderButton').addEventListener('tap', function() {
+        var id = {$_GPC['id']};
+        mui.ajax("{php echo $this->createMobileUrl('Checkuser',array('t'=>'place_an_order'));}",{
+            data:{
+                id:id,
+            },
+            dataType:'html',//服务器返回json格式数据
+            type:'get',//HTTP请求类型
+            timeout:10000,//超时时间设置为10秒；
+            headers:{'Content-Type':'application/json'},                  
+            success:function(data){
+                var dataset = $.parseJSON(data);
+                if(dataset.error ==0){
+                    if(dataset.msg.place_an_order=='0' || dataset.msg==false){
+                        mui.openWindow({
+                            url: "{php echo $this->createMobileUrl('fit_calendar',array('id'=>$_GPC['id']));}", 
+                            id:'info'
+                        });
+                    }else{
+                        mui.toast('没有权限!');
+                    }
+                }else{
+                    mui.toast('没有权限!');
+                }
+            },
+            error:function(xhr,type,errorThrown){
+                //异常处理；
+                console.log(type);
+            }
+        });
+    });
+</script>
+{template 'common/footer'}

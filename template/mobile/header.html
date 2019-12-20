@@ -1,0 +1,120 @@
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=9112f5fe8e098f1488ccaf92b619f974"></script>
+<script>
+    wx.ready(function(){
+        wx.getLocation({
+        type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+        success: function (res) {
+            var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+            var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+            var speed = res.speed; // 速度，以米/每秒计
+            var accuracy = res.accuracy; // 位置精度
+            $.ajax({
+                url:"{php echo $this->createMobileUrl('Getgps');}",
+                data:{
+                    latitude:latitude,
+                    longitude:longitude
+                    },
+                dataType:'json',
+                type:'post',
+                success:function(data){
+                    data=eval('('+data+')');
+                    console.log(data);
+                    if(data.status=='0'){
+                        $("#nowGPSCity").val(data.result.addressComponent.city); 
+                        $(".mall_header .mui-pull-left span").text(data.result.addressComponent.city);
+                    }
+                        
+                }
+   
+            });
+        },  
+        cancel: function (res) {  
+            alert('用户拒绝授权获取地理位置');  
+        } 
+        });
+    });
+</script>
+<style>
+    .citylist,.searchlist{
+        position: fixed;
+        width: 100%;
+        background-color: #fff;
+        top: 45px;
+        z-index: 9;
+        display: none;
+    }
+    .close{
+        float: right;
+        margin-right: 10px;
+        font-size: 13px;
+    }
+</style>
+<header class="mui-bar mui-bar-nav mall_header">
+    <a class="mui-icon mui-icon-home-filled  mui-pull-left gps_city" href="javascript:;"><span>{php echo $_SESSION['newGPSCity']?$_SESSION['newGPSCity']:$_SESSION['nowGPSCity'];}</span></a>
+    <input type="hidden" id="nowGPSCity" value="">
+    <form class="mui-input-group search" action="{php echo $this->createMobileUrl('search',array());}" method="post" >
+        <input type="search" id="search"  name="keyword" maxlength="10" style="background-color: #fff;text-align: left;">
+    </form>
+    <a class="mui-icon mui-icon-person mui-pull-right" href="{php echo $this->createMobileUrl('personal_center');}"></a>
+</header>
+<div class="citylist">
+    <ul class="allcity">
+        {loop $citys $city}
+        <li>
+            <a href="{php echo $this->createMobileUrl('entrance');}&newCity={$city['name']}">
+                <div class="mui-media-body">{$city['name']}</div>
+            </a>
+        </li>
+        {/loop}
+        <li style="border-top: 1px solid #eee;padding: 5px 0px;height: 30px;line-height: 30px;margin-bottom: 0px;">
+            <span class="close">
+                关闭
+            </span>
+        </li>
+    </ul>
+</div>
+<div class="searchlist">
+    <ul class="allsearch">
+        {loop $keywords $keyword}
+        <li>
+            <a href="javascript:;" class="keyword">
+                <div class="mui-media-body">{$keyword['keyword']}</div>
+            </a>
+        </li>
+        {/loop}
+        <li style="border-top: 1px solid #eee;padding: 5px 0px;height: 30px;line-height: 30px;margin-bottom: 0px;display: block;">
+            <span class="close">
+                关闭
+            </span>
+        </li>
+    </ul>
+</div>
+<script>
+    window.onload = function(){ 
+    　　var w = $(window).width();
+        $("#search").css({"width":w-153,'height':'34','margin-top':'5px','margin-left':'5px','display':'block','float': 'left'});
+    } 
+    $(function(){
+        $(".gps_city").click(function(){
+            $(".citylist").show();
+            $(".searchlist").hide();
+        });
+
+        $(".close").click(function(){
+            $(".citylist").hide();
+            $(".searchlist").hide();
+        });
+
+        $("#search").click(function(){
+            $(".citylist").hide();
+            $(".searchlist").show();
+        });
+
+        $(".keyword").click(function(){
+            var text = $(this).text();
+            $("#search").val(text.trim());
+            $(".search").submit();
+        });
+    });
+</script>

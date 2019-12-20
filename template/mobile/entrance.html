@@ -1,0 +1,44 @@
+{template 'template/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/entrance.css?{TIMESTAMP}">
+<header class="mui-bar mui-bar-nav mui-bar-transparent write" data-top='0' data-offset='150' data-duration='20' data-scrollby=".mui-scroll-wrapper">
+    <div class="mui-row">
+        <div class="mui-col-sm-2 mui-col-xs-2 mui-bar-city">
+            {php echo $this->settings['defaultCity']}
+            <span class="mui-icon mui-icon-arrowdown"></span>
+        </div>
+        <div class="mui-col-sm-8 mui-col-xs-8 mui-bar-search">
+            <input type="search" class="mui-input-clear" placeholder="搜索" readonly>
+        </div>
+        <div class="mui-col-sm-1 mui-col-xs-1">
+            <span class="mui-icon mui-icon-phone"></span>
+        </div>
+        <div class="mui-col-sm-1 mui-col-xs-1">
+            <span class="mui-icon mui-icon-chat"></span>
+        </div>
+    </div>
+</header>
+<div class="mui-content entrance">
+
+</div>
+<script>
+    $(function () {
+        $.ajax({
+            url: "{php echo $this->createMobileUrl('entrance');}",
+            type: "GET",
+            async: false,
+            success: function(data) {
+                resp = data;
+                $(".entrance").html(resp);
+            }
+        })
+        $(".mui-bar-transparent").on("alpha", function(evt) {
+            var alpha= evt.detail.alpha
+            if(alpha == 0){
+                $(this).removeClass('black').addClass('write');
+            }else{
+                $(this).removeClass('write').addClass('black');
+            }
+        });
+    });
+</script>
+{template 'template/footer'}

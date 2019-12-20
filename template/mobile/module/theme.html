@@ -1,0 +1,27 @@
+<style>
+.mui-slider .mui-slider-group .mui-slider-item.mui-col-xs-3,.mui-slider .mui-slider-group .mui-slider-item.mui-col-sm-3 {
+    width: 25%;
+}
+</style>
+<div class="theme_mod">
+    {if $theme['show_title'] =='1'}
+    <div class="floor-header fh-center">  
+    <h5>{$theme['name']}</h5>
+    </div>
+    {/if}
+    {php $theme['img'] = iunserializer($theme['img']);}
+    {php $theme['theme_id'] = iunserializer($theme['theme_id']);}
+    <div class="mui-slider">
+        <div class="mui-slider-group">
+            {loop $theme['img'] $key $img}
+            {if !empty($img)}
+            <div class="mui-slider-item mui-col-xs-3 mui-col-sm-3" style="    padding: 2px;">
+                <a href="{php echo $this->createMobileUrl('theme',array('id'=>$key));}">
+                    <img src="{php echo tomedia($img);}" />
+                </a>
+            </div>
+            {/if}
+            {/loop}
+        </div>
+    </div>
+</div>

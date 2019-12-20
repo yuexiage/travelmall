@@ -1,0 +1,63 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
+<form action="" method="post" class="form-horizontal form" id="form1">
+<header id="header" class="mui-bar mui-bar-transparent">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <a class="mui-icon mui-icon-checkmarkempty mui-icon mui-icon-right-nav mui-pull-right">发布</a>
+    <h1 class="mui-title"></h1>
+</header>
+<style>
+    .mui-bar .mui-icon-checkmarkempty{
+        font-size: 14px;
+        color:#04be02;
+    }
+</style>
+<div class="mui-content" style="padding:10px">
+   <ul style="margin-top: 30px;    margin-top: 30px;
+    background-color: #fff;
+    padding: 10px;">
+       <li>
+           是否满意:
+       </li>
+       <li style="overflow: hidden;margin-bottom: 10px">
+           <ul class="attitude">
+               <li class="active" id="1">满意</li>
+               <li id="2">一般</li>
+               <li id="3">不满意</li>
+           </ul>
+       </li>
+       <input type="hidden" name="attitude" value="1">
+        <li>
+           内容:
+       </li>
+       <li style="overflow: hidden;">
+          <textarea class="form-control" name="content" maxlength="255"></textarea>
+       </li>
+       <li>
+           {php echo tpl_app_form_field_image('images', $image);}
+       </li>
+   </ul>
+</div>
+</form>
+<script>
+    $(function(){
+        $(".attitude li").click(function(){
+            var id = $(this).attr("id");
+            $(".attitude li").removeClass("active");
+            $(this).addClass("active");
+            $("input[name='attitude']").val(id);
+        });
+
+        $(".mui-icon-checkmarkempty").click(function(){
+            var a = $("textarea[name='content']").val();
+            if(a==''){
+                mui.alert('内容不能为空','提示框');
+                return false;
+            }else{
+                $("#form1").submit();
+            }
+        });
+
+    });
+</script>
+{template 'common/footer'}

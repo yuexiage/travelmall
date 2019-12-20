@@ -1,0 +1,234 @@
+<div class="row">
+    <div class="col-md-8">
+        <div class="calendar">
+            <div class="title">
+                <h1>
+                    <span class="green" id="calendar-title">月</span>
+                    <span class="green" id="calendar-year">年</span>
+                </h1>
+                <a href="" class="glyphicon glyphicon-chevron-left green" id="pre"></a>
+                <a href="" class="glyphicon glyphicon-chevron-right green" id="next"></a>
+            </div>
+            <div class="body">
+                <div class="lightgrey body-list">
+                    <ul class="week">
+                        <li>周日</li>
+                        <li>周一</li>
+                        <li>周二</li>
+                        <li>周三</li>
+                        <li>周四</li>
+                        <li>周五</li>
+                        <li>周六</li>
+                    </ul>
+                </div>
+                <div class="darkgrey body-list">
+                    <ul id="days"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="panel from-panel panel-success date-panel" style="display: none">
+            <div class="panel-heading">参团游详细设置</div>
+            <div class="panel-body">
+                <form>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">成人价</span>
+                            <input type="number" class="form-control" id="adult" placeholder="成人价" >
+                            <span class="input-group-addon">￥</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">儿童价</span>
+                            <input type="number" class="form-control" id="child" placeholder="儿童价" >
+                            <span class="input-group-addon">￥</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">单房差</span>
+                            <input type="number" class="form-control" id="single" placeholder="单房差" >
+                            <span class="input-group-addon">￥</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">库存</span>
+                            <input type="number" class="form-control"  id="stock" placeholder="库存" >
+                            <span class="input-group-addon">位</span>
+                        </div>
+                    </div>
+                    <div class="form-group panel-btn" style=" text-align: center;">
+
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="select_list">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function(){
+        var date_update = '<button type="button" class="btn btn-warning update-btn">更新</button>\
+      									<button type="button" class="btn btn-warning delete-btn">删除</button>\
+      									<button type="button" class="btn btn-warning centel-btn">取消</button>';
+        var date_insert = '<button type="button" class="btn btn-warning ok-btn">确定</button>\
+      									<button type="button" class="btn btn-warning centel-btn">取消</button>';
+        $.calendar._({
+            dayClick:function(date,obj){
+                //确定点击的是哪个日期
+                var data_date = $(obj).attr('data-date');
+                //如果背景已经是绿色
+                if($(obj).hasClass("selection")){
+                    //其中是否有内容
+                    if(!$(obj).hasClass("exist_content")){
+                        $(obj).removeClass("selection");
+                        if($(".calendar #days .days_li.selection").length == 0){
+                            $(".date-panel").hide();
+                        }
+                        $(obj).removeClass("selection");
+                        $("#"+data_date).remove();
+                    }
+                }else{
+                    //如果没有被选择
+                    if($(obj).hasClass("exist_content")){
+                        $(".calendar .body-list ul li.selection").removeClass('selection');
+                        $(".select_list").html('').append("<input type='hidden' id='"+data_date+"' class='date_list' value='"+data_date+"' >");
+                        $(".panel-btn").html(date_update);
+
+                        var adult = $(".day-content-adult .day-content-adult-price",obj).text();
+                        $("#adult").val(parseInt(adult));
+                        var child = $(".day-content-child .day-content-child-price",obj).text();
+                        $("#child").val(parseInt(child));
+                        var stock = $(".day-content-stock .day-content-child-price",obj).text();
+                        $("#stock").val(parseInt(stock));
+                        var single = $(".day-content-single .day-content-child-price",obj).text();
+                        $("#single").val(parseInt(single));
+                    }else{
+                        $(".select_list").append("<input type='hidden' id='"+data_date+"' class='date_list' value='"+data_date+"' >");
+                        $(".exist_content.selection").each(function(k,d){
+                            var da = $(this).attr('data-date');
+                            $("#"+da).remove();
+                        });
+                        $(".exist_content.selection").removeClass('selection');
+                        $(".panel-btn").html(date_insert);
+                    }
+                    $(obj).addClass("selection");
+                    $(".date-panel").show();
+                }
+            },
+            centel:function(){
+                $(".calendar .body-list ul li.selection").each(function(k,d){
+                    var da = $(this).attr('data-date');
+                    $("#"+da).remove();
+                    $(this).removeClass("selection");
+                });
+                $(".date-panel input").val('');
+                $(".date-panel").hide();
+            },
+            ok:function(){
+                var adult   = $("#adult").val();
+                var child   = $("#child").val();
+                var stock   = $("#stock").val();
+                var single  = $("#single").val();
+
+                var date_list = {};
+                $(".date_list").each(function(k,date){
+                    date_list[k] = $(this).val();
+                });
+                $.ajax({
+                    url: "{php echo $this->createWebUrl('event',array('offered_id'=>$_GPC['id'],'op'=>'ok'));}",
+                    type: "post",
+                    async: false,
+                    data:{"date_list":date_list,'adult':adult,'child':child,'stock':stock,'single':single},
+                    success: function(data) {
+                        resp = data;
+                        resp = $.parseJSON(resp);
+                        if(resp.code == 20){
+                            $(".date_list").each(function(){
+                                var d = $(this).val();
+                                var _d = '<ul class="day-content">\
+                  <li class="day-content-adult">\
+                    <div class="day-content-adult-title">成</div>\
+                    <div class="day-content-adult-price"><span class="adult-price">'+adult
+                                    +' </span><sub>￥</sub></div>\
+                  </li>\
+                  <li class="day-content-child">\
+                    <div class="day-content-child-title">儿</div>\
+                    <div class="day-content-child-price"><span class="child-price">'+child+' </span><sub>￥</sub></div>\
+                  </li>\
+                  <li class="day-content-single">\
+                    <div class="day-content-child-title">单</div>\
+                    <div class="day-content-child-price"><span class="child-price">'+stock+' </span><sub>￥</sub></div>\
+                  </li>\
+                  <li class="day-content-stock">\
+                    <div class="day-content-child-title">库</div>\
+                    <div class="day-content-child-price"><span class="child-price">' +single+' </span><sub>位</sub></div>\
+                  </li>\
+                </ul>';
+                                $("#date-"+d).append(_d);
+                            });
+                            $(".selection").addClass('exist_content').removeClass('selection');
+                            $(".select_list").text('');
+                            $(".date-panel").hide();
+                            util.message(resp.msg);
+                        }else{
+                            util.message('添加失败','','error');
+                        }
+                    }
+                })
+
+
+            },
+            update:function(){
+                var select_date = $(".select_list input").val();
+                var adult   = $("#adult").val();
+                var child   = $("#child").val();
+                var stock   = $("#stock").val();
+                var single  = $("#single").val();
+                $.ajax({
+                    url: "{php echo $this->createWebUrl('event',array('offered_id'=>$_GPC['id'],'op'=>'update'));}",
+                    type: "post",
+                    async: false,
+                    data:{"select_date":select_date,'adult':adult,'child':child,'stock':stock,'single':single},
+                    success: function(data) {
+                        resp = data;
+                        resp = $.parseJSON(resp);
+                        if(resp.code == 20){
+                            $(".selection .day-content-adult .adult-price").text(adult);
+                            $(".selection .day-content-child .child-price").text(child);
+                            $(".selection .day-content-stock .child-price").text(stock);
+                            $(".selection .day-content-single .child-price").text(single);
+                            util.message('更新成功!。');
+                        }
+                    }
+                })
+            },
+            del:function(){
+                if (confirm("确认删除？删除后将不可恢复!")) {
+                    var select_date = $(".select_list input").val();
+                    $.ajax({
+                        url: "{php echo $this->createWebUrl('event',array('offered_id'=>$_GPC['id'],'op'=>'delete'));}",
+                        type: "post",
+                        async: false,
+                        data:{"select_date":select_date},
+                        success: function(data) {
+                            resp = data;
+                            resp = $.parseJSON(resp);
+                            if(resp.code == 20){
+                                $("#date-"+select_date).removeClass('selection exist_content');
+                                $("#date-"+select_date+" .day-content").remove();
+                                $(".date-panel").hide();
+                                util.message('删除成功!。');
+                            }
+                        }
+                    })
+                }
+            },
+            url:"{php echo $this->createWebUrl('event',array('offered_id'=>$_GPC['id'],'op'=>'all'));}"
+        })
+    });
+</script>

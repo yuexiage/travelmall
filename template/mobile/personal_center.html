@@ -1,0 +1,105 @@
+{template 'common/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
+<header id="header" class="mui-bar mui-bar-transparent">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title"></h1>
+</header>
+<div class="mui-content">
+    <div class="mui-slider">
+        {php $imgs = iunserializer($visa['thumbs']);}
+        <div class="mui-slider-group">
+            {loop $imgs $row}
+            <div class="mui-slider-item">
+              <img src="{php echo tomedia($row);}" width="100%">
+            </div>
+            {/loop}
+        </div>
+    </div>
+    
+   <img src="../addons/yuexiage_travelmall/images/images/avatar_bg.jpg" width="100%">
+   <div class="avatar_border">
+       <img src="{$_W['fans']['avatar']}" class="avatar">
+       <p>{$_W['fans']['nickname']}</p>
+   </div>
+    <ul class="mui-table-view">
+        <li class="mui-table-view-cell">
+        <span class="fa fa-database"></span>&nbsp;积分{$_W['member']['credit1']}
+        </li>
+        <li class="mui-table-view-cell">
+        <label><span class="fa fa-key"></span>&nbsp;消费码:</label>
+        <span class="code">
+            {if $code['code']}
+            {$code['code']}
+            {else}
+                <a href="javascript:;" class="getCode">获取邀请码</a>
+            {/if}
+        </span>
+        
+        </li>
+        <li class="mui-table-view-cell">
+            <label><span class="fa fa-reorder"></span>&nbsp;
+            <a class="mui-navigate-right" href="{php echo $this->createMobileUrl('myorder');}">我的订单</a>
+            </label>
+        </li>
+        <li class="mui-table-view-cell">
+            <label><span class="fa fa-money"></span>&nbsp;
+            <a class="mui-navigate-right" href="{php echo $this->createMobileUrl('mycoupon');}">优惠券
+            </a>
+            </label>
+        </li>
+        <li class="mui-table-view-cell">
+            <label><span class="fa fa-money"></span>&nbsp;
+            <a class="mui-navigate-right" href="{php echo $this->createMobileUrl('mycash');}">代金券
+            </a>
+            </label>
+        </li>
+        <li class="mui-table-view-cell">
+            <label><span class="fa fa-star"></span>&nbsp;
+            <a class="mui-navigate-right" href="{php echo $this->createMobileUrl('mycollection');}">收藏</a>
+            </label>
+        </li>
+        <!-- <li class="mui-table-view-cell">
+            <label><span class="fa fa-envelope"></span>&nbsp;
+            <a class="mui-navigate-right" href="{php echo $this->createMobileUrl('myaddress');}">收货地址</a>
+            </label>
+        </li> -->
+    </ul>
+</div>
+<script type="text/javascript">
+    window.onload = function(){
+        mui.plusReady(function(){
+        //关闭等待框
+        plus.nativeUI.closeWaiting();
+        //显示当前页面
+        mui.currentWebview.show();
+        });
+    }
+    $(function(){
+        $(".getCode").click(function(){
+            mui.ajax("{php echo $this->createMobileUrl('personal_center',array('op'=>getCode));}",{
+                data:{},
+                dataType:'html',//服务器返回json格式数据
+                type:'get',//HTTP请求类型
+                timeout:10000,//超时时间设置为10秒；
+                headers:{'Content-Type':'application/json'},                  
+                success:function(data){
+                    console.log(data);
+                    if (typeof data == 'string') {
+                        data = JSON.parse(data);
+                    }
+                    if(data.code=='1'){
+                        $(".code").text(data.data);
+                        mui.toast(data.msg);
+                    }else{
+                        mui.toast(data.msg);
+                    }
+                },
+                error:function(xhr,type,errorThrown){
+                    //异常处理；
+                    console.log(type);
+                }
+            });
+        });
+    });
+</script>
+{template 'common/footer'}

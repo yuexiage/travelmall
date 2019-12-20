@@ -1,0 +1,682 @@
+{template 'template/header'}
+<script src="../addons/yuexiage_travelmall/images/js/mui.pullToRefresh.js"></script>
+<header id="header" class="mui-bar mui-bar-transparent">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">{$title}</h1>
+</header>
+<style>
+    .mui-bar~.mui-content .mui-fullscreen {
+        top: 44px;
+        height: auto;
+    }
+    .mui-pull-top-tips {
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        margin-left: -25px;
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        z-index: 1;
+    }
+    .mui-bar~.mui-pull-top-tips {
+        top: 24px;
+    }
+    .mui-pull-top-wrapper {
+        width: 42px;
+        height: 42px;
+        display: block;
+        text-align: center;
+        background-color: #efeff4;
+        border: 1px solid #ddd;
+        border-radius: 25px;
+        background-clip: padding-box;
+        box-shadow: 0 4px 10px #bbb;
+        overflow: hidden;
+    }
+    .mui-pull-top-tips.mui-transitioning {
+        -webkit-transition-duration: 200ms;
+        transition-duration: 200ms;
+    }
+    .mui-pull-top-tips .mui-pull-loading {
+        /*-webkit-backface-visibility: hidden;
+        -webkit-transition-duration: 400ms;
+        transition-duration: 400ms;*/
+
+        margin: 0;
+    }
+    .mui-pull-top-wrapper .mui-icon,
+    .mui-pull-top-wrapper .mui-spinner {
+        margin-top: 7px;
+    }
+    .mui-pull-top-wrapper .mui-icon.mui-reverse {
+        /*-webkit-transform: rotate(180deg) translateZ(0);*/
+    }
+    .mui-pull-bottom-tips {
+        text-align: center;
+        background-color: #efeff4;
+        font-size: 15px;
+        line-height: 40px;
+        color: #777;
+    }
+    .mui-pull-top-canvas {
+        overflow: hidden;
+        background-color: #fafafa;
+        border-radius: 40px;
+        box-shadow: 0 4px 10px #bbb;
+        width: 40px;
+        height: 40px;
+        margin: 0 auto;
+    }
+    .mui-pull-top-canvas canvas {
+        width: 40px;
+    }
+    .mui-slider-indicator.mui-segmented-control {
+        background-color: #efeff4;
+    }
+    .mui-popover {
+
+    }
+    #segmentedControl a{
+        float: left;
+    }
+    #middlePopover1,#middlePopover2,#middlePopover3,#middlePopover4{
+        width: 98%;
+    }
+    #middlePopover1 li{
+        border-right: 1px solid #bbb;
+        margin-right: 5px;
+        border-bottom-right-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+    #middlePopover1 li.mui-active.li-left{
+        border-left:3px solid #2dbb55;
+    }
+    #middlePopover1 .mui-icon {
+        font-size: 14px;
+        color: #2dbb55;
+    }
+    #middlePopover2,#middlePopover4{
+        padding: 10px 5px;
+    }
+    #middlePopover2 .days_block ul,
+    #middlePopover2 .months_block ul,
+    #middlePopover4 .citys_block ul,
+    #middlePopover4 .tabs_block ul,
+    #middlePopover4 .themes_block ul{
+        width: 100%;
+        padding: 10px;
+    }
+    #middlePopover2 h5,
+    #middlePopover4 h5{
+        padding:0px 10px;
+        margin: 15px 0px 0px 0px;
+        font-size: 16px;
+    }
+    #middlePopover2 .days_block ul li,
+    #middlePopover2 .months_block ul li,
+    #middlePopover4 .citys_block ul li,
+    #middlePopover4 .tabs_block ul li,
+    #middlePopover4 .themes_block ul li
+    {
+        float: left;
+        margin-right: 5px;
+        margin-bottom: 5px;
+    }
+    #middlePopover2 .check,
+    #middlePopover2 .reset,
+    #middlePopover4 .check,
+    #middlePopover4 .reset{
+        padding: 20px;
+    }
+    #middlePopover3 li.mui-active{
+        color:#2dbb55;
+    }
+    .mui-table-view.offered_list .mui-media-object {
+        width: 160px;
+        max-width: 160px;
+        height: 100px;
+        line-height: 42px;
+        border-radius: 10px;
+    }
+    #middlePopover1.mui-popover {
+        height: 300px;
+    }
+    #middlePopover1.mui-popover .mui-scroll-wrapper{
+        height: 299px;
+        margin:0px;
+    }
+    .mui-popover .mui-table-view .mui-table-view-cell:last-child,
+    .mui-popover .mui-table-view .mui-table-view-cell:last-child>a:not(.mui-btn) {
+        border-bottom-right-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+    .mui-popover .mui-table-view .mui-table-view-cell:first-child,
+    .mui-popover .mui-table-view .mui-table-view-cell:first-child>a:not(.mui-btn) {
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
+    }
+</style>
+<div class="mui-content filter-page">
+    <div id="slider" class="mui-slider mui-fullscreen">
+        <div id="sliderSegmentedControl" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+            <div id="segmentedControl" class="">
+                <a class="destination mui-control-item mui-col-xs-3 mui-col-sm-3  mui-active " href="#middlePopover1">
+                    目的地
+                </a>
+                <a class="mui-control-item mui-col-xs-3 mui-col-sm-3" href="#middlePopover2">
+                    行程时间
+                </a>
+                <a class="mui-control-item mui-col-xs-3 mui-col-sm-3" href="#middlePopover3">
+                    总和排序
+                </a>
+                <a class="mui-control-item mui-col-xs-3 mui-col-sm-3" href="#middlePopover4">
+                    筛选
+                </a>
+
+            </div>
+        </div>
+        <div class="mui-slider-group">
+            <div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+                <div id="scroll1" class="mui-scroll-wrapper">
+                    <div class="mui-scroll">
+                        <ul class="mui-table-view  offered_list">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" class="filter-orderby" name="filter-orderby">
+{if $_GPC['type'] == 1}
+    <input type="hidden" class="filter-destination-{$_GPC['val']}" name="filter-destination[]" value="{$_GPC['val']}">
+{elseif $_GPC['type'] == 2}
+    <input type="hidden" class="filter-date-day-{$_GPC['val']}" name="filter-date-day[]" value="{$_GPC['val']}">
+{elseif $_GPC['type'] == 3}
+    <input type="hidden" class="filter-departure-{$_GPC['val']}" name="filter-departure[]" value="{$_GPC['val']}">
+{elseif $_GPC['type'] == 4}
+    <input type="hidden" class="filter-tab-{$_GPC['val']}" name="filter-tab[]" value="{$_GPC['val']}">
+{else}
+    <input type="hidden" class="filter-theme-{$_GPC['val']}" name="filter-theme[]" value="{$_GPC['val']}">
+{/if}
+<input type="hidden" class="page" name="page" value="1">
+<input type="hidden" class="page-close" value="0">
+<div id="middlePopover1" class="mui-popover mui-col-xs-12 mui-col-sm-12">
+    <div class="mui-popover-arrow"></div>
+    <div class="mui-row">
+        <div class="mui-col-sm-6">
+            <div class="mui-scroll-wrapper">
+                <div class="mui-scroll">
+                    <ul class="mui-table-view">
+                        <li class="mui-table-view-cell mui-active li-left">
+                            <a>
+                                不限
+                            </a>
+                        </li>
+                        {loop $countrys $key $country}
+                        <li class="mui-table-view-cell li-left">
+                            <a  id="{$key}">
+                                {$country['name']}
+                            </a>
+                        </li>
+                        {/loop}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="mui-col-sm-6">
+            <div class="mui-scroll-wrapper">
+                <div class="mui-scroll">
+                    <ul class="mui-table-view">
+                        <li class="mui-table-view-cell li-right">
+                            <a class="">
+                                不限
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="middlePopover2" class="mui-popover mui-col-xs-12 mui-col-sm-12">
+    <div class="mui-popover-arrow"></div>
+    <div class="mui-row">
+        <div class="mui-col-sm-12">
+            <h5>行程天数</h5>
+            <div class="days_block">
+                <ul>
+                {loop $days $key $day}
+                    {php $success = '';}
+                    {if $_GPC['type']==2 && $_GPC['val']==$day['id'] }
+                        {php $success = 'mui-btn-success';}
+                    {/if}
+                    <li id="{$day['id']}">
+                        <button type="button" class="mui-btn mui-btn-outlined {$success}">{$day['name']}</button>
+                    </li>
+                {/loop}
+                </ul>
+            </div>
+        </div>
+        <div class="mui-col-sm-12" style="display: none">
+            <h5>出发时间</h5>
+            <div class="months_block">
+                <ul>
+                    {loop $moonths $key $month}
+                    <li id="{$month['id']}">
+                        <button type="button" class="mui-btn mui-btn-outlined">{$month['name']}</button>
+                    </li>
+                    {/loop}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="mui-row">
+        <div class="mui-col-sm-6 reset">
+            <button type="button" class="mui-btn mui-btn-block">重置</button>
+        </div>
+        <div class="mui-col-sm-6 check">
+            <button type="button" class="mui-btn mui-btn-success mui-btn-block">确定</button>
+        </div>
+    </div>
+</div>
+<div id="middlePopover3" class="mui-popover mui-col-xs-12 mui-col-sm-12">
+    <div class="mui-popover-arrow"></div>
+    <ul class="mui-table-view">
+        {loop $order_bys $key $order_by}
+        <li class="mui-table-view-cell orderby_list_li" >
+            <a id="{$order_by['id']}">{$order_by['name']}</a>
+        </li>
+        {/loop}
+    </ul>
+</div>
+<div id="middlePopover4" class="mui-popover mui-col-xs-12 mui-col-sm-12">
+    <div class="mui-popover-arrow"></div>
+    <div class="mui-row">
+        <div class="mui-col-sm-12">
+            <h5>出发城市</h5>
+            <div class="citys_block">
+                <ul>
+                    {loop $city_list $key $city}
+                    {php $success = '';}
+                    {if $_GPC['type']==3 && $_GPC['val']==$city['id'] }
+                    {php $success = 'mui-btn-success';}
+                    {/if}
+                    <li id="{$city['id']}">
+                        <button type="button" class="mui-btn mui-btn-outlined {$success}">{$city['name']}</button>
+                    </li>
+                    {/loop}
+                </ul>
+            </div>
+        </div>
+        <div class="mui-col-sm-12">
+            <h5>特色标签</h5>
+            <div class="tabs_block">
+                <ul>
+                    {loop $tabs $key $tab}
+                    {php $success = '';}
+                    {if $_GPC['type']==4 && $_GPC['val']==$tab['id'] }
+                    {php $success = 'mui-btn-success';}
+                    {/if}
+                    <li id="{$tab['id']}">
+                        <button type="button" class="mui-btn mui-btn-outlined {$success}">{$tab['name']}</button>
+                    </li>
+                    {/loop}
+                </ul>
+            </div>
+        </div>
+        <div class="mui-col-sm-12">
+            <h5>特色主题</h5>
+            <div class="themes_block">
+                <ul>
+                    {loop $themes $key $theme}
+                    {php $success = '';}
+                    {if $_GPC['type']==4 && $_GPC['val']==$theme['id'] }
+                    {php $success = 'mui-btn-success';}
+                    {/if}
+                    <li id="{$theme['id']}">
+                        <button type="button" class="mui-btn mui-btn-outlined {$success}">{$theme['name']}</button>
+                    </li>
+                    {/loop}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="mui-row">
+        <div class="mui-col-sm-6 reset">
+            <button type="button" class="mui-btn mui-btn-block">重置</button>
+        </div>
+        <div class="mui-col-sm-6 check">
+            <button type="button" class="mui-btn mui-btn-success mui-btn-block">确定</button>
+        </div>
+    </div>
+</div>
+<script>
+    mui.init();
+    (function($) {
+        //阻尼系数
+        var deceleration = mui.os.ios?0.003:0.0009;
+        $('.mui-scroll-wrapper').scroll({
+            bounce: false,
+            indicators: true, //是否显示滚动条
+            deceleration:deceleration
+        });
+        $.ready(function() {
+            //循环初始化所有下拉刷新，上拉加载。
+            $.each(document.querySelectorAll('.mui-slider-group .mui-scroll'), function(index, pullRefreshEl) {
+                $(pullRefreshEl).pullToRefresh({
+                    down: {
+                        callback: function () {
+                            var self = this;
+                            get_offered_list();
+                            self.endPullDownToRefresh();
+                        }
+                    },
+                    up: {
+                        callback: function() {
+                            var self = this;
+                            var page = mui(".page")[0].value;
+                            console.log('page：'+page);
+                            if(page != '-1'){
+                                var page = parseInt(page) + 1;
+                                get_offered_list(page);
+                            }
+
+                            self.endPullUpToRefresh();
+                        }
+                    }
+                });
+            });
+            var createFragment = function(ul, index, count, reverse) {
+                var length = ul.querySelectorAll('li').length;
+                var fragment = document.createDocumentFragment();
+                var li;
+                for (var i = 0; i < count; i++) {
+                    li = document.createElement('li');
+                    li.className = 'mui-table-view-cell';
+                    li.innerHTML = '第' + (index + 1) + '个选项卡子项-' + (length + (reverse ? (count - i) : (i + 1)));
+                    fragment.appendChild(li);
+                }
+                return fragment;
+            };
+        });
+    })(mui);
+    $(function () {
+        //目的地开始
+        var li_child = {php echo json_encode($_citys);};
+        $("#middlePopover1").on('tap','.mui-table-view-cell.li-left',function(){
+            $('#middlePopover1 .mui-table-view-cell').removeClass('mui-active');
+            this.classList.add('mui-active');
+            var html = '';
+            var id = $("a",this).attr("id");
+            var filter_destination = [];
+            $("input[name='filter-destination[]']").each(function(i, el) {
+                filter_destination[i] =$(this).val();
+            });
+            if (typeof(id) != "undefined"){
+                $.each(li_child[id], function(index, date) {
+                    var li_c    = '';
+                    var a_c     = '';
+                    if($.inArray(date.city_id,filter_destination) !=-1){
+                        li_c    = 'mui-active';
+                        a_c     = 'mui-icon mui-icon-checkmarkempty';
+                    }
+                    html += '<li class="mui-table-view-cell li-right '+li_c+'"><a id="'+date.id+'" class="'+a_c+'">'+date.name+'</a></li>';
+                });
+                $("#middlePopover1 .li-right:not(:first-child)").remove();
+                $("#middlePopover1 .li-right:first-child").after(html);
+            }else{
+                $('#middlePopover1 .li-right:eq(0)').addClass('mui-active');
+                $('#middlePopover1 .mui-table-view-cell.li-right:first-child a').addClass("mui-icon mui-icon-checkmarkempty");
+                $("#middlePopover1 .li-right:not(:first-child)").remove();
+                $("[class^='filter-destination']").remove();
+            }
+        })
+        $("#middlePopover1").on('tap','.mui-table-view-cell.li-right',function(){
+            $('a',this).addClass("mui-icon mui-icon-checkmarkempty");
+            var html = '';
+            var id = $("a",this).attr("id");
+            if (typeof(id) != "undefined"){
+                $("#middlePopover1 .li-right:first-child").removeClass('mui-active');
+                $('#middlePopover1 .li-right:first-child a').removeClass("mui-icon mui-icon-checkmarkempty");
+                if($(this).hasClass("mui-active")){
+                    $(this).removeClass('mui-active');
+                    $('a',this).removeClass("mui-icon mui-icon-checkmarkempty");
+                    $(".filter-destination-"+id).remove();
+                    var length = $("#middlePopover1 .li-right.mui-active").length-1;
+                    var nav_text = $("#middlePopover1 .li-right.mui-active:eq("+length+")").text();
+                    if (nav_text == ""){
+                        $("#middlePopover1 .li-right:first-child").addClass('mui-active');
+                        $('#middlePopover1 .li-right:first-child a').addClass("mui-icon mui-icon-checkmarkempty");
+                        $("#segmentedControl a:first-child").text('目的地');
+                    }else{
+                        $("#segmentedControl .destination").text(nav_text);
+                    }
+                }else{
+                    $(this).addClass('mui-active');
+                    $('a',this).addClass("mui-icon mui-icon-checkmarkempty");
+                    $(".filter-page").after('<input type="hidden" class="filter-destination-'+id+'" name="filter-destination[]" value="'+id+'">');
+                    $("#segmentedControl a:first-child").text($("a",this).text());
+                }
+            }else{
+                $("#segmentedControl a:first-child").text('目的地');
+                $("#middlePopover1 .li-right:not(:first-child)").removeClass('mui-active');
+                $("#middlePopover1 .li-right:not(:first-child) a").removeClass('mui-icon mui-icon-checkmarkempty');
+                $("[class^='filter-destination']").remove();
+            }
+            //隐藏弹窗菜单
+            mui('#middlePopover1.mui-popover').popover('toggle',document.getElementById("openPopover"));
+            //请求数据
+            get_offered_list();
+        })
+
+        //目的地结束
+        //行程时间开始
+        $("#middlePopover2").on('tap', '.days_block .mui-btn', function(e) {
+            var id = $(this).parent().attr("id");
+            if($(this).hasClass('mui-btn-success')){
+                $(this).removeClass('mui-btn-success');
+                $(".filter-date-day-"+id).remove();
+            }else{
+                $(this).addClass('mui-btn-success');
+                $(".filter-page").after('<input type="hidden" class="filter-date-day-'+id+'" name="filter-date-day[]" value="'+id+'">');
+            }
+        });
+
+        $("#middlePopover2").on('tap', '.months_block .mui-btn', function(e) {
+            var id = $(this).parent().attr("id");
+            if($(this).hasClass('mui-btn-success')){
+                $(this).removeClass('mui-btn-success');
+                $(".filter-date-month-"+id).remove();
+            }else{
+                $(this).addClass('mui-btn-success');
+                $(".filter-page").after('<input type="hidden" class="filter-date-month-'+id+'" name="filter-date-month[]" value="'+id+'">');
+            }
+        });
+
+        //重置
+        $("#middlePopover2").on('tap', '.reset button', function(e) {
+            $("[class^='filter-date']").remove();
+            $("#middlePopover2 li button").removeClass('mui-btn-success');
+        });
+        //确定
+        $("#middlePopover2").on('tap', '.check button', function(e) {
+            //请求数据
+            get_offered_list();
+            mui('#middlePopover2.mui-popover').popover('toggle',document.getElementById("openPopover"));
+        });
+        //行程时间结束
+
+        //排序开始
+        $("#middlePopover3").on('tap', '.mui-table-view-cell.orderby_list_li', function(e) {
+            var id = $('a',this).attr("id");
+            if($(this).hasClass('mui-active')){
+                $(this).removeClass('mui-active');
+                $(".filter-orderby").val('');
+                $("span",this).remove();
+            }else{
+                $(".mui-table-view-cell.orderby_list_li").removeClass('mui-active');
+                $(".mui-table-view-cell.orderby_list_li span").remove();
+                $(this).addClass('mui-active');
+                $(".filter-orderby").val(id);
+                $('a',this).prepend('<span class="mui-icon mui-icon-checkmarkempty"></span>');
+
+            }
+            //请求数据
+            get_offered_list();
+            mui('#middlePopover3.mui-popover').popover('toggle',document.getElementById("openPopover"));
+
+        });
+        //排序结束
+
+        //筛选开始
+        $("#middlePopover4").on('tap', '.citys_block .mui-btn', function(e) {
+            var id = $(this).parent().attr("id");
+            if($(this).hasClass('mui-btn-success')){
+                $(this).removeClass('mui-btn-success');
+                $(".filter-departure-"+id).remove();
+            }else{
+                $(this).addClass('mui-btn-success');
+                $(".filter-page").after('<input type="hidden" class="filter-departure-'+id+'" name="filter-departure[]" value="'+id+'">');
+            }
+        });
+        $("#middlePopover4").on('tap', '.tabs_block .mui-btn', function(e) {
+            var id = $(this).parent().attr("id");
+            if($(this).hasClass('mui-btn-success')){
+                $(this).removeClass('mui-btn-success');
+                $(".filter-tab-"+id).remove();
+            }else{
+                $(this).addClass('mui-btn-success');
+                $(".filter-page").after('<input type="hidden" class="filter-tab-'+id+'" name="filter-tab[]" value="'+id+'">');
+            }
+        });
+        $("#middlePopover4").on('tap', '.themes_block .mui-btn', function(e) {
+            var id = $(this).parent().attr("id");
+            if($(this).hasClass('mui-btn-success')){
+                $(this).removeClass('mui-btn-success');
+                $(".filter-theme-"+id).remove();
+            }else{
+                $(this).addClass('mui-btn-success');
+                $(".filter-page").after('<input type="hidden" class="filter-theme-'+id+'" name="filter-theme[]" value="'+id+'">');
+            }
+        });
+        //重置
+        $("#middlePopover4").on('tap', '.reset button', function(e) {
+            $("[class^='filter-tab']").remove();
+            $("[class^='filter-departure']").remove();
+            $("[class^='filter-theme']").remove();
+            $("#middlePopover4 li button").removeClass('mui-btn-success');
+        });
+        //确定
+        $("#middlePopover4").on('tap', '.check button', function(e) {
+            //请求数据
+            get_offered_list();
+            mui('#middlePopover4.mui-popover').popover('toggle',document.getElementById("openPopover"));
+        });
+        get_offered_list();
+        //筛选结束
+        mui(".offered_list").on('tap','.mui-table-view-cell a',function(){
+            //获取id
+            var url = this.getAttribute("href");
+            mui.openWindow({
+                id:'detail',
+                url:url
+            });
+        })
+    });
+    function get_offered_list(page = 1) {
+
+        var data_info = {};
+        //目的地
+        var filter_destination = [];
+        $("input[name='filter-destination[]']").each(function(i, el) {
+            filter_destination[i] = $(this).val();
+        });
+        data_info.filter_destination = filter_destination;
+
+        //行程时间 月
+        var filter_date_month = [];
+        $("input[name='filter-date-month[]']").each(function(i, el) {
+            filter_date_month[i] = $(this).val();
+        });
+        data_info.filter_date_month = filter_date_month;
+
+        //行程时间 天
+        var filter_date_day = [];
+        $("input[name='filter-date-day[]']").each(function(i, el) {
+            filter_date_day[i] = $(this).val();
+        });
+        data_info.filter_date_day = filter_date_day;
+
+        //排序
+        data_info.orderby = $(".filter-orderby").val();
+
+        //出发城市
+        var filter_departure = [];
+        $("input[name='filter-departure[]']").each(function(i, el) {
+            filter_departure[i] = $(this).val();
+        });
+        data_info.filter_departure = filter_departure;
+
+        //特色标签
+        var filter_tab = [];
+        $("input[name='filter-tab[]']").each(function(i, el) {
+            filter_tab[i] = $(this).val();
+        });
+        data_info.filter_tab = filter_tab;
+
+        //特色主题
+        var filter_theme        = [];
+        $("input[name='filter-theme[]']").each(function(i, el) {
+            filter_theme[i]     = $(this).val();
+        });
+        data_info.filter_theme  = filter_theme;
+        data_info.page  = page;
+        var page_close = $(".page-close").val();
+        if(parseInt(page_close) == 0){
+            mui.ajax("{php echo $this->createMobileUrl('filter',array());}",{
+                data:data_info,
+                type:'post',//HTTP请求类型
+                timeout:10000,//超时时间设置为10秒；
+                beforeSend:function(){
+                    $(".page-close").val(1);
+                    mui.showLoading("正在加载..","div");
+                },
+                complete:function(){
+                    $(".page-close").val(0);
+                    mui.hideLoading();
+                },
+                success:function(data){
+                    //offered_list
+                    console.log('返回值:'.page);
+                    if(data !=''){
+                        if(page > 1){
+                            $(".offered_list").append(data);
+                            $('.page').val(page);
+                        }else{
+                            $(".offered_list").html(data);
+                            $('.page').val(1);
+                        }
+                    }else{
+                        if(page > 1){
+
+                            $(".page").val('-1');
+                        }else{
+                            $(".offered_list").html('');
+                            $('.page').val(1);
+                        }
+                        mui.toast('没有更多数据!');
+                    }
+
+                },
+                error:function(xhr,type,errorThrown){
+                    //异常处理；
+                    console.log(type);
+                }
+            });
+        }
+    }
+</script>
+{template 'template/footer'}

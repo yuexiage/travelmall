@@ -1,0 +1,237 @@
+{template 'common/header'}
+<ul class="nav nav-tabs">
+	<li {if $do == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('module', array('op' => 'display','action'=>'tab'));}">管理标签模块</a></li>					
+	<li {if $do == 'post' && empty($id)}class="active"{/if}><a href="{php echo $this->createWebUrl('module', array('op' => 'post','action'=>'tab'));}">添加标签模块</a></li>
+	{if $do == 'post' && $id}
+	<li {if $do == 'post' && !empty($id)}class="active"{/if}><a href="{php echo $this->createWebUrl('module', array('op' => 'post','id'=>$tab_id,'action'=>'tab'));}">编辑</a></li>
+	{/if}
+</ul>
+<style>
+	.select{
+		padding:10px;
+		border-radius: 5px;
+		border:1px solid #ddd;
+		width: 80px;
+		text-align: center;
+		cursor:pointer;
+	}
+	.select:hover{
+		border:1px solid #bbb;
+		background-color: #ddd;
+	}
+	input[type='radio']{
+		width: 20px;
+		height:20px;
+	}
+</style>
+{if $do == 'post'}
+<div class="tab_container"> 
+	<div id="tab1" class="tab_content main">
+	<form action="" method="post" class="form-horizontal form" id="form1">
+		<div class="panel panel-default">
+			<div class="panel-heading">标签详细设置</div>
+			<div class="panel-body">
+				{if !empty($module_post['name'])}
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">访问地址</label>
+					<div class="col-sm-8 col-xs-12">
+						<div class="form-control-static">
+						<a href="{$_W['siteroot']}app/index.php?c=entry&m=yuexiage_travelmall&do=tab&id={$module_post['tab_id']}&i={$_W['uniacid']}" target="_blank">
+							{$_W['siteroot']}app/index.php?c=entry&m=yuexiage_travelmall&do=tab&id={$module_post['tab_id']}&i={$_W['uniacid']}
+						</a>
+						</div>
+						<span class="help-block">您可以根据此地址，添加回复规则，设置访问。</span>
+					</div>
+				</div>
+				{/if}
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">排序</label>
+					<div class="col-sm-8 col-xs-12">
+						<input type="text" name="displayorder" class="form-control" value="{$module_post['displayorder']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">发布</label>
+					<div class="col-sm-8 col-xs-12">
+						<label>
+							<input type="radio" value="1" name="enabled" {php if ($module_post['enabled']=='1') echo "checked='checked' ";}>是
+						</label>
+						<label>
+							<input type="radio" value="0" name="enabled" {php if ($module_post['enabled']=='0') echo "checked='checked' ";}>否
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">标签名称</label>
+					<div class="col-sm-8 col-xs-12">
+						<input type="text" name="name" class="form-control" value="{$module_post['name']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">显示标题</label>
+					<div class="col-sm-8 col-xs-12">
+						<label>
+							<input type="radio" value="1" name="show_title" {php if ($module_post['show_title']=='1') echo "checked='checked' ";}>是
+						</label>
+						<label>
+							<input type="radio" value="0" name="show_title" {php if ($module_post['show_title']=='0') echo "checked='checked' ";}>否
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">位置</label>
+					<div class="col-sm-8 col-xs-12">
+					{template 'position'}
+					</div>
+				</div>
+				<div class="list">
+					{loop  $tabs $index $item}
+					<fieldset>
+						<legend>{$item['name']}</legend>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-8 col-md-3 col-lg-2 control-label">选择</label>
+							<div class="col-sm-8 col-xs-12">
+								<input type="checkbox" value="1" name="img[{$index}]" {php if ($img[$index]=='1') echo "checked='checked' ";}>
+							</div>
+						</div>
+					</fieldset>
+					{/loop}
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-12">
+				<input name="submit" type="submit" value="提交" class="btn btn-primary col-lg-1">
+				<input type="hidden" name="token" value="{$_W['token']}" />
+			</div>
+		</div>
+	</form>
+	<div style="display: none">
+		{php echo tpl_form_field_image('img[]');}
+		<div class="col-sm-8 col-xs-12 link">
+			{php echo tpl_form_field_link('lnk[]','', array('css'=>array('input'=>'class1', 'btn'=>'class2')));}
+		</div>
+	</div>
+	</div>
+	<script type="text/javascript">
+		$("#form1").submit(function(){
+			if($("input[name='name']").val() == '') {
+				util.message('请输入标签名称', '', 'error');
+				return false;
+			}
+		});
+		$(function(){
+			$(document).on('click','.glyphicon-plus',function(){
+				var fieldset_length = $("fieldset").length;
+				var link = $(".link .input-group").html();
+				var str = '<fieldset><legend>第'+(fieldset_length+1)+'个</legend><div class="form-group"><label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">图片</label><div class="col-sm-6 col-xs-10"><div class="input-group "><input type="text" name="img[]" value="" class="form-control" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" onclick="showImageDialog(this);">选择图片</button></span></div><div class="input-group " tab="margin-top:.5em;"><img src="./resource/images/nopic.jpg" onerror="this.src=\'./resource/images/nopic.jpg\'; this.title=\'图片未找到.\'" class="img-responsive img-thumbnail" width="150"><em class="close" tab="position:absolute; top: 0px; right: -14px;" title="删除这张图片" onclick="deleteImage(this)">×</em></div></div><div class="col-sm-1 col-xs-1"><i class="glyphicon glyphicon-plus"></i></div><div class="col-sm-1 col-xs-1"><i class="glyphicon glyphicon-minus"></i></div></div><div class="form-group"><label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">链接</label><div class="col-sm-8 col-xs-12"><div class="input-group">'+link+'</div></div></div>';
+				$("fieldset:last").after(str);
+			});
+
+			$(".rows,.columns").change(function(){
+				$(".list").html('');
+				change_list();
+			});
+			
+		});
+
+		function change_list(){
+			var row 	= $(".rows").val();
+			var column  = $(".columns").val();
+			var num		= row*column;
+			for (var i = 0; i < num; i++) {
+				var fieldset_length = $("fieldset").length;
+				var link = $(".link .input-group").html();
+				var str = '<fieldset><legend>第'+(fieldset_length+1)+'个</legend><div class="form-group"><label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">图片</label><div class="col-sm-8 col-xs-12"><div class="input-group "><input type="text" name="img[]" value="" class="form-control" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" onclick="showImageDialog(this);">选择图片</button></span></div><div class="input-group " tab="margin-top:.5em;"><img src="./resource/images/nopic.jpg" onerror="this.src=\'./resource/images/nopic.jpg\'; this.title=\'图片未找到.\'" class="img-responsive img-thumbnail" width="150"><em class="close" tab="position:absolute; top: 0px; right: -14px;" title="删除这张图片" onclick="deleteImage(this)">×</em></div></div></div><div class="form-group"><label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">链接</label><div class="col-sm-8 col-xs-12"><div class="input-group">'+link+'</div></div></div>';
+				$(".list").append(str);
+			}
+		}
+
+		if($(".list fieldset").length=='0'){
+			change_list();
+		}
+		
+	</script>
+</div>
+{elseif $do == 'display'}
+<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form action="./index.php" method="get" class="form-horizontal" role="form">
+			<input type="hidden" name="c" value="site" />
+			<input type="hidden" name="a" value="entry" />
+			<input type="hidden" name="m" value="yuexiage_travelmall" />
+			<input type="hidden" name="do" value="module" />
+			<input type="hidden" name="op" value="display" />
+			<input type="hidden" name="action" value="tab" />
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">关键字</label>
+				<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					<input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="pull-right col-xs-12 col-sm-2 col-md-2 col-lg-2">
+					<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="main">
+	<div class="tab">
+		<form action="" method="post" onsubmit="return formcheck(this)">
+		<div class="panel panel-default">
+		<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th style="width: 6%; text-align:center;">显示顺序</th>
+					<th style="width:25%;">标签名称</th>
+					<th style="width:50px; text-align:center">状态</th>
+					<th style="width:15%; text-align:center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			{loop $modules $row}
+				<tr>
+					<td class="text-center">
+						<input type="text" class="form-control" name="displayorder[{$row['tab_id']}]" value="{$row['displayorder']}">
+					</td>
+					<td class="text-left">
+						<div tab="height:30px;line-height:30px">
+							{$row['name']}
+						</div>
+					</td>
+					<td>
+						{if $row['enabled']==1}
+							<span class="label label-success">发布</span>
+						{else}
+							<span class="label label-default">未发布</span>
+						{/if}
+					</td>
+					<td class="text-right" tab="position:relative;">		
+						<a href="{php echo $this->createWebUrl('module', array('op' => 'post','id' => $row['tab_id'],'action'=>'tab'));}" title="编辑">编辑</a>&nbsp;-&nbsp;
+						<a href="{php echo $this->createWebUrl('module', array('op' => 'delete','id' => $row['tab_id'],'action'=>'tab'));}" onclick="return confirm('确认删除此标签吗？');return false;" title="删除">删除</a>
+					</td>
+				</tr>
+			{/loop}
+				<tr>
+					<td colspan="4">
+						<a href="{php echo $this->createWebUrl('module', array('op' => 'post','action' => 'tab'));}"><i class="fa fa-plus-circle" title="添加新标签模块"></i> 添加新标签模块</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
+		</div>
+			<div class="form-group col-sm-12">
+				<input name="submit" type="submit" class="btn btn-primary col-lg-1" value="提交">
+				<input type="hidden" name="token" value="{$_W['token']}" />
+			</div>
+		</form>
+	</div>
+</div>
+{$pager}
+{/if}
+{template 'common/footer'}
