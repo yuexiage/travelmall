@@ -11,29 +11,30 @@
 //);
 $_W['cache_create'] = array(
     'blacklist'         =>array('table'=>'ims_yuexiage_travelmall_blacklist'),
-    'country'           =>array('table'=>'ims_yuexiage_travelmall_country'),
-    'country_all'       =>array('table'=>'ims_yuexiage_travelmall_country'),
-    'city'              =>array('table'=>'ims_yuexiage_travelmall_city'),
-    'city_all'          =>array('table'=>'ims_yuexiage_travelmall_city'),
     'spike_comment'     =>array('table'=>'ims_yuexiage_travelmall_comment'),
     'spike_order'       =>array('table'=>'ims_yuexiage_travelmall_orders'),
-    'coupon_type'       =>array('table'=>'ims_yuexiage_travelmall_coupon'),     //优惠券
-    'category'          =>array('table'=>'ims_yuexiage_travelmall_categorys'),  //分类
-    'stroke'            =>array('table'=>'ims_yuexiage_travelmall_stroke'),     //行程
-    'stroke_item'       =>array('table'=>'ims_yuexiage_travelmall_stroke'),     //行程
-    'tab_item'          =>array('table'=>'ims_yuexiage_travelmall_tabs'),       //标签
+    'coupon_type'       =>array('table'=>'ims_yuexiage_travelmall_coupon'),             //优惠券
+    'category'          =>array('table'=>'ims_yuexiage_travelmall_categorys'),          //分类
+
+    //可用
+    'country'           =>array('table'=>'ims_yuexiage_travelmall_country'),            //有效国家
+    'country_all'       =>array('table'=>'ims_yuexiage_travelmall_country'),            //包含下架国家
+    'city'              =>array('table'=>'ims_yuexiage_travelmall_city'),               //有效城市
+    'city_all'          =>array('table'=>'ims_yuexiage_travelmall_city'),               //包含下架城市
+    'stroke'            =>array('table'=>'ims_yuexiage_travelmall_offered_stroke'),     //线路所有行程
+    'stroke_item'       =>array('table'=>'ims_yuexiage_travelmall_offered_stroke'),     //线路某个行程
+    'offered_item'      =>array('table'=>'ims_yuexiage_travelmall_offered'),            //行程
+    'tab_item'          =>array('table'=>'ims_yuexiage_travelmall_tabs'),               //标签
+    'tab'               =>array('table'=>'ims_yuexiage_travelmall_tabs'),               //所有标签
+    'hotel'             =>array('table'=>'ims_yuexiage_travelmall_hotel'),              //酒店信息
+    'flight'            =>array('table'=>'ims_yuexiage_travelmall_flight'),             //航班信息
+    'theme'             =>array('table'=>'ims_yuexiage_travelmall_theme'),             //主题信息
 
     /** 模块缓存**/
     'module_slideshow'  =>array('table'=>'ims_yuexiage_travelmall_module_slideshow'),   //行程
-    'module_style'      =>array('table'=>'ims_yuexiage_travelmall_module_style'),       //样式
     'module_filter'     =>array('table'=>'ims_yuexiage_travelmall_module_filter'),      //过滤模块
-    'module_theme'      =>array('table'=>'ims_yuexiage_travelmall_theme'),              //主题
-    'module_category'   =>array('table'=>'ims_yuexiage_travelmall_module_category'),    //分类
     'module_tab'        =>array('table'=>'ims_yuexiage_travelmall_module_tab'),         //标签
     'module_recommend'  =>array('table'=>'ims_yuexiage_travelmall_module_recommend'),   //推荐
-
-    'flight'            =>array('table'=>'ims_yuexiage_travelmall_flight'),
-    'tab'               =>array('table'=>'ims_yuexiage_travelmall_tabs'),      //过滤模块
 );
 
 //缓存清除规则
@@ -61,31 +62,23 @@ $_W['cache_clear'] = array(
     'ims_yuexiage_travelmall_categorys'=>array(
         'category'              =>array(),
     ),
-    'ims_yuexiage_travelmall_stroke'=>array(
+    'ims_yuexiage_travelmall_offered_stroke'=>array(
         'stroke'                =>array(1=>'offered_id'),
         'stroke_item'           =>array(1=>'stroke_id'),
     ),
-    'ims_yuexiage_travelmall_tabs'=>array(
-        'tab_item'              =>array(1=>'tab_id'),
+    'ims_yuexiage_travelmall_offered'=>array(
+        'offered_item'           =>array(1=>'offered_id'),
     ),
     'ims_yuexiage_travelmall_tabs'=>array(
         'tab'                   =>array(),
+        'tab_item'              =>array(1=>'tab_id'),
     ),
 
     'ims_yuexiage_travelmall_module_slideshow'=>array(
         'module_slideshow'     =>array(1=>'pid',2=>'slideshow_id'),
     ),
-    'ims_yuexiage_travelmall_module_style'=>array(
-        'module_style'         =>array(1=>'pid',2=>'style_id'),
-    ),
     'ims_yuexiage_travelmall_module_filter'=>array(
         'module_filter'        =>array(1=>'pid',2=>'filter_id'),
-    ),
-    'ims_yuexiage_travelmall_module_theme'=>array(
-        'module_theme'         =>array(1=>'pid',2=>'theme_id'),
-    ),
-    'ims_yuexiage_travelmall_module_category'=>array(
-        'module_category'      =>array(1=>'pid',2=>'category_id'),
     ),
     'ims_yuexiage_travelmall_module_tab'=>array(
         'module_tab'           =>array(1=>'pid',2=>'tab_id'),
@@ -98,5 +91,10 @@ $_W['cache_clear'] = array(
     'ims_yuexiage_travelmall_flight'=>array(
         'flight'               =>  array( 1=>'flight_id'),
     ),
-
+    'ims_yuexiage_travelmall_hotel'=>array(
+        'hotel'               =>  array( 1=>'hotel_id'),
+    ),
+    'ims_yuexiage_travelmall_theme'=>array(
+        'theme'               =>  array(),
+    ),
 );

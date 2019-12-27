@@ -27,7 +27,7 @@ function com_load_cache($cache_data){
     //基本配置校验
     if (empty($cache_data['cache_key'])) {
         //构建缓存传入的参数
-        throw new Exception("缓存调用失败！!",'42');
+        throw new Exception("缓存调用失败！!",42);
     }
     //获取缓存构建配置
     $cache_key = $cache_data['cache_key'];
@@ -36,7 +36,7 @@ function com_load_cache($cache_data){
             continue;
         }
         if (!isset($cache_data[$value])) {
-            throw new Exception($value, '缺少缓存' . $cache_key . '构建元素！','42');
+            throw new Exception('缺少缓存' . $cache_key . '构建元素！',42);
         }
         $cache_key .= SEP . $cache_data[$value];
     }

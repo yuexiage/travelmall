@@ -1,0 +1,136 @@
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/pullrefresh.css?v=1">
+<div class="tab_mod mod_panel">
+    {if $tab['show_title'] =='1'}
+    <div class="mod_panel_title ">
+        <h5>{$tab['name']}</h5>
+    </div>
+    {/if}
+    <div class="mod_panel_content {if empty($tab['show_title'])} no-title{/if}">
+        <div id="pullToRefresh" class="mui-slider mui-fullscreen">
+            <div class="tab-hearder">
+                <div id="sliderSegmentedControl" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+                    <div class="mui-scroll">
+                        {loop $tab['img'] $k $val}
+                        <a class="mui-control-item {if $k==0} mui-active {/if}" tab_id="{$val['tab_id']}" href="#item1mobile">
+                            {$val['name']}
+                            <div class="border-bottom"></div>
+                        </a>
+                        {/loop}
+                    </div>
+                </div>
+            </div>
+            <div class="mui-slider-group mui-scroll-content">
+                <div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+                    <div id="scroll1" class="mui-scroll-wrapper">
+                        <div class="mui-scroll">
+                            <div class="mui-row waterfall">
+                                <div class="mui-col-sm-6 mui-col-xs-6 waterfall-left">
+
+                                </div>
+                                <div class="mui-col-sm-6 mui-col-xs-6 waterfall-right" >
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" class="page" value="0">
+    </div>
+</div>
+<script src="../addons/yuexiage_travelmall/images/js/mui.pullToRefresh.js"></script>
+<script>
+    mui.init();
+    (function($) {
+        //阻尼系数
+        var deceleration = mui.os.ios?0.003:0.0009;
+        $('.mui-scroll-wrapper').scroll({
+            bounce: false,
+            indicators: true, //是否显示滚动条
+            deceleration:deceleration
+        });
+        $.ready(function() {
+            //循环初始化所有下拉刷新，上拉加载。
+            $.each(document.querySelectorAll('.mui-slider-group .mui-scroll'), function(index, pullRefreshEl) {
+                $(pullRefreshEl).pullToRefresh({
+                    up: {
+                        callback: function() {
+                            var self = this;
+                            setTimeout(function() {
+                                var page = mui(".page")[0].value;
+                                console.log('page：'+page);
+                                if(page != '-1'){
+                                    var page = parseInt(page) + 1;
+                                    var tab_id = mui(".tab_mod .mui-active")[0].getAttribute("tab_id");
+                                    get_offered_list(page,tab_id);
+                                }else{
+                                    mui.toast('没有更多数据!');
+                                }
+                                self.endPullUpToRefresh();
+                            }, 1000);
+                        }
+                    }
+                });
+            });
+        });
+    })(mui);
+
+    function get_offered_list(page=1,tab_id) {
+            mui.ajax("{php echo $this->createMobileUrl('offered',array('op'=>'offered_list'));}",{
+                data:{tab_id:tab_id,page:page},
+                type:'post',//HTTP请求类型
+                timeout:10000,//超时时间设置为10秒；
+                beforeSend:function(){
+                    mui.showLoading("正在加载..","div");
+                },
+                complete:function(){
+                    mui.hideLoading();
+                },
+                success:function(data){
+                    resp = data;
+                    resp = $.parseJSON(resp);
+                    console.log(resp);
+                    if(resp.code == 20){
+                        if(resp.data.left == ''){
+                            $(".page").val(-1);
+                        }else{
+                            $(".waterfall-left").append(resp.data.left);
+                            $(".waterfall-right").append(resp.data.right);
+                            var h = $(window).height()-84;
+                            $(".tab_mod .mod_panel_content").css("height",h);
+                            $(".page").val(page);
+                        }
+                    }else{
+                        mui.toast(resp.msg);
+                        $(".page").val('-1');
+                    }
+                },
+                error:function(xhr,type,errorThrown){
+                    //异常处理；
+                    console.log(type);
+                }
+            });
+    }
+
+    mui("#sliderSegmentedControl").on('tap','.mui-control-item',function(){
+        $(".waterfall-left").html('');
+        $(".waterfall-right").html('');
+        get_offered_list(1,$(this).attr('tab_id'));
+    })
+</script>
+<script>
+    $(function(){
+        var tab_id = $("#sliderSegmentedControl a:eq(0)").attr('tab_id');
+        get_offered_list(1,tab_id);
+    });
+    mui(".tab_mod").on('tap','.mui-card',function(){
+        //获取id
+        var id = this.getAttribute("offered_id");
+        mui.openWindow({
+            id:'detail',
+            url:"{php echo $this->createMobileUrl('offered',array());}&id="+id,
+        });
+    })
+</script>

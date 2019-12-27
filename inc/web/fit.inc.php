@@ -85,13 +85,13 @@ if ($do == 'display') {
     $categorys = pdo_fetchall("SELECT * FROM ".tablename('yuexiage_travelmall_categorys')." WHERE uniacid = '{$_W['uniacid']}' and enabled = 1 ORDER BY displayorder ASC, id ASC ", array(), 'id');
 
     //获取行程列表
-    $strokes = pdo_fetchall("SELECT * FROM ".tablename('yuexiage_travelmall_stroke')." WHERE uniacid = '{$_W['uniacid']}' and offered_id='{$id}'  ORDER BY displayorder ASC, id ASC ", array(), 'id');
+    $strokes = pdo_fetchall("SELECT * FROM ".tablename('yuexiage_travelmall_offered_stroke')." WHERE uniacid = '{$_W['uniacid']}' and offered_id='{$id}'  ORDER BY displayorder ASC, id ASC ", array(), 'id');
     foreach ($strokes as &$_stroke) {
         $_stroke['stay']      = iunserializer($_stroke['stay']);
         $_stroke['viewpoint'] = iunserializer($_stroke['viewpoint']);
     }
     //获取单个行程
-    $stroke = pdo_fetch("SELECT * FROM ".tablename('yuexiage_travelmall_stroke')." WHERE uniacid = '{$_W['uniacid']}'  and id='{$stroke_id}' ", array(), 'id');
+    $stroke = pdo_fetch("SELECT * FROM ".tablename('yuexiage_travelmall_offered_stroke')." WHERE uniacid = '{$_W['uniacid']}'  and id='{$stroke_id}' ", array(), 'id');
     $stroke['stay']      = iunserializer($stroke['stay']);
     $stroke['viewpoint'] = iunserializer($stroke['viewpoint']);
 
@@ -171,9 +171,9 @@ if ($do == 'display') {
             'shopping'      => $_GPC['shopping']
         );
         if (!empty($stroke_id)) {
-            pdo_update('yuexiage_travelmall_stroke', $data, array('id' => $stroke_id));
+            pdo_update('yuexiage_travelmall_offered_stroke', $data, array('id' => $stroke_id));
         } else {
-            pdo_insert('yuexiage_travelmall_stroke', $data);
+            pdo_insert('yuexiage_travelmall_offered_stroke', $data);
         }
         message('添加行程成功!', $this->createWebUrl('fit', array('op' => 'post','id'=>$id)), 'success');
     }
@@ -203,7 +203,7 @@ if ($do == 'display') {
         if (!empty($_GPC['stroke_displayorder'])) {
             foreach ($_GPC['stroke_displayorder'] as $id => $displayorder) {
                 $update = array('displayorder' => $displayorder);
-                pdo_update('yuexiage_travelmall_stroke', $update, array('id' => $id));
+                pdo_update('yuexiage_travelmall_offered_stroke', $update, array('id' => $id));
             }
             message('行程排序更新成功！', 'refresh', 'success');
         }
@@ -213,7 +213,7 @@ if ($do == 'display') {
     $stroke = intval($_GPC['stroke']);
     if($stroke){
         if(!empty($id)) {
-            $stroke = pdo_fetch("SELECT * FROM ".tablename('yuexiage_travelmall_stroke')." WHERE id = '$id' AND uniacid = {$_W['uniacid']}");
+            $stroke = pdo_fetch("SELECT * FROM ".tablename('yuexiage_travelmall_offered_stroke')." WHERE id = '$id' AND uniacid = {$_W['uniacid']}");
             if(empty($stroke)) {
                 message('行程不存在或已删除', '', 'error');
             }
@@ -222,7 +222,7 @@ if ($do == 'display') {
                 'displayorder' => 0
             );
         }
-        pdo_delete('yuexiage_travelmall_stroke',  array('id' => $id));
+        pdo_delete('yuexiage_travelmall_offered_stroke',  array('id' => $id));
         message('删除自由行成功！', $this->createWebUrl('fit', array('op' => 'display')), 'success');
     }else{
         if(!empty($id)) {

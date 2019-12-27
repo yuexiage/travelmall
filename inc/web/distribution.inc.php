@@ -30,7 +30,7 @@ if ($do == 'display') {
     $stroke = intval($_GPC['stroke']);
     if($stroke){
         if(!empty($id)) {
-            $stroke = pdo_fetch("SELECT * FROM ".tablename('yuexiage_travelmall_stroke')." WHERE id = '$id' AND uniacid = {$_W['uniacid']}");
+            $stroke = pdo_fetch("SELECT * FROM ".tablename('yuexiage_travelmall_offered_stroke')." WHERE id = '$id' AND uniacid = {$_W['uniacid']}");
             if(empty($stroke)) {
                 message('行程不存在或已删除', '', 'error');
             }
@@ -39,7 +39,7 @@ if ($do == 'display') {
                 'displayorder' => 0
             );
         }
-        pdo_delete('yuexiage_travelmall_stroke',  array('id' => $id));
+        pdo_delete('yuexiage_travelmall_offered_stroke',  array('id' => $id));
         message('删除参团游成功！', $this->createWebUrl('offered', array('op' => 'display')), 'success');
     }else{
         if(!empty($id)) {

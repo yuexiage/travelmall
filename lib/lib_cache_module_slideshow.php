@@ -17,7 +17,7 @@ class module_slideshow{
         $cache_key      = 'module_slideshow'.SEP.implode(SEP,$params);
         $pid            = array_shift($params);
         if( empty($pid)){
-            throw new Exception('信息不全','42');
+            throw new Exception('信息不全',42);
         }
         $slideshow_id   = array_shift($params);
         if( empty($slideshow_id)){

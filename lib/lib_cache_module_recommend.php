@@ -17,7 +17,7 @@ class module_recommend{
         $cache_key      = 'module_recommend'.SEP.implode(SEP,$params);
         $pid            = array_shift($params);
         if( empty($pid)){
-            throw new Exception('信息不全','42');
+            throw new Exception('信息不全',42);
         }
         $recommend_id   = array_shift($params);
         if( empty($recommend_id)){

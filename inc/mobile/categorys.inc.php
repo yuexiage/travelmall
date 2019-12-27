@@ -1,6 +1,9 @@
 <?php
+
 global $_GPC, $_W;
-$category = pdo_fetch("SELECT * FROM ".tablename('yuexiage_travelmall_categorys')." where id=".$_GPC['id'] , array(), 'id');
+$category = pdo_fetch("SELECT * FROM ".tablename('yuexiage_travelmall_categorys')." where category_id =:category ", array(
+    ':category'=>$_GPC['id'],
+), 'id');
 if(!empty($category)){
     $sql = "SELECT * FROM ".tablename('yuexiage_travelmall_offered')." where category_id=:category_id and uniacid = :uniacid order by displayorder";
     $condition = " AND tof.enabled = 1 AND tc.id = {$category['id']}";

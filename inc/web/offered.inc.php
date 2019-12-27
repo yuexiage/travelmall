@@ -104,7 +104,7 @@ if ($do == 'display') {
     $themes     =  com_load_cache(array(
         'cache_key'=>'theme',
     ));
-
+    echo 222222;
     //分类
     $categorys  =  com_load_cache(array(
         'cache_key'=>'category',
@@ -151,6 +151,7 @@ if ($do == 'display') {
             'day_night'     => trim($_GPC['day_night']),
             'lower_shelf'   => strtotime($_GPC['lower_shelf']),
             'upper_shelf'   => $_GPC['upper_shelf'],
+            'characteristic'=> $_GPC['characteristic'],
             'contain'       => $_GPC['contain'],
             'not_included'  => $_GPC['not_included'],
             'booked'        => $_GPC['booked'],
@@ -196,10 +197,10 @@ if ($do == 'display') {
             'shopping'      => $_GPC['shopping']
         );
         if (!empty($stroke_id)) {
-            update('yuexiage_travelmall_stroke', $data, array('stroke_id' => $stroke_id));
+            update('yuexiage_travelmall_offered_stroke', $data, array('stroke_id' => $stroke_id));
         } else {
             $data['stroke_id'] = uuid();
-            insert('yuexiage_travelmall_stroke', $data);
+            insert('yuexiage_travelmall_offered_stroke', $data);
         }
         message('添加行程成功!', $this->createWebUrl('offered', array('op' => 'post','id'=>$offered_id)), 'success');
     }
@@ -209,7 +210,7 @@ if ($do == 'display') {
         if (!empty($_GPC['stroke_displayorder'])) {
             foreach ($_GPC['stroke_displayorder'] as $stroke_id => $displayorder) {
                 $update = array('displayorder' => $displayorder);
-                update('yuexiage_travelmall_stroke', $update, array('stroke_id' => $stroke_id));
+                update('yuexiage_travelmall_offered_stroke', $update, array('stroke_id' => $stroke_id));
             }
             message('行程排序更新成功！', 'refresh', 'success');
         }
@@ -231,7 +232,7 @@ if ($do == 'display') {
                 'displayorder' => 0
             );
         }
-        update('yuexiage_travelmall_stroke', ['is_del'=>1], array('stroke_id' => $stroke_id));
+        update('yuexiage_travelmall_offered_stroke', ['is_del'=>1], array('stroke_id' => $stroke_id));
         message('删除参团游行程成功！', $this->createWebUrl('offered', array('op' => 'display')), 'success');
     }else{
         if(!empty($offered_id)) {

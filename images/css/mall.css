@@ -1,3 +1,6 @@
+* {
+    font-family: "Microsoft YaHei";
+}
 .container {
     padding-right: 0px;
     padding-left: 0px;
@@ -8,6 +11,9 @@
 }
 .write{
     color: #fff;
+}
+.bg_write{
+    background-color: #fff;
 }
 .black{
     color: #333;
@@ -68,5 +74,98 @@
 .recommend_mod.hidden_padding .no-title{
     padding-top: 0px;;
 }
-
+.recommend_mod .row_column a .title{
+    color: #fff;
+    position: absolute;
+    left: 50%;
+    margin: auto;
+    top: 50%;
+    padding: 0px;
+    transform: translate(-50%,-50%);
+}
 /**结束推荐模块**/
+/***标签模块*/
+.tab_mod .mod_panel_content{
+    position: relative;
+    height: 300px;
+}
+.tab_mod .mui-scroll .mui-control-item{
+    width: 100px;
+    text-align: center;
+    font-size: 1.28rem;
+    color: #333;
+}
+.tab_mod .mui-scroll .mui-control-item.mui-active{
+    font-size: 1.8rem;
+    color: #333;
+    line-height: 27px;
+}
+.tab_mod .mui-scroll .mui-control-item.mui-active .border-bottom{
+    content: '';
+    border-radius: 25px;
+    background-color: #00aeeb;
+    height: 5px;
+    width: 33px;
+}
+.tab_mod .mui-scroll .mui-control-item .border-bottom{
+    margin: 5px auto;
+}
+.tab_mod .mui-scroll-content{
+    margin: 15px auto;
+    background-color: #efeff4;
+}
+.tab_mod .fixed{
+    position: fixed;
+    top: 44px;
+    z-index: 999;
+    width: 100%;
+}
+.waterfall .waterfall-item{
+    padding:5px;
+}
+.tab_mod .mui-slider .mui-segmented-control.mui-segmented-control-inverted~.mui-slider-group .mui-slider-item{
+    border:none;
+}
+.tab_mod .mui-card-header>img:first-child{
+    height: auto;
+}
+.tab_mod .mui-card{
+    margin:0px;
+}
+.tab_mod .mui-card-header.mui-card-media{
+    padding:0px;
+    overflow: hidden;
+}
+.tab_mod .mui-card-content-inner {
+    padding: 5px;
+}
+.tab_mod .mui-card-header.mui-card-media .price{
+    color: #fff;
+    border-radius: 0 14px 0 0;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    padding: 2px 16px;
+    background-image: linear-gradient(to right, #fe8410, #f84d04);
+    display: flex;
+    align-items: center;
+}
+.tab_mod .mui-card-content-inner p span{
+    background: #eef7ff;
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+    color: #003b8f;
+    border-radius: .18rem;
+    margin: .08rem 1.12rem .08rem 0;
+    font-size: 12px;
+    float: left;
+}
+.tab_mod .mui-card-content {
+    font-size: 14px;
+    position: relative;
+    overflow: hidden;
+    padding-bottom: 5px;
+}
+
+/***标签模块结束*/

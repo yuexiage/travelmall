@@ -16,10 +16,10 @@ class stroke{
         $cache_key      = 'stroke'.SEP.implode(SEP,$params);
         $offered_id     = array_shift($params);
         if( empty($offered_id)){
-            throw new Exception('信息不全','42');
+            throw new Exception('信息不全',42);
         }
 
-        $strokes = pdo_fetchall("SELECT * FROM ".tablename('yuexiage_travelmall_stroke')." WHERE uniacid = :uniacid and offered_id = :offered_id and is_del = :is_del  ORDER BY displayorder ASC, id ASC ", array(
+        $strokes = pdo_fetchall("SELECT * FROM ".tablename('yuexiage_travelmall_offered_stroke')." WHERE uniacid = :uniacid and offered_id = :offered_id and is_del = :is_del  ORDER BY displayorder ASC, id ASC ", array(
             ':uniacid'      => $_W['uniacid'],
             ':offered_id'   => $offered_id,
             ':is_del'       => 0,

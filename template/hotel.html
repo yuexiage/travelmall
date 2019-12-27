@@ -24,8 +24,8 @@
 					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">访问地址</label>
 					<div class="col-sm-8 col-xs-12">
 						<div class="form-control-static">
-						<a href="{$_W['siteroot']}app/index.php?c=entry&m=yuexiage_travelmall&do=hotel&id={$hotel['country_id']}&i={$_W['uniacid']}" target="_blank">
-							{$_W['siteroot']}app/index.php?c=entry&m=yuexiage_travelmall&do=hotel&id={$hotel['country_id']}&i={$_W['uniacid']}
+						<a href="{$_W['siteroot']}app/index.php?c=entry&m=yuexiage_travelmall&do=hotel&id={$hotel['hotel_id']}&i={$_W['uniacid']}" target="_blank">
+							{$_W['siteroot']}app/index.php?c=entry&m=yuexiage_travelmall&do=hotel&id={$hotel['hotel_id']}&i={$_W['uniacid']}
 						</a>
 						</div>
 						<span class="help-block">您可以根据此地址，添加回复规则，设置访问。</span>
@@ -66,6 +66,9 @@
 							<option value="5" {php if ($hotel['star']=='5') echo "selected='selected' ";}>5星</option>
 							<option value="6" {php if ($hotel['star']=='6') echo "selected='selected' ";}>6星</option>
 							<option value="7" {php if ($hotel['star']=='7') echo "selected='selected' ";}>7星</option>
+							<option value="8" {php if ($hotel['star']=='8') echo "selected='selected' ";}>8星</option>
+							<option value="9" {php if ($hotel['star']=='9') echo "selected='selected' ";}>9星</option>
+							<option value="10" {php if ($hotel['star']=='10') echo "selected='selected' ";}>10星</option>
 						</select>
 					</div>
 				</div>
@@ -185,6 +188,14 @@
 						<input type="text" name="address" class="form-control" value="{$hotel['address']}" />
 					</div>
 				</div>
+				<!--
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">链接</label>
+					<div class="col-sm-6 col-xs-12">
+						{php echo tpl_form_field_link("coordinate",$hotel['coordinate'], array('css'=>array('input'=>'class1', 'btn'=>'class2')));}
+					</div>
+				</div>
+				-->
 				<div class="form-group">
 					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">酒店描述</label>
 					<div class="col-sm-8 col-xs-12">

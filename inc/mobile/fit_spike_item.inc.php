@@ -26,7 +26,7 @@ $collection= pdo_fetch("SELECT * FROM ".tablename('yuexiage_travelmall_collectio
 
 
 //获取行程
-$sql = "SELECT * FROM ".tablename('yuexiage_travelmall_stroke')." WHERE offered_id = {$_GPC['id']} and uniacid = '{$_W['uniacid']}' order by displayorder";
+$sql = "SELECT * FROM ".tablename('yuexiage_travelmall_offered_stroke')." WHERE offered_id = {$_GPC['id']} and uniacid = '{$_W['uniacid']}' order by displayorder";
 $strokes = pdo_fetchall($sql); 
 
 foreach ($strokes as $key => $stroke) {
