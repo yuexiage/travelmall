@@ -317,13 +317,6 @@ class Yuexiage_travelmallModuleSite extends WeModuleSite {
 
 	}
 
-	//获取所有标签
-	public function getAllTab(){
-		global $_GPC, $_W;
-		$sql = "SELECT * FROM ".tablename('yuexiage_travelmall_tabs')." WHERE enabled = 1 and uniacid = :uniacid order by displayorder,id";
-		return $tabs = pdo_fetchall($sql, array(':uniacid' => $_W['uniacid']),'id');
-	}
-
 	//获取标签对应商品
 	public function doMobileGetTabGoods(){
 		global $_GPC, $_W;

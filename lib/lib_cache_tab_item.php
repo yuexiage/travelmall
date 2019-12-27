@@ -16,9 +16,8 @@ class tab_item{
         $cache_key      = 'tab_item'.SEP.implode(SEP,$params);
         $tab_id         = array_shift($params);
         if( empty($tab_id)){
-            throw new Exception('信息不全','42');
+            throw new Exception('信息不全',42);
         }
-
         $tab = pdo_fetch("SELECT * FROM ".tablename('yuexiage_travelmall_tabs')." WHERE uniacid = :uniacid and tab_id = :tab_id and is_del = :is_del and enabled = :enabled  ORDER BY displayorder ASC, id ASC ", array(
             ':uniacid'      => $_W['uniacid'],
             ':tab_id'       => $tab_id,

@@ -84,6 +84,7 @@ if ($do == 'display') {
             'wifi'          => $_GPC['wifi'],
             'park'          => $_GPC['park'],
             'address'       => $_GPC['address'],
+            'coordinate'    => $_GPC['coordinate'],
             'contact'       => $_GPC['contact'],
             'star'          => $_GPC['star'],
             'description'   => $_GPC['description']

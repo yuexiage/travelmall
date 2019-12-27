@@ -121,12 +121,12 @@ try {
             echo json('',20,'添加成功!');
         } catch (Exception $e) {
             pdo_rollback();
-            echo json('',42,$e->getMessage());
+            echo json('',$e->getCode(),$e->getMessage());
         }
     }
 
 } catch (Exception $e) {
-    echo json('',42,$e->getMessage());
+    echo json('',$e->getCode(),$e->getMessage());
 }
 
 

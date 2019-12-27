@@ -16,7 +16,7 @@ class flight{
         $cache_key      = 'flight'.SEP.implode(SEP,$params);
         $flight_id      = array_shift($params);
         if( empty($flight_id)){
-            throw new Exception('信息不全','42');
+            throw new Exception('信息不全',42);
         }
         $flight     = pdo_fetch("SELECT * FROM ".tablename('yuexiage_travelmall_flight')." WHERE uniacid = :uniacid  and enabled = :enabled and flight_id =:flight_id and is_del = :is_del",
             array(':is_del'=>0,":uniacid"=>$_W['uniacid'],':enabled'=>1,':flight_id'=>$flight_id),'id');

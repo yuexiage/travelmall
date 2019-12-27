@@ -19,7 +19,7 @@ if($_W['isajax']){
                 include 'api/module/api_module_recommend.php';
                 break;
             case 'tab':
-                $tabs   = $this->getAllTab();
+                include 'api/module/api_module_tab.php';
                 break;
             case 'poop':
                 $_poops = iunserializer($thisModel['line'])[1];

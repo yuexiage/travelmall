@@ -133,6 +133,7 @@ if ($do == 'display') {
         }
         message('更新航班成功！', $this->createWebUrl('flight', array('op' => 'display')), 'success');
     }
+    include $this->template('flight');
 }elseif ($do == 'delete') { 
     $flight_id  = $_GPC['id'];
     if(!empty($flight_id)) {

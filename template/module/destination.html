@@ -1,0 +1,273 @@
+{template 'common/header'}
+<ul class="nav nav-tabs">
+	<li {if $do == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('module', array('op' => 'display','action'=>'destination'));}">管理目的地模块</a></li>
+	<li {if $do == 'post' && empty($id)}class="active"{/if}><a href="{php echo $this->createWebUrl('module', array('op' => 'post','action'=>'destination'));}">添加目的地模块</a></li>
+	{if $do == 'post' && $id}
+	<li {if $do == 'post' && !empty($id)}class="active"{/if}><a href="{php echo $this->createWebUrl('module', array('op' => 'post','id'=>$destination_id,'action'=>'destination'));}">编辑</a></li>
+	{/if}
+</ul>
+<style>
+	input[type='radio']{
+		width: 20px;
+		height:20px;
+	}
+	.plus,.minus{
+		border:1px solid #e7e7eb;
+		padding: 6px 10px;
+		text-align: center;
+		border-radius: 5px;
+		cursor: pointer;
+	}
+</style>
+{if $do == 'post'}
+<div class="tab_container">
+	<div id="tab1" class="tab_content main">
+		<form action="" method="post" class="form-horizontal form" id="form1">
+			<div class="panel panel-default">
+				<div class="panel-heading">目的地详细设置</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">排序</label>
+						<div class="col-sm-8 col-xs-12">
+							<input type="text" name="displayorder" class="form-control" value="{$module_post['displayorder']}" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">发布</label>
+						<div class="col-sm-8 col-xs-12">
+							<label>
+								<input type="radio" value="1" name="enabled" {php if ($module_post['enabled']=='1') echo "checked='checked' ";}>是
+							</label>
+							<label>
+								<input type="radio" value="0" name="enabled" {php if ($module_post['enabled']=='0') echo "checked='checked' ";}>否
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">目的地模块名称</label>
+						<div class="col-sm-8 col-xs-12">
+							<input type="text" name="name" class="form-control" value="{$module_post['name']}" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">显示标题</label>
+						<div class="col-sm-8 col-xs-12">
+							<label>
+								<input type="radio" value="1" name="show_title" {php if ($module_post['show_title']=='1') echo "checked='checked' ";}>是
+							</label>
+							<label>
+								<input type="radio" value="0" name="show_title" {php if ($module_post['show_title']=='0') echo "checked='checked' ";}>否
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">取消边界</label>
+						<div class="col-sm-8 col-xs-12">
+							<label>
+								<input type="radio" value="1" name="hidden_padding" {php if ($module_post['hidden_padding']=='1') echo "checked='checked' ";}>是
+							</label>
+							<label>
+								<input type="radio" value="0" name="hidden_padding" {php if ($module_post['hidden_padding']=='0') echo "checked='checked' ";}>否
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">位置</label>
+						<div class="col-sm-8 col-xs-12">
+							{template 'position'}
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">样式</label>
+						<div class="col-sm-8 col-xs-12">
+							<select name="style" class="form-control">
+								<option value="" >--选择样式--</option>
+								{loop $files $file}
+								{php $filename = pathinfo($file,PATHINFO_FILENAME);}
+								<option value="{$filename}" {php if($filename==$module_post['style']) echo "selected='selected' ;"}>{$filename}
+								</option>
+								{/loop}
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">目的地内容</div>
+				<div class="panel-body">
+					<div class="destination_first">
+						<fieldset>
+							<legend>第1个</legend>
+							<div class="form-group">
+								<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">名称</label>
+								<div class="col-sm-6 col-xs-12">
+									<input type="text" name="destination[title][]" class="form-control" value="{php echo $imgs['title'][0];}" />
+								</div>
+								<div class="col-sm-2 col-xs-2">
+									<div class="row">
+										<div class="col-sm-6 col-xs-6 plus">+</div>
+										<div class="col-sm-6 col-xs-6 minus">-</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">背景图片</label>
+								<div class="col-sm-6 col-xs-12">
+									{php echo tpl_form_field_image("destination[img][]",$imgs['img'][0]);}
+								</div>
+							</div>
+                            <div class="form-group">
+                                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">出发地</label>
+                                <div class="col-sm-8 col-xs-12">
+                                    {php echo tpl_form_field_category_2level('destination', $regions['countrys'], $regions['_citys'],$offered['destination_country'], $offered['destination_city']);}
+                                </div>
+                            </div>
+						</fieldset>
+					</div>
+					<div class="destination_list">
+						{php for($i=0;$i< count($imgs['img'])-1;$i++):}
+						<fieldset>
+							<legend>第{php echo $i+2}个</legend>
+							<div class="form-group">
+								<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">名称</label>
+								<div class="col-sm-6 col-xs-12">
+									<input type="text" name="destination[title][]" class="form-control" value="{php echo $imgs['title'][$i+1];}" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">背景图片</label>
+								<div class="col-sm-6 col-xs-12">
+									{php echo tpl_form_field_image("destination[img][]",$imgs['img'][$i+1]);}
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">链接</label>
+								<div class="col-sm-6 col-xs-12">
+									{php echo tpl_form_field_link("destination[link][]",$imgs['link'][$i+1], array('css'=>array('input'=>'class1', 'btn'=>'class2')));}
+								</div>
+							</div>
+						</fieldset>
+						{php endfor;}
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-12">
+					<input name="submit" type="submit" value="提交" class="btn btn-primary col-lg-1">
+					<input type="hidden" name="token" value="{$_W['token']}" />
+				</div>
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript">
+        $("#form1").submit(function(){
+            if($("input[name='name']").val() == '') {
+                util.message('请输入目的地名称', '', 'error');
+                return false;
+            }
+        });
+        $(function(){
+            $(".destination_first").on('click','.plus',function(){
+                $.ajax({
+                    url: "{php echo $this->createWebUrl('module',array('op' => 'move_item','action'=>'destination'));}",
+                    type: "GET",
+                    async: false,
+                    success: function(data) {
+                        resp = data;
+                        $(".destination_list").append(resp);
+                        $("legend").each(function(k,d){
+                            $(this).text('第'+(k+1)+'个');
+                        });
+                    }
+                })
+            });
+            $(".destination_first").on('click','.minus',function(){
+                if(window.confirm("删除后将不可恢复!")){
+                    $("fieldset:last-child",$(".destination_list")).remove();
+                }
+            });
+        });
+	</script>
+</div>
+{elseif $do == 'display'}
+<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form action="./index.php" method="get" class="form-horizontal" role="form">
+			<input type="hidden" name="c" value="site" />
+			<input type="hidden" name="a" value="entry" />
+			<input type="hidden" name="m" value="yuexiage_travelmall" />
+			<input type="hidden" name="do" value="module" />
+			<input type="hidden" name="op" value="display" />
+			<input type="hidden" name="action" value="destination" />
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">关键字</label>
+				<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					<input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="pull-right col-xs-12 col-sm-2 col-md-2 col-lg-2">
+					<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="main">
+	<div class="tab">
+		<form action="" method="post" onsubmit="return formcheck(this)">
+			<div class="panel panel-default">
+				<div class="panel-body table-responsive">
+					<table class="table table-hover">
+						<thead>
+						<tr>
+							<th style="width: 6%; text-align:center;">显示顺序</th>
+							<th style="width:25%;">目的地名称</th>
+							<th style="width:50px; text-align:center">状态</th>
+							<th style="width:15%; text-align:center">操作</th>
+						</tr>
+						</thead>
+						<tbody>
+						{loop $modules $row}
+						<tr>
+							<td class="text-center">
+								<input type="text" class="form-control" name="displayorder[{$row['destination_id']}]" value="{$row['displayorder']}">
+							</td>
+							<td class="text-left">
+								<div tab="height:30px;line-height:30px">
+									{$row['name']}
+								</div>
+							</td>
+							<td>
+								{if $row['enabled']==1}
+								<span class="label label-success">发布</span>
+								{else}
+								<span class="label label-default">未发布</span>
+								{/if}
+							</td>
+							<td class="text-right" tab="position:relative;">
+								<a href="{php echo $this->createWebUrl('module', array('op' => 'post','id' => $row['destination_id'],'action'=>'destination'));}" title="编辑">编辑</a>&nbsp;-&nbsp;
+								<a href="{php echo $this->createWebUrl('module', array('op' => 'delete','id' => $row['destination_id'],'action'=>'destination'));}" onclick="return confirm('确认删除此目的地吗？');return false;" title="删除">删除</a>
+							</td>
+						</tr>
+						{/loop}
+						<tr>
+							<td colspan="4">
+								<a href="{php echo $this->createWebUrl('module', array('op' => 'post','action' => 'destination'));}"><i class="fa fa-plus-circle" title="添加新目的地模块"></i> 添加新目的地模块</a>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="form-group col-sm-12">
+				<input name="submit" type="submit" class="btn btn-primary col-lg-1" value="提交">
+				<input type="hidden" name="token" value="{$_W['token']}" />
+			</div>
+		</form>
+	</div>
+</div>
+{$pager}
+{/if}
+{template 'common/footer'}

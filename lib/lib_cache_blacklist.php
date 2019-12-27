@@ -16,7 +16,7 @@ class blacklist{
         $cache_key  = 'blacklist'.SEP.implode(SEP,$params);
         $uid        = array_shift($params);
         if( empty($uid)){
-            throw new Exception('信息不全','42');
+            throw new Exception('信息不全',42);
         }
 
         //黑名单
