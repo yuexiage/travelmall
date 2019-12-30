@@ -1,0 +1,62 @@
+{template 'template/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/viewpoint.css?{TIMESTAMP}">
+<div class="mui-content viewpoint" id="mui-content">
+    <div class="mui-slider">
+        <div class="mui-slider-group mui-slider-loop"></div>
+        <div class="mui-slider-indicator"></div>
+    </div>
+    <div class="viewpoint-content">
+        <div class="tab-hearder">
+            <div id="sliderSegmentedControl" class="mui-segmented-control mui-segmented-control-inverted" data-scroll="1">
+                <a class="mui-control-item  mui-active" href="#item1mobile1">
+                    <h1></h1>
+                    <div class="border-bottom"></div>
+                </a>
+            </div>
+        </div>
+        <div id="item1mobile1" class="mui-control-content mui-active">
+        </div>
+    </div>
+
+</div>
+<script type="text/javascript">
+    $(function(){
+        $.ajax({
+            url: "{php echo $this->createMobileUrl('viewpoint',array('id'=>$_GPC['id']));}",
+            type: "GET",
+            beforeSend:function(){
+                mui.showLoading("正在加载..","div");
+            },
+            complete:function(){
+                mui.hideLoading();
+            },
+            async: false,
+            success: function(data) {
+                resp = data;
+                resp = $.parseJSON(resp);
+                console.log(resp);
+                //轮播图
+                var len = resp.data.thumbs.length;
+                $(".mui-slider-group").append('<div class="mui-slider-item mui-slider-item-duplicate"><img src="'+util.tomedia(resp.data.thumbs[len-1])+'" width="100%"></div>');
+                $.each(resp.data.thumbs,function(i,val){
+                    $(".mui-slider-group").append('<div class="mui-slider-item"><img src="'+util.tomedia(val)+'" width="100%"></div>');
+                    var mui_active = '';
+                    if(i == 0){ mui_active = 'mui-active';}
+                    $(".mui-slider-indicator").append('<div class="mui-indicator '+mui_active+'"></div>');
+                });
+                $(".mui-slider-group").append('<div class="mui-slider-item mui-slider-item-duplicate"><img src="'+util.tomedia(resp.data.thumbs[0])+'" width="100%"></div>');
+
+                var gallery = mui('.mui-slider');
+                gallery.slider({
+                    /*自动轮播图的间隔时间*/
+                    interval: 3000
+                });
+
+                //标题
+                $("#sliderSegmentedControl h1").html(resp.data.name+'('+resp.data.country+'->'+resp.data.city+')');
+                //酒店介绍
+                $("#item1mobile1").html(resp.data.description);
+            }
+        });
+    });
+</script>

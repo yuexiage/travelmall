@@ -167,5 +167,29 @@
     overflow: hidden;
     padding-bottom: 5px;
 }
-
 /***标签模块结束*/
+/**弹窗**/
+.mui-offered-popover{
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-55%);
+    width: 90%;
+    max-height: 80%;
+}
+.mui-offered-popover .popover-content{
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 15px;
+}
+.mui-offered-popover .popover-close{
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+}
+.mui-offered-popover .popover-close .mui-icon{
+    font-size: 44px;
+}
+/***弹窗结束*/

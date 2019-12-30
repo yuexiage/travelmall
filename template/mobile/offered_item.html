@@ -81,18 +81,62 @@
                     <div class="sticky-bar sticky-bar-multi">
                         <div class="day">第1天</div>
                     </div>
-                    <h2 class="title">北京</h2>
+                    <h2 class="title">北京-》天津</h2>
                     <ul class="route-list">
+                        <li class="item desc">
+                            <div class="txt-box">说明：
+                                <span class="sub-txt"> (自助餐; 餐标:10/位) (自助餐; 餐标:10/位) (自助餐; 餐标:10/位) (自助餐; 餐标:10/位)</span>
+                            </div>
+                        </li>
+                        <li class="item food">
+                            <h5 class="sub-tit">
+                                <span class="txt">餐饮</span>
+                            </h5>
+                            <div class="txt-box">早餐：
+                                <span class="sub-txt"> (自助餐; 餐标:10/位)</span>
+                            </div>
+                            <div class="txt-box">午餐：
+                                <span class="sub-txt"> (自助餐; 餐标:10/位)</span>
+                            </div>
+                            <div class="txt-box">晚餐：
+                                <span class="sub-txt"> (自助餐; 餐标:10/位)</span>
+                            </div>
+                        </li>
                         <li class="item hotel">
                             <h5 class="sub-tit">入住酒店</h5>
                             <p class="sub-txt space-line">说明：具体以实际安排为准</p>
-                            <ul class="product-list">
-                                <li class="item item-txt">
-                                    <p class="regular-txt"><a href="#middlePopover" id="91228853ed59033bb8497dd1e17d5510">当地三星酒店 (舒适型)</a></p>
+                            <ul class="product-list  mui-table-view">
+                                <li class="mui-table-view-cell mui-media item item-txt">
+                                    <a href="#middlePopover" class="hotel" id="91228853ed59033bb8497dd1e17d5510">
+                                        <img class="mui-media-object mui-pull-left" src="https://userimg.qunarzz.com/imgs/201301/05/Z7S8IZZqchMxYHH8Z480.jpg">
+                                        <div class="mui-media-body">
+                                            当地三星酒店 (舒适型)
+                                            <p class='mui-ellipsis'>阿斯顿发送到发水电费</p>
+                                        </div>
+                                    </a>
                                 </li>
                             </ul>
                         </li>
-                        
+                        <li class="item sight">
+                            <h5 class="sub-tit">景点</h5>
+                            <p class="sub-txt space-line"></p>
+                            <ul class="product-list  mui-table-view">
+                                <li class="mui-table-view-cell mui-media item item-txt">
+                                    <a href="#middlePopover" class="viewpoint" id="0d1f21288b55360d6c738e17c574eef8">
+                                        <img class="mui-media-object mui-pull-left" src="https://userimg.qunarzz.com/imgs/201301/05/Z7S8IZZqchMxYHH8Z480.jpg">
+                                        <div class="mui-media-body">
+                                            【天依女神庙】(约30min）
+                                            <p class='mui-ellipsis'>这里有几栋魏峨的宝塔，据说在7至12世纪此地共有8座宝塔，现只剩4座，其中最大的主塔内供奉占婆女神，她是古时候统治芽庄的占婆王国之母，印度教徒称占婆女神是印度教希瓦神(Siva)的化身，越南佛教徒称她为天依女神。</p>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="item shopping">
+                            <div class="txt-box">购物：
+                                <span class="sub-txt"> (自助餐; 餐标:10/位) (自助餐; 餐标:10/位) (自助餐; 餐标:10/位) (自助餐; 餐标:10/位)</span>
+                            </div>
+                        </li>
                     </ul>
                 </li>
             </ul>
@@ -159,7 +203,7 @@
 </div>
 <div id="middlePopover" class="mui-offered-popover">
     <div class="popover-content">
-        <iframe src="" class="iframe" width="100%" height="400px;" style="border:none"></iframe>
+        <iframe src="" class="iframe" width="100%" height="500px;" style="border:none"></iframe>
     </div>
     <div class="popover-close">
         <i class="mui-icon mui-icon-close"></i>
@@ -343,7 +387,12 @@
 
         $('a[href^="#"]').click(function(){
             if($($(this).attr('href')).attr('class') == 'mui-offered-popover'){
-                var url = "{php echo $this->createMobileUrl('hotel',array())}";
+                var c           = $(this).attr('class');
+                if(c == 'hotel'){
+                    var url       = "{php echo $this->createMobileUrl('hotel',array())}";
+                }else{
+                    var url   = "{php echo $this->createMobileUrl('viewpoint',array())}";
+                }
                 $($(this).attr('href')+ " .iframe").attr('src',url+'&id='+$(this).attr('id'));
                 $("body").append('<div class="mui-backdrop mui-active" style=""></div>');
                 $($(this).attr('href')).show();

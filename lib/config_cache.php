@@ -27,6 +27,7 @@ $_W['cache_create'] = array(
     'tab_item'          =>array('table'=>'ims_yuexiage_travelmall_tabs'),               //标签
     'tab'               =>array('table'=>'ims_yuexiage_travelmall_tabs'),               //所有标签
     'hotel'             =>array('table'=>'ims_yuexiage_travelmall_hotel'),              //酒店信息
+    'viewpoint'         =>array('table'=>'ims_yuexiage_travelmall_viewpoint'),          //景点信息
     'flight'            =>array('table'=>'ims_yuexiage_travelmall_flight'),             //航班信息
     'theme'             =>array('table'=>'ims_yuexiage_travelmall_theme'),             //主题信息
 
@@ -92,9 +93,12 @@ $_W['cache_clear'] = array(
         'flight'               =>  array( 1=>'flight_id'),
     ),
     'ims_yuexiage_travelmall_hotel'=>array(
-        'hotel'               =>  array( 1=>'hotel_id'),
+        'hotel'                =>  array( 1=>'hotel_id'),
     ),
     'ims_yuexiage_travelmall_theme'=>array(
-        'theme'               =>  array(),
+        'theme'                =>  array(),
+    ),
+    'ims_yuexiage_travelmall_viewpoint'=>array(
+        'viewpoint'            =>  array( 1=>'viewpoint_id'),
     ),
 );
