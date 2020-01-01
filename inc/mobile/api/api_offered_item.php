@@ -37,7 +37,7 @@ $country = com_load_cache(array(
 $city = com_load_cache(array(
     'cache_key'  =>'city',
 ));
-
+//去程机票
 if(!empty($spike_item['trip'])){
     foreach ($spike_item['trip'] as $flight_id => &$flight){
         $flight = com_load_cache(array(
@@ -64,6 +64,7 @@ if(!empty($spike_item['trip'])){
         $flight['flight_duration']   = intval($flight['flight_duration']/60).'小时'.($flight['flight_duration']%60).'分钟';
     }
 }
+//返程机票
 if(!empty($spike_item['return_trip'])){
     foreach ($spike_item['return_trip'] as $flight_id => &$flight){
         $flight = com_load_cache(array(
@@ -103,21 +104,25 @@ foreach ($strokes as $key => &$stroke) {
     $stroke['stay']      = iunserializer($stroke['stay']);
     foreach ($stroke['stay'] as $k => &$value) {
         //查找酒店信息
-        $sql    = "SELECT * FROM ".tablename('yuexiage_travelmall_hotel')." WHERE id = :id and uniacid = :uniacid ";
-        $value              = pdo_fetch($sql,array(":id"=>$k,':uniacid'=>$_W['uniacid']));
+        $value = com_load_cache(array(
+            'cache_key'  =>'hotel',
+            'hotel_id'   =>$k,
+        ));
         $value['thumbs']    =iunserializer($value['thumbs']);
         $value['facilities']=iunserializer($value['facilities']);
         $value['service']   =iunserializer($value['service']);
     }
-    //酒店
+    //景点
     $stroke['viewpoint'] = iunserializer($stroke['viewpoint']);
     foreach ($stroke['viewpoint'] as $k => &$value) {
-        $sql = "SELECT * FROM ".tablename('yuexiage_travelmall_viewpoint')." WHERE id = :id and uniacid = :uniacid";
-        $value = pdo_fetch($sql,array(":id"=>$k,':uniacid'=>$_W['uniacid']));
+        $value = com_load_cache(array(
+            'cache_key'     =>'viewpoint',
+            'viewpoint_id'  =>$k,
+        ));
         $value['thumbs'] = iunserializer($value['thumbs']);
     }
 }
-$spike_item['strokes'] = $strokes;
+$spike_item['strokes'] = array_values($strokes);
 
 
 

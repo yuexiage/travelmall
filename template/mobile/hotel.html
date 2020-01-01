@@ -173,7 +173,6 @@
             success: function(data) {
                 resp = data;
                 resp = $.parseJSON(resp);
-                console.log(resp);
                 //轮播图
                 var len = resp.data.thumbs.length;
                 $(".mui-slider-group").append('<div class="mui-slider-item mui-slider-item-duplicate"><img src="'+util.tomedia(resp.data.thumbs[len-1])+'" width="100%"></div>');
@@ -198,7 +197,6 @@
                 for(var i=0;i <resp.data.star;i++){
                     star+='<span class="mui-icon mui-icon-star"></span>';
                 }
-                console.log(star);
                 $(".mh-base-info .star").html(star);
                 $(".mh-base-info .address span:first-child").after(resp.data.address);
                 $(".mh-base-info .contact span").after(resp.data.contact);

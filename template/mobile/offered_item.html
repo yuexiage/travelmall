@@ -76,70 +76,7 @@
             </ul>
         </div>
         <div class="m-route complex">
-            <ul class="list">
-                <li class="item" id="day_1">
-                    <div class="sticky-bar sticky-bar-multi">
-                        <div class="day">第1天</div>
-                    </div>
-                    <h2 class="title">北京-》天津</h2>
-                    <ul class="route-list">
-                        <li class="item desc">
-                            <div class="txt-box">说明：
-                                <span class="sub-txt"> (自助餐; 餐标:10/位) (自助餐; 餐标:10/位) (自助餐; 餐标:10/位) (自助餐; 餐标:10/位)</span>
-                            </div>
-                        </li>
-                        <li class="item food">
-                            <h5 class="sub-tit">
-                                <span class="txt">餐饮</span>
-                            </h5>
-                            <div class="txt-box">早餐：
-                                <span class="sub-txt"> (自助餐; 餐标:10/位)</span>
-                            </div>
-                            <div class="txt-box">午餐：
-                                <span class="sub-txt"> (自助餐; 餐标:10/位)</span>
-                            </div>
-                            <div class="txt-box">晚餐：
-                                <span class="sub-txt"> (自助餐; 餐标:10/位)</span>
-                            </div>
-                        </li>
-                        <li class="item hotel">
-                            <h5 class="sub-tit">入住酒店</h5>
-                            <p class="sub-txt space-line">说明：具体以实际安排为准</p>
-                            <ul class="product-list  mui-table-view">
-                                <li class="mui-table-view-cell mui-media item item-txt">
-                                    <a href="#middlePopover" class="hotel" id="91228853ed59033bb8497dd1e17d5510">
-                                        <img class="mui-media-object mui-pull-left" src="https://userimg.qunarzz.com/imgs/201301/05/Z7S8IZZqchMxYHH8Z480.jpg">
-                                        <div class="mui-media-body">
-                                            当地三星酒店 (舒适型)
-                                            <p class='mui-ellipsis'>阿斯顿发送到发水电费</p>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="item sight">
-                            <h5 class="sub-tit">景点</h5>
-                            <p class="sub-txt space-line"></p>
-                            <ul class="product-list  mui-table-view">
-                                <li class="mui-table-view-cell mui-media item item-txt">
-                                    <a href="#middlePopover" class="viewpoint" id="0d1f21288b55360d6c738e17c574eef8">
-                                        <img class="mui-media-object mui-pull-left" src="https://userimg.qunarzz.com/imgs/201301/05/Z7S8IZZqchMxYHH8Z480.jpg">
-                                        <div class="mui-media-body">
-                                            【天依女神庙】(约30min）
-                                            <p class='mui-ellipsis'>这里有几栋魏峨的宝塔，据说在7至12世纪此地共有8座宝塔，现只剩4座，其中最大的主塔内供奉占婆女神，她是古时候统治芽庄的占婆王国之母，印度教徒称占婆女神是印度教希瓦神(Siva)的化身，越南佛教徒称她为天依女神。</p>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="item shopping">
-                            <div class="txt-box">购物：
-                                <span class="sub-txt"> (自助餐; 餐标:10/位) (自助餐; 餐标:10/位) (自助餐; 餐标:10/位) (自助餐; 餐标:10/位)</span>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
+            <ul class="list"></ul>
         </div>
         <a name="003" id="003" ></a>
         <div class="detail_info">
@@ -365,6 +302,61 @@
                     });
                     $(".m-traffic .list").append(html);
                 }
+
+                $.each(resp.data.offered.strokes,function(i,val){
+                   //酒店
+                    var hotel = '<li class="item hotel"><h5 class="sub-tit">入住酒店</h5><p class="sub-txt space-line">说明：具体以实际安排为准</p><ul class="product-list  mui-table-view">';
+                    $.each(val.stay,function(k,v){
+                        hotel+= '<li class="mui-table-view-cell mui-media item item-txt">\
+                                    <a href="#middlePopover" class="hotel" id="'+v.hotel_id+'">\
+                                    <img class="mui-media-object mui-pull-left" src="'+util.tomedia(v.thumbs[0])+'">\
+                                    <div class="mui-media-body">'+v.name+'<p class="mui-ellipsis">'+v.description+'</p></div>\
+                                    </a>\
+                            </li>';
+                    });
+                    hotel+= '</ul></li>';
+
+                    //景点
+                    var sight = '<li class="item hotel"><h5 class="sub-tit">景点</h5><ul class="product-list  mui-table-view">';
+                    $.each(val.viewpoint,function(k,v){
+                        sight+= '<li class="mui-table-view-cell mui-media item item-txt">\
+                                    <a href="#middlePopover" class="viewpoint" id="'+v.viewpoint_id+'">\
+                                    <img class="mui-media-object mui-pull-left" src="'+util.tomedia(v.thumbs[0])+'">\
+                                    <div class="mui-media-body">'+v.name+'<p class="mui-ellipsis">'+v.description+'</p></div>\
+                                    </a>\
+                            </li>';
+                    });
+                    sight+= '</ul></li>';
+
+                    var stroke = '<li class="item" id="day_'+(i+1)+'">\
+                        <div class="sticky-bar sticky-bar-multi">\
+                        <div class="day">第'+(i+1)+'天</div>\
+                        </div><h2 class="title">'+val.stroke+'</h2>\
+                        <ul class="route-list">\
+                        <li class="item desc"><div class="txt-box">说明：<span class="sub-txt"> '+val.desc+'</span></div></li>\
+                        <li class="item food">\
+                            <h5 class="sub-tit">\
+                                <span class="txt">餐饮</span>\
+                            </h5>\
+                            <div class="txt-box">早餐：\
+                                <span class="sub-txt">  '+val.breakfast+'</span>\
+                            </div>\
+                             <div class="txt-box">午餐：\
+                                <span class="sub-txt"> '+val.lunch+'</span>\
+                            </div>\
+                            <div class="txt-box">晚餐：\
+                                <span class="sub-txt"> '+val.dinner+'</span>\
+                            </div></li>'+hotel+sight+'\
+                            <li class="item shopping">\
+                                <div class="txt-box">购物：<span class="sub-txt">'+val.shopping+'</span>\
+                            </div>\
+                        </li>\
+                    </ul>\
+                 </li>';
+                 $(".m-route .list").append(stroke);
+                });
+
+
             }
         })
 
