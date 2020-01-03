@@ -1,6 +1,6 @@
 {template 'common/header'}
-<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/calendar.css?{TIMESTAMP}">
-<script src="../addons/yuexiage_travelmall/images/js/calendar.js?{TIMESTAMP}"></script>
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/calendar.css">
+<script src="../addons/yuexiage_travelmall/images/js/calendar.js"></script>
 <ul class="nav nav-tabs">
 	<li {if $do == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('offered', array('op' => 'display'));}">管理参团游</a></li>					
 	<li {if $do == 'post' && empty($id)}class="active"{/if}><a href="{php echo $this->createWebUrl('offered', array('op' => 'post'));}">添加参团游</a></li>

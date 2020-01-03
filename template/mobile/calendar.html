@@ -1,162 +1,121 @@
-{template 'common/header'}
-<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
-<link rel="stylesheet" type="text/css" href="../addons/yuexiage_travelmall/images/css/calendar.css" />
-<link rel="stylesheet" type="text/css" href="../addons/yuexiage_travelmall/images/css/custom_2.css" />
-
-<header class="mui-bar mui-bar-nav">
-    <a class="mui-icon mui-icon mui-icon-back  mui-pull-left" href="javascript:history.go(-1)"></a>
-    <h1 class="mui-title">
-        选择团期
-    </h1>
+{template 'template/header'}
+<link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mobile_calendar.css?{TIMESTAMP}">
+<script src="../addons/yuexiage_travelmall/images/js/mobile_calendar.js?{TIMESTAMP}"></script>
+<header class="mui-bar mui-bar-nav" data-top='0' data-offset='150' data-duration='20' >
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">{$spike_item['name']}</h1>
 </header>
-<script type="text/javascript">
-    window.onload = function(){
-        mui.plusReady(function(){
-        //关闭等待框
-        plus.nativeUI.closeWaiting();
-        //显示当前页面
-        mui.currentWebview.show();
-        });
-    }
-    $(function(){
-        $(".next").click(function(){
-           //成人价格
-           var adult_price = $("input[name='adult_price']").val();
-           if(adult_price <=0){
-                mui.toast('成人价格错误!');
-                return false;
-           }
-           //成人数量
-           var adult_num = $("input[name='adult_num']").val();
-           if(adult_num <=0){
-                mui.toast('成人数量错误!');
-                return false;
-           }
-
-           var child_num = $("input[name='child_num']").val();
-           var stock = $("input[name='stock']").val();
-           if( (parseInt(adult_num)+parseInt(child_num)) > parseInt(stock) ){
-                mui.toast('人数超过库存上限!');
-                return false;
-           }
-
-
-           $("form[name='day_s']").submit();
-        });
-    });
-</script>
-<form method="post" name="day_s" action="{php echo $this->createMobileUrl('calendar',array('id'=>$_GPC['id'],'op'=>'join'));}">
-<div class="container" style="margin-bottom: 70px;">
-    <section class="main">
-        <div class="custom-calendar-wrap">
-            <div id="custom-inner" class="custom-inner">
-                <div class="custom-header clearfix">
-                    <nav>
-                        <span id="custom-prev" class="custom-prev"></span>
-                        <span id="custom-next" class="custom-next"></span>
-                    </nav>
-                    <h2 id="custom-month" class="custom-month"></h2>
-                    <h3 id="custom-year" class="custom-year"></h3>
+<div class="mui-row calendar">
+    <div class="mui-col-xs-12 mui-col-sm-12">
+        <div class="calendar">
+            <div class="title">
+                <h1>
+                    <span class="" id="calendar-title">月</span>
+                    <span class="" id="calendar-year">年</span>
+                </h1>
+                <a href="" class="mui-icon mui-icon-arrowleft gray" id="pre"></a>
+                <a href="" class="mui-icon mui-icon-arrowright gray" id="next"></a>
+            </div>
+            <div class="body">
+                <div class="lightgrey body-list">
+                    <ul class="week">
+                        <li>周日</li>
+                        <li>周一</li>
+                        <li>周二</li>
+                        <li>周三</li>
+                        <li>周四</li>
+                        <li>周五</li>
+                        <li>周六</li>
+                    </ul>
                 </div>
-                <div id="calendar" class="fc-calendar-container"></div>
+                <div class="darkgrey body-list">
+                    <ul id="days"></ul>
+                </div>
+            </div>
+            <div class="bar">
+                <ul class="mui-table-view" style="margin-bottom: 70px;">
+                    <li class="mui-table-view-cell">成人: ￥<em class="adult_price"></em>
+                        <div class="mui-numbox" data-numbox-step='1' data-numbox-min='1' data-numbox-max='10' style="float: right;">
+                            <button class="mui-btn mui-numbox-btn-minus" type="button">-</button>
+                            <input class="mui-numbox-input" type="number" name="adult_num"/>
+                            <button class="mui-btn mui-numbox-btn-plus" type="button">+</button>
+                        </div>
+                    </li>
+                    <li class="mui-table-view-cell">儿童: ￥<em class="child_price"></em>
+                        <div class="mui-numbox" data-numbox-step='1' data-numbox-min='0' data-numbox-max='10' style="float: right;">
+                            <button class="mui-btn mui-numbox-btn-minus" type="button">-</button>
+                            <input class="mui-numbox-input" type="number" name="child_num" />
+                            <button class="mui-btn mui-numbox-btn-plus" type="button">+</button>
+                        </div>
+                    </li>
+                    <input type="hidden" name="stock" value="0">
+                    <input type="hidden" name="amount_id" value="0">
+                </ul>
             </div>
         </div>
-    </section>
-
-    <ul class="mui-table-view">
-        <li class="mui-table-view-cell">成人: ￥<em class="adult_price"></em>
-            <input type="hidden" name="adult_price" value="0">
-            <div class="mui-numbox" data-numbox-step='1' data-numbox-min='0' data-numbox-max='30' style="float: right;">
-                <button class="mui-btn mui-numbox-btn-minus" type="button">-</button>
-                <input class="mui-numbox-input" type="number" name="adult_num"/>
-                <button class="mui-btn mui-numbox-btn-plus" type="button">+</button>
-            </div>
-        </li>
-        <li class="mui-table-view-cell">儿童: ￥<em class="child_price"></em>
-            <div class="mui-numbox" data-numbox-step='1' data-numbox-min='0' data-numbox-max='30' style="float: right;">
-                <input type="hidden" name="child_price" value="0">
-                <button class="mui-btn mui-numbox-btn-minus" type="button">-</button>
-                <input class="mui-numbox-input" type="number" name="child_num" />
-                <button class="mui-btn mui-numbox-btn-plus" type="button">+</button>
-            </div>
-        </li>
-        <input type="hidden" name="stock" value="0">
-        <input type="hidden" name="day_id" value="0">
-    </ul>
-</div>
-<input type="hidden" name="event_day" value="">
-<div class="bottom_nav">
-    <div class="mui-row">
-        <div class="mui-col-sm-6 mui-col-xs-6 prev">
-        <a href="javascript:history.go(-1)">上一步</a>
-        </div>
-        <div class="mui-col-sm-6 mui-col-xs-6 next">
-        <a href="###">下一步</a>
+    </div>
+    <div class="tab_bottom mui-row">
+        <div class="mui-col-sm-12 mui-col-xs-12">
+            <button type="button" class="mui-btn mui-btn-warning next-btn mui-btn-block">
+                下一步,填写订单
+            </button>
         </div>
     </div>
 </div>
-</form>
-<script type="text/javascript" src="../addons/yuexiage_travelmall/images/js/jquery.calendario.js"></script>
-<script type="text/javascript"> 
-    var codropsEvents = {$json};
-    $(function() {          
-        $wrapper = $( '#custom-inner' ),
-        $calendar = $( '#calendar' ),
-        cal = $calendar.calendario( {
-            onDayClick : function( $el, $contentEl, dateProperties ) {
-                if( $contentEl.length > 0 ) {
-                    /*for( var key in dateProperties ) {
-                        console.log( key + ' = ' + dateProperties[ key ] );
-                    }*/
-                    if(dateProperties[ 'month' ]<10){
-                        dateProperties[ 'month' ] = '0'+dateProperties[ 'month' ];
-                    }
-                    if(dateProperties[ 'day' ]<10){
-                        dateProperties[ 'day' ] = '0'+dateProperties[ 'day' ];
-                    }
-                    event_day = dateProperties[ 'month' ]+'-'+dateProperties[ 'day' ]+'-'+dateProperties[ 'year' ];
-                    $("input[name='event_day']").val(event_day);
-                    console.log(event_day);
-                    //showEvents( $contentEl, dateProperties );
-                }
-            },
-            caldata : codropsEvents,
-            displayWeekAbbr : true
-        } ),
-        $month = $( '#custom-month' ).html( cal.getMonthName() ),
-        $year = $( '#custom-year' ).html( cal.getYear() );
-
-        $( '#custom-next' ).on( 'click', function() {
-            cal.gotoNextMonth( updateMonthYear );
-        } );
-        $( '#custom-prev' ).on( 'click', function() {
-            cal.gotoPreviousMonth( updateMonthYear );
-        } );
-
-        function updateMonthYear() {                
-            $month.html( cal.getMonthName() );
-            $year.html( cal.getYear() );
-        }
-
-        $(function(){
-            $(document).on('click','.price_day',function(){
-                var adult = $(this).attr('adult');
-                var child = $(this).attr('child');
-                var stock = $(this).attr('stock');
-                var id    = $(this).attr('id');
-                $(".adult_price").text(adult);
-                $("input[name='adult_price']").val(adult);
-                $(".child_price").text(child);
-                $("input[name='child_price']").val(child);
+<script type="text/javascript">
+    $(function(){
+        $.calendar._({
+            dayClick:function(date,obj){
+                //确定点击的是哪个日期
+                var data_date = $(obj).attr('data-date');
+                //如果背景已经是绿色
+                $(".selection").removeClass('selection');
+                var adult_price = $('.day-content-adult',obj).attr('adult-price');
+                var child_price = $('.day-content-adult',obj).attr('child-price');
+                var stock       = $('.day-content-adult',obj).attr('stock');
+                var amount_id   = $('.day-content',obj).attr('amount_id');
                 $("input[name='stock']").val(stock);
-                $("input[name='day_id']").val(id);
-                $(".fc-content").css("background",'#fff');
-                $(".price_day").css("color",'#04be02');
-                $(this).parent().parent().css("background",'#f80');
-                var aa = $(this).parent().parent();
-                $(".price_day",aa).css("color",'#fff');
+                $("input[name='amount_id']").val(amount_id);
+                $(".adult_price").text(adult_price);
+                $(".child_price").text(child_price);
+                if(stock <1){
+                    $(".next-btn").attr('disabled','disabled');
+                }else{
+                    $(".next-btn").attr("disabled",false);
+                }
+                $(obj).addClass('selection');
+            },
+            s_date:"{$_GPC['date']}",
+            url:"{php echo $this->createMobileUrl('event',array('offered_id'=>$_GPC['id'],'op'=>'all'));}"
+        });
+
+
+        $(".next-btn").click(function(){
+            //成人价格
+            var adult_price = $(".adult_price").text();
+            if( adult_price <=0 ){
+                mui.toast('成人价格错误!');
+                return false;
+            }
+
+            //成人数量
+            var adult_num = $("input[name='adult_num']").val();
+            if(adult_num <=0){
+                mui.toast('成人数量错误!');
+                return false;
+            }
+
+            var child_num = $("input[name='child_num']").val();
+            var stock = $("input[name='stock']").val();
+            if( (parseInt(adult_num)+parseInt(child_num)) > parseInt(stock) ){
+                mui.toast('人数超过库存上限!');
+                return false;
+            }
+            mui.openWindow({
+                id:'calendar',
+                url:"{php echo $this->createMobileUrl('offered',array('op'=>'calendar','id'=>$_GPC['id']));}&date=",
             });
         });
     });
 </script>
-{template 'common/footer'}
+{template 'template/footer'}

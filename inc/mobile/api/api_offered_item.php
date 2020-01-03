@@ -24,10 +24,10 @@ if(empty($spike_item)){
 }
 
 if($spike_item['upper_shelf'] && ($spike_item['lower_shelf'] < time()) ){
-    $spike_item['end'] = 1;
     $update = array('enabled' => 0);
     //更新线路状态
-    pdo_update('yuexiage_travelmall_offered', $update, array('id' => $_GPC['id']));
+    update('yuexiage_travelmall_offered', $update, array('offered_id' => $_GPC['id']));
+    $spike_item['enabled'] = 0;
 }
 
 //获取机票信息

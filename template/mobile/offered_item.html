@@ -40,6 +40,7 @@
 		<div class="dataTitleBox">出发日期</div>
 		<div class="dataListBox">
 			<ul></ul>
+            <input type="hidden" id="date" value="">
 		</div>
 	</div>
 	<div class="part_info mar_bot10">
@@ -140,7 +141,7 @@
 </div>
 <div id="middlePopover" class="mui-offered-popover">
     <div class="popover-content">
-        <iframe src="" class="iframe" width="100%" height="500px;" style="border:none"></iframe>
+        <iframe src="" class="iframe" width="100%" height="400px;" style="border:none"></iframe>
     </div>
     <div class="popover-close">
         <i class="mui-icon mui-icon-close"></i>
@@ -206,17 +207,23 @@
 
 				//日期
                 $.each(resp.data.offered.date,function(i,val){
+                    console.log(val);
                     var today = new Array('周日','周一','周二','周三','周四','周五','周六');
                     var week  = today[val.w];
                     var amount_id = 'amount_id='+val.amount_id;
-                    if( (resp.data.offered.enabled==0) || (resp.data.offered.upper_shelf ==1 && resp.data.offered.end == 1) ){
+                    if( resp.data.offered.enabled==0 ){
                         amount_id = 'amount_id=-1';
                     }
-					$(".dataListBox ul").append('<a href="###" '+amount_id+'><li class=""><div>'+val.d+week+'</div><div class="priceBox">¥'+val.adult_price+'</div></li></a>');
+                    var active = '';
+                    if(i ==0){
+                        active = "active";
+                        $("#date").val(val.date);
+                    }
+					$(".dataListBox ul").append('<a '+amount_id+' date="'+val.date+'"><li class="'+active+'"><div>'+val.d+week+'</div><div class="priceBox">¥'+val.adult_price+'</div></li></a>');
                 });
 
-                if( (resp.data.offered.enabled==1) && (resp.data.offered.upper_shelf == 0 || resp.data.offered.end == 0) ){
-                    $(".dataListBox ul").append('<a href="###"><li style="line-height:36px">更多</li></a>');
+                if( resp.data.offered.enabled==1 ){
+                    $(".dataListBox ul").append('<a class="more_date" ><li style="line-height:36px">更多</li></a>');
                 }
 
                 //费用熬好
@@ -396,6 +403,36 @@
             $(this).parent().parent().hide();
         });
 
+        var i = 0;
+        $(window).scroll(function(){
+            var t = $(this).scrollTop();
+            $(".deta_nav li").removeClass("cur");
+            for(var i =1; i<=5; i++){
+                var nav = $("#00"+i).offset().top-100;
+                var n = i+1;
+                if(n < 6){
+                    var nav_next = $("#00"+n).offset().top-100;
+                    if ( (t > nav ) && (t <nav_next) ){
+                        $("a[a_id='00"+i+"']").parent().addClass("cur");
+                    }else if(t < ($("#001").offset().top-100)){
+                        $("a[a_id='001']").parent().addClass("cur");
+                    }
+                }else if( (n == 6) && t > ($("#005").offset().top-100)){
+                    $("a[a_id='005']").parent().addClass("cur");
+                }
+            }
+        });
+
+        //日期
+        $(".dataListBox a").click(function(){
+            if($(this).attr('amount_id') != '-1'){
+                var d = $(this).attr('date');
+                $(".dataListBox li").removeClass('active');
+                $('li',this).addClass('active');
+                $("#date").val(d);
+            }
+        });
+
         $(".shoucang").click(function(){
             mui.ajax("{php echo $this->createMobileUrl('collection',array('id'=>$_GPC['id']));}",{
 
@@ -416,5 +453,13 @@
             });
         });
     });
+    mui(".offered_item").on('tap','.more_date,.reserve',function(){
+        //获取id
+        var date = mui("#date")[0].getAttribute("value");
+        mui.openWindow({
+            id:'calendar',
+            url:"{php echo $this->createMobileUrl('offered',array('op'=>'calendar','id'=>$_GPC['id']));}&date="+date,
+        });
+    })
 </script>
 {template 'template/footer'}

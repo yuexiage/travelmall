@@ -9,6 +9,15 @@ try {
             //查询线路详情
             include_once 'api/api_offered_item.php';
         }
+    }elseif ($_GPC['op'] == 'calendar'){
+        //查询线路详情
+        $spike_item = com_load_cache(array(
+            'cache_key'  =>'offered_item',
+            'offered_id' =>$_GPC['id'],
+        ));
+
+        load()->func('tpl');
+        include $this->template('calendar');
     }else{
         load()->func('tpl');
         include $this->template('offered_item');
