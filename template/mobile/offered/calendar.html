@@ -111,9 +111,10 @@
                 mui.toast('人数超过库存上限!');
                 return false;
             }
+            var amount_id = $("input[name='amount_id']").val();
             mui.openWindow({
                 id:'calendar',
-                url:"{php echo $this->createMobileUrl('offered',array('op'=>'calendar','id'=>$_GPC['id']));}&date=",
+                url:"{php echo $this->createMobileUrl('offered',array('op'=>'booking','id'=>$_GPC['id']));}&adult_num="+adult_num+'&child_num='+child_num+'&amount_id='+amount_id,
             });
         });
     });

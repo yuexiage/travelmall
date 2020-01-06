@@ -1,17 +1,11 @@
-{template 'common/header'}
+{template 'template/header'}
 <link type="text/css" rel="stylesheet" href="../addons/yuexiage_travelmall/images/css/mall.css?{TIMESTAMP}">
-
 <header class="mui-bar mui-bar-nav">
-    <a class="mui-icon mui-icon mui-icon-back  mui-pull-left" href="javascript:history.go(-1)"></a>
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
     <h1 class="mui-title">
         确认订单
     </h1>
 </header>
-<style>
-    body{
-        background-color: #efeff4;
-    }
-</style>
 <form method="post" name="day_s" action="{php echo $this->createMobileUrl('calendar',array('id'=>$_GPC['id'],'op'=>'saveorder'));}" style="margin:50px 0px 70px 0px;">
     <div class="offered_name">
         {$offered['name']}
@@ -171,4 +165,4 @@
     });
 </script>
 
-{template 'common/footer'}
+{template 'template/footer'}

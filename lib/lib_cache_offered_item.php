@@ -21,7 +21,8 @@ class offered_item{
         }
 
         //查询常规线路基础信息
-        $spike_item = pdo_fetch("SELECT * FROM ".tablename("yuexiage_travelmall_offered")." WHERE offered_id = :offered_id",array(':offered_id'=>$offered_id));
+        $spike_item = pdo_fetch("SELECT * FROM ".tablename("yuexiage_travelmall_offered")." WHERE offered_id = :offered_id and uniacid = :uniacid and is_del = :is_del",array(
+            ':offered_id'=>$offered_id,':uniacid'=>$_W['uniacid'],':is_del'=> 0));
         $spike_item['thumbs']       = iunserializer($spike_item['thumbs']);
         $spike_item['tabs']         = iunserializer($spike_item['tabs']);       //标签
         $spike_item['coupons']      = iunserializer($spike_item['coupons']);    //优惠券
@@ -37,7 +38,7 @@ class offered_item{
 
         //获取日期
         $time = strtotime(date("Y-m-d"))+86400;
-        $sql        = "SELECT FROM_UNIXTIME(start_date,'%Y-%m-%d') AS date,FROM_UNIXTIME(start_date,'%Y') AS y,FROM_UNIXTIME(start_date,'%m-%d') AS d,FROM_UNIXTIME(start_date,'%w') AS w,amount_id,adult_price,child_price FROM ".tablename('yuexiage_travelmall_offered_amount')." WHERE offered_id = :offered_id and uniacid = :uniacid and start_date >:time and stock > :stock and is_del = :is_del order by start_date limit 0,7";
+        $sql        = "SELECT FROM_UNIXTIME(start_date,'%Y-%m-%dyuexiage_travelmall_offered') AS date,FROM_UNIXTIME(start_date,'%Y') AS y,FROM_UNIXTIME(start_date,'%m-%d') AS d,FROM_UNIXTIME(start_date,'%w') AS w,amount_id,adult_price,child_price FROM ".tablename('yuexiage_travelmall_offered_amount')." WHERE offered_id = :offered_id and uniacid = :uniacid and start_date >:time and stock > :stock and is_del = :is_del order by start_date limit 0,7";
         $dates      = pdo_fetchall($sql,array(':offered_id'=>$offered_id,':uniacid'=>$_W['uniacid'],':time'=>$time,':stock'=>0,':is_del'=> 0));
         // pdo_debug();
         $spike_item['date']         = is_array($dates) ? $dates : [];
